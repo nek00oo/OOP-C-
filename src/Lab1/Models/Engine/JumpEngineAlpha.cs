@@ -1,14 +1,11 @@
 namespace Itmo.ObjectOrientedProgramming.Lab1.Models.Engine;
 
-public class JumpEngineAlpha : JumpEngine
+public class JumpEngineAlpha : IJumpEngine
 {
-    public JumpEngineAlpha()
-        : base(EngineType.Alpha)
-    {
-    }
+    public int FuelConsumptionAe { get; } = 50;
 
-    public override double CalculateFuelRequired(double fuelQuantity, int distance)
+    public double CalculateFuelRequired(int distance)
     {
-        return fuelQuantity - (FuelConsumptionAe * distance);
+        return FuelConsumptionAe * distance;
     }
 }

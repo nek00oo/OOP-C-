@@ -6,8 +6,8 @@ namespace Itmo.ObjectOrientedProgramming.Lab1.Entities.SpaceShip;
 
 public class MeredianShip : SpaceShipBase, ISpaceShipWithDeflector
 {
-    public MeredianShip(double fuelPlasmQuantity, bool antineutrinoEmitter = false, bool photonDeflector = false)
-        : base(antineutrinoEmitter, HullShipClass.Second, EngineType.E, fuelPlasmQuantity)
+    public MeredianShip(bool antineutrinoEmitter = false, bool photonDeflector = false)
+        : base(antineutrinoEmitter, HullShipClass.Second, EngineType.E)
     {
         Deflector = new DeflectorSecondClass(photonDeflector);
     }

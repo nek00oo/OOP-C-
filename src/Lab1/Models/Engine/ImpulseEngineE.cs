@@ -2,15 +2,12 @@ using System;
 
 namespace Itmo.ObjectOrientedProgramming.Lab1.Models.Engine;
 
-public class ImpulseEngineE : ImpulseEngine
+public class ImpulseEngineE : IImpulseEngine
 {
-    public ImpulseEngineE()
-        : base(EngineType.E)
-    {
-    }
+    public int FuelConsumptionAe { get; } = 75;
 
-    public override double CalculateFuelRequired(double fuelQuantity, int distance)
+    public double CalculateFuelRequired(int distance)
     {
-        return fuelQuantity - (FuelConsumptionAe * Math.Exp(distance));
+        return FuelConsumptionAe * Math.Exp(distance);
     }
 }

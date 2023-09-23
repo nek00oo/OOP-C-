@@ -1,3 +1,5 @@
+using Itmo.ObjectOrientedProgramming.Lab1.Models.Obstacles;
+
 namespace Itmo.ObjectOrientedProgramming.Lab1.Models.Deflector;
 
 public abstract class DeflectorBase
@@ -13,7 +15,10 @@ public abstract class DeflectorBase
     protected int HealthPoints { get; set; }
     public bool IsDisabledPhotonDeflector() => HealthPointPhotonDeflector <= 0;
     public bool IsDisabled() => HealthPoints <= 0;
-    public abstract bool ReflectObstacles(ObstaclesType obstaclesType, int countObstacles = 1);
 
-    public abstract bool TakeDamage(int count = 1);
+    public bool TakeDamage(IObstaclesBase obstacle, int count = 1)
+    {
+        HealthPoints -= obstacle.Damage * count;
+        return HealthPoints > 0;
+    }
 }

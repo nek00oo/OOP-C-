@@ -5,7 +5,7 @@ namespace Itmo.ObjectOrientedProgramming.Lab1.Service.FabricCreateEngine;
 
 public static class FabricCreateEngineJump
 {
-    public static JumpEngine CreateJumpEngine(EngineType engineType)
+    public static IJumpEngine CreateJumpEngine(EngineType engineType)
     {
         switch (engineType)
         {
