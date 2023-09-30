@@ -1,5 +1,6 @@
 using Itmo.ObjectOrientedProgramming.Lab1.Models.Engine;
 using Itmo.ObjectOrientedProgramming.Lab1.Models.HullShip;
+using Itmo.ObjectOrientedProgramming.Lab1.Models.Obstacles;
 using Itmo.ObjectOrientedProgramming.Lab1.Service.FabricCreateEngine;
 using Itmo.ObjectOrientedProgramming.Lab1.Service.FabricCreateHullShip;
 
@@ -22,4 +23,6 @@ public abstract class SpaceShipBase
     {
         return ImpulseEngine.CalculateFuelRequired(distance);
     }
+
+    public abstract bool TakeDamage(IObstaclesBase obstacles,  int countObstacles);
 }

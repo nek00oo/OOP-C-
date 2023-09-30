@@ -1,20 +1,29 @@
 using Itmo.ObjectOrientedProgramming.Lab1.Entities.SpaceShip;
-using Itmo.ObjectOrientedProgramming.Lab1.Models;
+using Itmo.ObjectOrientedProgramming.Lab1.Models.Obstacles;
+using Itmo.ObjectOrientedProgramming.Lab1.Service.NavigateRouteResult;
 
 namespace Itmo.ObjectOrientedProgramming.Lab1.Entities.Space;
 
 public class OrdinarySpace : SpaceBase
 {
-    public override bool NavigateSpace(SpaceShipBase spaceShip, int distance) =>
-        spaceShip.UsingFuelImpulseEngine(distance) && OvercomingObstacles(spaceShip);
+    private readonly IObstacleSpace _obstacleSpace;
+    private readonly int _countObstacles;
 
-    public override bool OvercomingObstacles(SpaceShipBase spaceShip) // TODO метеорит
+    public OrdinarySpace(int distance, IObstacleSpace obstacleSpace, int countObstacles = 0)
+        : base(distance)
     {
-        if (spaceShip is ISpaceShipWithDeflector shipWithDeflector)
-        {
-            return shipWithDeflector.Deflector.ReflectObstacles(ObstaclesType.Asteroid);
-        }
+        _countObstacles = countObstacles;
+        _obstacleSpace = obstacleSpace;
+    }
 
-        return spaceShip.HullShip.ConditionAfterObstacles(ObstaclesType.Asteroid);
+    public override bool NavigateSpace(SpaceShipBase spaceShip, out NavigateRouteResult navigateRouteResult)
+    {
+        navigateRouteResult = new NavigateRouteResult.Success(spaceShip.UsingFuelImpulseEngine(Distance));
+        return OvercomingObstacles(spaceShip, ref navigateRouteResult);
+    }
+
+    public override bool OvercomingObstacles(SpaceShipBase spaceShip, ref NavigateRouteResult navigateRouteResult)
+    {
+        return _obstacleSpace.InteractionWithSpaceShip(spaceShip, _countObstacles, ref navigateRouteResult);
     }
 }
