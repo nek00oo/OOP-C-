@@ -13,15 +13,14 @@ public abstract class SpaceShipBase
         ImpulseEngine = impulseEngine;
     }
 
-    public int FuelQuantity { get; protected set; }
     public IImpulseEngine ImpulseEngine { get; }
     public bool AntineutrinoEmitter { get; }
     protected HullShipBase HullShip { get; }
 
-    public double UsingFuelImpulseEngine(int distance)
+    public void UsingFuelImpulseEngine(int distance)
     {
-        return ImpulseEngine.CalculateFuelRequired(distance);
+        ImpulseEngine.CalculateFuelRequired(distance);
     }
 
-    public abstract bool TakeDamage(IObstaclesBase obstacles,  int countObstacles);
+    public abstract bool TakeDamage(IObstaclesBase obstacles, int countObstacles);
 }

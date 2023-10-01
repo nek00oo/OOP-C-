@@ -54,12 +54,25 @@ public class Route
     {
         foreach (SpaceShipBase spaceShip in _spaceShips)
         {
-            double fuelQuantity = 0;
-            NavigateRouteResult navigateRouteResult = new NavigateRouteResult.Success(spaceShip, fuelQuantity);
+            NavigateRouteResult navigateRouteResult = new NavigateRouteResult.Success(spaceShip, 0, 0);
             foreach (SpaceBase space in _spaceBases)
             {
-                if (space.NavigateSpace(spaceShip, out navigateRouteResult, ref fuelQuantity) is false)
+                if (space.NavigateSpace(spaceShip, ref navigateRouteResult))
+                {
+                    if (spaceShip is ISpaceShipWithJumpEngine spaceShipWithJumpEngine)
+                    {
+                        navigateRouteResult = new NavigateRouteResult.Success(spaceShip, spaceShip.ImpulseEngine.FuelQuantity, spaceShipWithJumpEngine.JumpEngine.FuelQuantity);
+                    }
+                    else
+                    {
+                        navigateRouteResult =
+                            new NavigateRouteResult.Success(spaceShip, spaceShip.ImpulseEngine.FuelQuantity, 0);
+                    }
+                }
+                else
+                {
                     break;
+                }
             }
 
             NavigateRouteResult.ProcessingResults(navigateRouteResult);

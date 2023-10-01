@@ -12,6 +12,6 @@ public abstract class SpaceBase
     }
 
     public int Distance { get; }
-    public abstract bool NavigateSpace(SpaceShipBase spaceShip, out NavigateRouteResult navigateRouteResult, ref double fuelQuantity);
+    public abstract bool NavigateSpace(SpaceShipBase spaceShip, ref NavigateRouteResult navigateRouteResult);
     public abstract bool OvercomingObstacles(SpaceShipBase spaceShip, ref NavigateRouteResult navigateRouteResult);
 }

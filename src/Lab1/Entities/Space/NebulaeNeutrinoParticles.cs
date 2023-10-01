@@ -19,13 +19,12 @@ public class NebulaeNeutrinoParticles : SpaceBase
         _obstacleNebulaeNeutrinoParticles = obstacleNebulaeNeutrinoParticles;
     }
 
-    public override bool NavigateSpace(SpaceShipBase spaceShip, out NavigateRouteResult navigateRouteResult, ref double fuelQuantity)
+    public override bool NavigateSpace(SpaceShipBase spaceShip, ref NavigateRouteResult navigateRouteResult)
     {
         spaceShip.ImpulseEngine.SlowingSpeed(NitroParticlesSpeedEffectAe, Distance);
         if (spaceShip.ImpulseEngine.Speed > 0)
         {
-            fuelQuantity += spaceShip.UsingFuelImpulseEngine(Distance);
-            navigateRouteResult = new NavigateRouteResult.Success(spaceShip, fuelQuantity);
+            spaceShip.UsingFuelImpulseEngine(Distance);
             return OvercomingObstacles(spaceShip, ref navigateRouteResult);
         }
 

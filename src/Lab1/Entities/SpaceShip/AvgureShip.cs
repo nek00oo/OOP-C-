@@ -19,9 +19,9 @@ public class AvgureShip : SpaceShipBase, ISpaceShipWithJumpEngine, ISpaceShipWit
     public DeflectorBase Deflector { get; }
     public IJumpEngine JumpEngine { get; }
 
-    public double UsingFuelJumpEngine(int distance)
+    public void UsingFuelJumpEngine(int distance)
     {
-        return JumpEngine.CalculateFuelRequired(distance);
+        JumpEngine.CalculateFuelRequired(distance);
     }
 
     public override bool TakeDamage(IObstaclesBase obstacles,  int countObstacles)

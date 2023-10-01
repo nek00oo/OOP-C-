@@ -18,10 +18,9 @@ public class OrdinarySpace : SpaceBase
         _obstacleSpace = obstacleSpace;
     }
 
-    public override bool NavigateSpace(SpaceShipBase spaceShip, out NavigateRouteResult navigateRouteResult, ref double fuelQuantity)
+    public override bool NavigateSpace(SpaceShipBase spaceShip, ref NavigateRouteResult navigateRouteResult)
     {
-        fuelQuantity += spaceShip.UsingFuelImpulseEngine(Distance);
-        navigateRouteResult = new NavigateRouteResult.Success(spaceShip, fuelQuantity);
+        spaceShip.UsingFuelImpulseEngine(Distance);
         return OvercomingObstacles(spaceShip, ref navigateRouteResult);
     }
 

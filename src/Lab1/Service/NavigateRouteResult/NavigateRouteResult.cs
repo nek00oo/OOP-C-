@@ -11,7 +11,7 @@ public abstract record NavigateRouteResult
     {
         if (navigateRouteResult is Success success)
         {
-            Console.WriteLine($"Successful overcoming of spaces. The {success.SpaceShip.GetType().Name} spaceship spent {Math.Round(success.FuelQuantity, 2)}");
+            Console.WriteLine($"Successful overcoming of spaces. The {success.SpaceShip.GetType().Name} spaceship spent {Math.Round(success.FuelQuantityActivePlasma, 2)} active plasmas and {Math.Round(success.FuelQuantityGravitonMatter, 2)} graviton matters");
             return;
         }
 
@@ -33,7 +33,7 @@ public abstract record NavigateRouteResult
         }
     }
 
-    public sealed record Success(SpaceShipBase SpaceShip, double FuelQuantity) : NavigateRouteResult; // Добавить количество потраченных денег
+    public sealed record Success(SpaceShipBase SpaceShip, double FuelQuantityActivePlasma, double FuelQuantityGravitonMatter) : NavigateRouteResult; // Добавить количество потраченных денег
 
     public sealed record CrewKilled(SpaceShipBase SpaceShip) : NavigateRouteResult;
 
