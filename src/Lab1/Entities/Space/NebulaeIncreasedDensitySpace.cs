@@ -12,21 +12,24 @@ public class NebulaeIncreasedDensitySpace : SpaceBase
     public NebulaeIncreasedDensitySpace(int distance, IObstacleNebulaeIncreasedDensitySpace obstacleNebulaeIncreasedDensitySpace, int countObstacles = 0)
         : base(distance)
     {
-        _countObstacles = countObstacles;
+        _countObstacles = 0;
+        if (countObstacles > 0)
+            _countObstacles = countObstacles;
         _obstacleNebulaeIncreasedDensitySpace = obstacleNebulaeIncreasedDensitySpace;
     }
 
-    public override bool NavigateSpace(SpaceShipBase spaceShip, out NavigateRouteResult navigateRouteResult)
+    public override bool NavigateSpace(SpaceShipBase spaceShip,  out NavigateRouteResult navigateRouteResult, ref double fuelQuantity)
     {
         if (spaceShip is ISpaceShipWithJumpEngine spaceShipWithJumpEngine &&
             spaceShipWithJumpEngine.JumpEngine.JumpRange >= Distance)
         {
+            fuelQuantity += spaceShipWithJumpEngine.UsingFuelJumpEngine(Distance);
             navigateRouteResult =
-                new NavigateRouteResult.Success(spaceShipWithJumpEngine.JumpEngine.CalculateFuelRequired(Distance));
+                new NavigateRouteResult.Success(spaceShip, fuelQuantity);
             return OvercomingObstacles(spaceShip, ref navigateRouteResult);
         }
 
-        navigateRouteResult = new NavigateRouteResult.ShipIsLost();
+        navigateRouteResult = new NavigateRouteResult.ShipIsLost(spaceShip);
         return false;
     }
 

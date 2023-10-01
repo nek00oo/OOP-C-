@@ -5,13 +5,15 @@ namespace Itmo.ObjectOrientedProgramming.Lab1.Models.Obstacles;
 
 public class ObstacleMeteorite : IObstacleSpace
 {
-    public int Damage { get; } = 10;
+    public int Damage { get; } = 50;
+    public int Weight { get; } = 3;
 
     public bool InteractionWithSpaceShip(SpaceShipBase spaceShip, int countObstacles, ref NavigateRouteResult navigateRouteResult)
     {
-        if (spaceShip.TakeDamage(this, countObstacles)) return true;
+        if (spaceShip.TakeDamage(this, countObstacles))
+            return true;
 
-        navigateRouteResult = new NavigateRouteResult.ShipIsDestroyed();
+        navigateRouteResult = new NavigateRouteResult.ShipIsDestroyed(spaceShip);
         return false;
     }
 }

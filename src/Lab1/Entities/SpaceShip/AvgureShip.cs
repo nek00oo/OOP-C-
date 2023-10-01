@@ -1,20 +1,19 @@
 using Itmo.ObjectOrientedProgramming.Lab1.Models.Deflector;
 using Itmo.ObjectOrientedProgramming.Lab1.Models.Engine;
+using Itmo.ObjectOrientedProgramming.Lab1.Models.HullShip;
 using Itmo.ObjectOrientedProgramming.Lab1.Models.Obstacles;
-using Itmo.ObjectOrientedProgramming.Lab1.Service.FabricCreateEngine;
-using Itmo.ObjectOrientedProgramming.Lab1.Service.FabricCreateHullShip;
 
 namespace Itmo.ObjectOrientedProgramming.Lab1.Entities.SpaceShip;
 
 public class AvgureShip : SpaceShipBase, ISpaceShipWithJumpEngine, ISpaceShipWithDeflector
 {
     public AvgureShip(bool antineutrinoEmitter = false, bool photonDeflector = false)
-        : base(antineutrinoEmitter, HullShipClass.Third, EngineType.E)
+        : base(antineutrinoEmitter, new HullShipThirdClass(), new ImpulseEngineE())
     {
         Deflector = new DeflectorThirdClass();
         if (photonDeflector)
             Deflector = new PhotonDeflector(Deflector);
-        JumpEngine = FabricCreateEngineJump.CreateJumpEngine(EngineType.Alpha);
+        JumpEngine = new JumpEngineAlpha();
     }
 
     public DeflectorBase Deflector { get; }
@@ -28,6 +27,8 @@ public class AvgureShip : SpaceShipBase, ISpaceShipWithJumpEngine, ISpaceShipWit
     public override bool TakeDamage(IObstaclesBase obstacles,  int countObstacles)
     {
         int residualDamage = Deflector.TakeDamage(obstacles, countObstacles);
-        return (HullShip.TakeDamage(obstacles, countObstacles) - residualDamage) > 0;
+        if (residualDamage < 0)
+            return HullShip.TakeDamage(residualDamage) > 0;
+        return true;
     }
 }

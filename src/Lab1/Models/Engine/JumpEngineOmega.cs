@@ -9,6 +9,6 @@ public class JumpEngineOmega : IJumpEngine
 
     public double CalculateFuelRequired(int distance)
     {
-       return FuelConsumptionAe * distance * Math.Log10(distance);
+       return FuelConsumptionAe * distance * Math.Log2(distance);
     }
 }

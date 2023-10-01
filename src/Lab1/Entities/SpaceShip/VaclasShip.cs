@@ -1,20 +1,19 @@
 using Itmo.ObjectOrientedProgramming.Lab1.Models.Deflector;
 using Itmo.ObjectOrientedProgramming.Lab1.Models.Engine;
+using Itmo.ObjectOrientedProgramming.Lab1.Models.HullShip;
 using Itmo.ObjectOrientedProgramming.Lab1.Models.Obstacles;
-using Itmo.ObjectOrientedProgramming.Lab1.Service.FabricCreateEngine;
-using Itmo.ObjectOrientedProgramming.Lab1.Service.FabricCreateHullShip;
 
 namespace Itmo.ObjectOrientedProgramming.Lab1.Entities.SpaceShip;
 
-public class VaclasShip : SpaceShipBase, ISpaceShipWithJumpEngine, ISpaceShipWithDeflector
+public sealed class VaclasShip : SpaceShipBase, ISpaceShipWithJumpEngine, ISpaceShipWithDeflector
 {
     public VaclasShip(bool antineutrinoEmitter = false, bool photonDeflector = false)
-        : base(antineutrinoEmitter, HullShipClass.Second, EngineType.E)
+        : base(antineutrinoEmitter, new HullShipSecondClass(), new ImpulseEngineE())
     {
         Deflector = new DeflectorFirstClass();
         if (photonDeflector)
             Deflector = new PhotonDeflector(Deflector);
-        JumpEngine = FabricCreateEngineJump.CreateJumpEngine(EngineType.Gamma);
+        JumpEngine = new JumpEngineGamma();
     }
 
     public DeflectorBase Deflector { get; }
@@ -28,6 +27,8 @@ public class VaclasShip : SpaceShipBase, ISpaceShipWithJumpEngine, ISpaceShipWit
     public override bool TakeDamage(IObstaclesBase obstacles,  int countObstacles)
     {
         int residualDamage = Deflector.TakeDamage(obstacles, countObstacles);
-        return (HullShip.TakeDamage(obstacles, countObstacles) - residualDamage) > 0;
+        if (residualDamage < 0)
+            return HullShip.TakeDamage(residualDamage) > 0;
+        return true;
     }
 }

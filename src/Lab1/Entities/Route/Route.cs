@@ -43,10 +43,10 @@ public class Route
     {
         _spaceBases = new List<SpaceBase>
         {
-            new OrdinarySpace(50, new ObstacleAsteroid()),
-            new OrdinarySpace(50, new ObstacleMeteorite()),
-            new NebulaeNitrineParticles(50, new CosmoWhale()),
-            new NebulaeIncreasedDensitySpace(50, new ObstacleAntimatterFlares()),
+            new OrdinarySpace(2, new ObstacleAsteroid()),
+            new OrdinarySpace(3, new ObstacleMeteorite()),
+            new NebulaeNeutrinoParticles(1, new CosmoWhale()),
+            new NebulaeIncreasedDensitySpace(4, new ObstacleAntimatterFlares()),
         };
     }
 
@@ -54,13 +54,12 @@ public class Route
     {
         foreach (SpaceShipBase spaceShip in _spaceShips)
         {
-            NavigateRouteResult navigateRouteResult = new NavigateRouteResult.Success(0);
+            double fuelQuantity = 0;
+            NavigateRouteResult navigateRouteResult = new NavigateRouteResult.Success(spaceShip, fuelQuantity);
             foreach (SpaceBase space in _spaceBases)
             {
-                if (!space.NavigateSpace(spaceShip, out navigateRouteResult))
-                {
+                if (space.NavigateSpace(spaceShip, out navigateRouteResult, ref fuelQuantity) is false)
                     break;
-                }
             }
 
             NavigateRouteResult.ProcessingResults(navigateRouteResult);

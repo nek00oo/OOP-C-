@@ -7,10 +7,12 @@ public abstract class HullShipBase
     protected int HealthPoints { get; set; }
     public bool IsDestroyed() => HealthPoints <= 0;
 
-    public int TakeDamage(IObstaclesBase obstacle, int countObstacles)
+    public abstract int TakeDamage(IObstaclesBase obstacle, int countObstacles);
+
+    public int TakeDamage(int residualDamage)
     {
-        if (!IsDestroyed())
-            HealthPoints -= obstacle.Damage * countObstacles;
+        if (IsDestroyed() is false)
+            HealthPoints += residualDamage;
         return HealthPoints;
     }
 }

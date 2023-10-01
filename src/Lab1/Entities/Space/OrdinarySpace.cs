@@ -12,13 +12,16 @@ public class OrdinarySpace : SpaceBase
     public OrdinarySpace(int distance, IObstacleSpace obstacleSpace, int countObstacles = 0)
         : base(distance)
     {
-        _countObstacles = countObstacles;
+        _countObstacles = 0;
+        if (countObstacles > 0)
+            _countObstacles = countObstacles;
         _obstacleSpace = obstacleSpace;
     }
 
-    public override bool NavigateSpace(SpaceShipBase spaceShip, out NavigateRouteResult navigateRouteResult)
+    public override bool NavigateSpace(SpaceShipBase spaceShip, out NavigateRouteResult navigateRouteResult, ref double fuelQuantity)
     {
-        navigateRouteResult = new NavigateRouteResult.Success(spaceShip.UsingFuelImpulseEngine(Distance));
+        fuelQuantity += spaceShip.UsingFuelImpulseEngine(Distance);
+        navigateRouteResult = new NavigateRouteResult.Success(spaceShip, fuelQuantity);
         return OvercomingObstacles(spaceShip, ref navigateRouteResult);
     }
 

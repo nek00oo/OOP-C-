@@ -1,8 +1,8 @@
 namespace Itmo.ObjectOrientedProgramming.Lab1.Models.Deflector;
 
-public class DeflectorDecorator : DeflectorBase
+public abstract class DeflectorDecorator : DeflectorBase
 {
-    public DeflectorDecorator(DeflectorBase deflector)
+    protected DeflectorDecorator(DeflectorBase deflector)
     {
         Wrappee = deflector;
     }
