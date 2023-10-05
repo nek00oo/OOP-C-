@@ -8,12 +8,11 @@ public class CosmoWhale : IObstacleNebulaeNitrineParticles
 {
     public int Damage { get; } = 300;
 
-    public bool InteractionWithSpaceShip(SpaceShipBase spaceShip,  int countObstacles, ref NavigateRouteResult navigateRouteResult)
+    public NavigateRouteResult InteractionWithSpaceShip(SpaceShipBase spaceShip,  int countObstacles)
     {
         if (spaceShip is ISpaceShipWithAntineutrinoEmitter || spaceShip.TakeDamageResult(this, countObstacles) is DamageResult.DamageSustained)
-            return true;
+            return new NavigateRouteResult.Success();
 
-        navigateRouteResult = new NavigateRouteResult.ShipIsDestroyed();
-        return false;
+        return new NavigateRouteResult.ShipIsDestroyed();
     }
 }

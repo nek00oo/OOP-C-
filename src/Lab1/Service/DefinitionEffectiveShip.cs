@@ -9,7 +9,7 @@ public class DefinitionEffectiveShip
 {
     private readonly IReadOnlyCollection<SpaceShipBase> _spaceShips;
     private readonly Route _route;
-    private IFuelExchange _fuelExchange;
+    private readonly IFuelExchange _fuelExchange;
 
     public DefinitionEffectiveShip(IReadOnlyCollection<SpaceShipBase> spaceShips, Route route, IFuelExchange fuelExchange)
     {
@@ -17,8 +17,6 @@ public class DefinitionEffectiveShip
         _route = route;
         _fuelExchange = fuelExchange;
     }
-
-    public void ChangeExchange(IFuelExchange fuelExchange) => _fuelExchange = fuelExchange;
 
     public SpaceShipBase? FindEffectiveShip()
     {

@@ -25,9 +25,9 @@ public class Route
         NavigateRouteResult navigateRouteResult = new NavigateRouteResult.Success();
         foreach (SpaceBase space in _spaceBases)
         {
-            if (space.NavigateSpace(spaceShip, ref navigateRouteResult) is false)
-                break;
-            navigateRouteResult = new NavigateRouteResult.Success();
+            navigateRouteResult = space.NavigateSpace(spaceShip);
+            if (navigateRouteResult is not NavigateRouteResult.Success)
+                return navigateRouteResult;
         }
 
         return navigateRouteResult;
@@ -35,12 +35,14 @@ public class Route
 
     public NavigateRouteResult PriceRoute(SpaceShipBase spaceShip, IFuelExchange fuelExchange, ref double currentPriceRoute)
     {
+        NavigateRouteResult navigateRouteResult = new NavigateRouteResult.Success();
         foreach (SpaceBase space in _spaceBases)
         {
-            if (space.NavigateSpacePrice(spaceShip, fuelExchange, ref currentPriceRoute) is false)
-                return new NavigateRouteResult.ShipIsLost();
+            navigateRouteResult = space.NavigateSpacePrice(spaceShip, fuelExchange, ref currentPriceRoute);
+            if (navigateRouteResult is not NavigateRouteResult.Success)
+                return navigateRouteResult;
         }
 
-        return new NavigateRouteResult.Success();
+        return navigateRouteResult;
     }
 }

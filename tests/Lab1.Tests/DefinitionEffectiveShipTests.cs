@@ -65,11 +65,11 @@ public class DefinitionEffectiveShipTests
 
     [Theory]
     [MemberData(nameof(GetSpaceAndSpaceShips))]
-    public void DefinitionEffectiveShip_ReturnMostEfficientShip(SpaceBase spaces, params SpaceShipBase[] spaceShips)
+    public void DefinitionEffectiveShip_ReturnMostEfficientShip(SpaceBase space, params SpaceShipBase[] spaceShips)
     {
         // Arrange
         IFuelExchange fuelExchange = new FuelExchange(10, 20);
-        var route = new Route(spaces);
+        var route = new Route(space);
         var spaceShipsCollection = spaceShips.ToList();
 
         var definitionEffectiveShipService = new DefinitionEffectiveShip(spaceShipsCollection, route, fuelExchange);
@@ -83,11 +83,11 @@ public class DefinitionEffectiveShipTests
 
     [Theory]
     [MemberData(nameof(GetSpaceListAndSpaceShipList))]
-    public void DefinitionEffectiveShip_ReturnMostEfficientShipTest2(IReadOnlyCollection<SpaceBase> space, IReadOnlyCollection<SpaceShipBase> spaceShips)
+    public void DefinitionEffectiveShip_ReturnMostEfficientShipTest2(IReadOnlyCollection<SpaceBase> spaces, IReadOnlyCollection<SpaceShipBase> spaceShips)
     {
         // Arrange
         IFuelExchange fuelExchange = new FuelExchange(10, 20);
-        var route = new Route(space);
+        var route = new Route(spaces);
 
         var definitionEffectiveShipService = new DefinitionEffectiveShip(spaceShips, route, fuelExchange);
 

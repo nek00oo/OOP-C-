@@ -8,12 +8,11 @@ public class ObstacleAntimatterFlares : IObstacleNebulaeIncreasedDensitySpace
 {
     public int Damage { get; } = 1;
 
-    public bool InteractionWithSpaceShip(SpaceShipBase spaceShip,  int countObstacles, ref NavigateRouteResult navigateRouteResult)
+    public NavigateRouteResult InteractionWithSpaceShip(SpaceShipBase spaceShip,  int countObstacles)
     {
         if (countObstacles == 0 || (spaceShip is ISpaceShipWithDeflector { Deflector: PhotonDeflector deflector } && deflector.TakeDamagePhotonDeflector(this, countObstacles)))
-            return true;
+            return new NavigateRouteResult.Success();
 
-        navigateRouteResult = new NavigateRouteResult.CrewKilled();
-        return false;
+        return new NavigateRouteResult.CrewKilled();
     }
 }

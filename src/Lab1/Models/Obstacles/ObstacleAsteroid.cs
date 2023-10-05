@@ -8,12 +8,11 @@ public class ObstacleAsteroid : IObstacleSpace
 {
     public int Damage { get; } = 60;
 
-    public bool InteractionWithSpaceShip(SpaceShipBase spaceShip,  int countObstacles, ref NavigateRouteResult navigateRouteResult)
+    public NavigateRouteResult InteractionWithSpaceShip(SpaceShipBase spaceShip,  int countObstacles)
     {
         if (spaceShip.TakeDamageResult(this, countObstacles) is DamageResult.DamageSustained)
-            return true;
+            return new NavigateRouteResult.Success();
 
-        navigateRouteResult = new NavigateRouteResult.ShipIsDestroyed();
-        return false;
+        return new NavigateRouteResult.ShipIsDestroyed();
     }
 }

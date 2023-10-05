@@ -25,35 +25,34 @@ public class NebulaeNeutrinoParticles : SpaceBase
     {
     }
 
-    public override bool NavigateSpace(SpaceShipBase spaceShip, ref NavigateRouteResult navigateRouteResult)
+    public override NavigateRouteResult NavigateSpace(SpaceShipBase spaceShip)
     {
         spaceShip.ImpulseEngine.SlowingSpeed(NitroParticlesSpeedEffectAe, Distance);
         if (spaceShip.ImpulseEngine.Speed > 0)
         {
-            return OvercomingObstacles(spaceShip, ref navigateRouteResult);
+            return OvercomingObstacles(spaceShip);
         }
 
-        navigateRouteResult = new NavigateRouteResult.ShipIsLost();
-        return false;
+        return new NavigateRouteResult.ShipIsLost();
     }
 
-    public override bool NavigateSpacePrice(SpaceShipBase spaceShip, IFuelExchange fuelExchange, ref double currentPriceRoute)
+    public override NavigateRouteResult NavigateSpacePrice(SpaceShipBase spaceShip, IFuelExchange fuelExchange, ref double currentPriceRoute)
     {
         spaceShip.ImpulseEngine.SlowingSpeed(NitroParticlesSpeedEffectAe, Distance);
         if (spaceShip.ImpulseEngine.Speed > 0)
         {
             currentPriceRoute +=
                 fuelExchange.FuelCost(spaceShip.ImpulseEngine, spaceShip.UsingFuelImpulseEngine(Distance));
-            return true;
+            return OvercomingObstacles(spaceShip);
         }
 
-        return false;
+        return new NavigateRouteResult.ShipIsLost();
     }
 
-    public override bool OvercomingObstacles(SpaceShipBase spaceShip, ref NavigateRouteResult navigateRouteResult)
+    public override NavigateRouteResult OvercomingObstacles(SpaceShipBase spaceShip)
     {
         if (_obstacleNebulaeNeutrinoParticles == null)
-            return true;
-        return _obstacleNebulaeNeutrinoParticles.InteractionWithSpaceShip(spaceShip, _countObstacles, ref navigateRouteResult);
+            return new NavigateRouteResult.Success();
+        return _obstacleNebulaeNeutrinoParticles.InteractionWithSpaceShip(spaceShip, _countObstacles);
     }
 }

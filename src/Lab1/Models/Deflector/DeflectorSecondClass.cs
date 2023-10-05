@@ -6,10 +6,7 @@ namespace Itmo.ObjectOrientedProgramming.Lab1.Models.Deflector;
 
 public class DeflectorSecondClass : DeflectorBase
 {
-    public DeflectorSecondClass()
-    {
-        HealthPoints = 150;
-    }
+    public override int HealthPoints { get; protected set; } = 150;
 
     public override DamageResult TakeDamageResult(IObstaclesBase obstacle, int countObstacles)
     {

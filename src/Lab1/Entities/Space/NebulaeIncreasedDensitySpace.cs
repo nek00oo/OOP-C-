@@ -21,34 +21,33 @@ public class NebulaeIncreasedDensitySpace : SpaceBase
 
     public NebulaeIncreasedDensitySpace(int distance)
         : base(distance) { }
-    public override bool NavigateSpace(SpaceShipBase spaceShip,  ref NavigateRouteResult navigateRouteResult)
+    public override NavigateRouteResult NavigateSpace(SpaceShipBase spaceShip)
     {
         if (spaceShip is ISpaceShipWithJumpEngine spaceShipWithJumpEngine &&
             spaceShipWithJumpEngine.JumpEngine.JumpRange >= Distance)
         {
-            return OvercomingObstacles(spaceShip, ref navigateRouteResult);
+            return OvercomingObstacles(spaceShip);
         }
 
-        navigateRouteResult = new NavigateRouteResult.ShipIsLost();
-        return false;
+        return new NavigateRouteResult.ShipIsLost();
     }
 
-    public override bool NavigateSpacePrice(SpaceShipBase spaceShip, IFuelExchange fuelExchange, ref double currentPriceRoute)
+    public override NavigateRouteResult NavigateSpacePrice(SpaceShipBase spaceShip, IFuelExchange fuelExchange, ref double currentPriceRoute)
     {
         if (spaceShip is ISpaceShipWithJumpEngine spaceShipWithJumpEngine &&
             spaceShipWithJumpEngine.JumpEngine.JumpRange >= Distance)
         {
             currentPriceRoute += fuelExchange.FuelCost(spaceShipWithJumpEngine.JumpEngine, spaceShipWithJumpEngine.UsingFuelJumpEngine(Distance));
-            return true;
+            return OvercomingObstacles(spaceShip);
         }
 
-        return false;
+        return new NavigateRouteResult.ShipIsLost();
     }
 
-    public override bool OvercomingObstacles(SpaceShipBase spaceShip, ref NavigateRouteResult navigateRouteResult)
+    public override NavigateRouteResult OvercomingObstacles(SpaceShipBase spaceShip)
     {
         if (_obstacleNebulaeIncreasedDensitySpace == null)
-            return true;
-        return _obstacleNebulaeIncreasedDensitySpace.InteractionWithSpaceShip(spaceShip, _countObstacles, ref navigateRouteResult);
+            return new NavigateRouteResult.Success();
+        return _obstacleNebulaeIncreasedDensitySpace.InteractionWithSpaceShip(spaceShip, _countObstacles);
     }
 }

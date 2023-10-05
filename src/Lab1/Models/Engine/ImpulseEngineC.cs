@@ -5,7 +5,6 @@ public class ImpulseEngineC : IImpulseEngine
     public int FuelConsumptionAe { get; } = 50;
 
     public int Speed { get; private set; } = 50;
-    public double FuelQuantity { get; private set; }
 
     public double CalculateFuelRequired(int distance)
     {

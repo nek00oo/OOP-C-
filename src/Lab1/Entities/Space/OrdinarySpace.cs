@@ -22,21 +22,21 @@ public class OrdinarySpace : SpaceBase
     public OrdinarySpace(int distance)
         : base(distance) { }
 
-    public override bool NavigateSpace(SpaceShipBase spaceShip, ref NavigateRouteResult navigateRouteResult)
+    public override NavigateRouteResult NavigateSpace(SpaceShipBase spaceShip)
     {
-        return OvercomingObstacles(spaceShip, ref navigateRouteResult);
+        return OvercomingObstacles(spaceShip);
     }
 
-    public override bool NavigateSpacePrice(SpaceShipBase spaceShip, IFuelExchange fuelExchange, ref double currentPriceRoute)
+    public override NavigateRouteResult NavigateSpacePrice(SpaceShipBase spaceShip, IFuelExchange fuelExchange, ref double currentPriceRoute)
     {
         currentPriceRoute += fuelExchange.FuelCost(spaceShip.ImpulseEngine, spaceShip.UsingFuelImpulseEngine(Distance));
-        return true;
+        return OvercomingObstacles(spaceShip);
     }
 
-    public override bool OvercomingObstacles(SpaceShipBase spaceShip, ref NavigateRouteResult navigateRouteResult)
+    public override NavigateRouteResult OvercomingObstacles(SpaceShipBase spaceShip)
     {
         if (_obstacleSpace == null)
-            return true;
-        return _obstacleSpace.InteractionWithSpaceShip(spaceShip, _countObstacles, ref navigateRouteResult);
+            return new NavigateRouteResult.Success();
+        return _obstacleSpace.InteractionWithSpaceShip(spaceShip, _countObstacles);
     }
 }
