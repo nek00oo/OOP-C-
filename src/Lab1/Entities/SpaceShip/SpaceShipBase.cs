@@ -1,26 +1,25 @@
 using Itmo.ObjectOrientedProgramming.Lab1.Models.Engine;
 using Itmo.ObjectOrientedProgramming.Lab1.Models.HullShip;
 using Itmo.ObjectOrientedProgramming.Lab1.Models.Obstacles;
+using Itmo.ObjectOrientedProgramming.Lab1.Service.TransferDamage;
 
 namespace Itmo.ObjectOrientedProgramming.Lab1.Entities.SpaceShip;
 
 public abstract class SpaceShipBase
 {
-    protected SpaceShipBase(bool antineutrinoEmitter, HullShipBase hullShip, IImpulseEngine impulseEngine)
+    protected SpaceShipBase(HullShipBase hullShip, IImpulseEngine impulseEngine)
     {
-        AntineutrinoEmitter = antineutrinoEmitter;
         HullShip = hullShip;
         ImpulseEngine = impulseEngine;
     }
 
     public IImpulseEngine ImpulseEngine { get; }
-    public bool AntineutrinoEmitter { get; }
     protected HullShipBase HullShip { get; }
 
-    public void UsingFuelImpulseEngine(int distance)
+    public double UsingFuelImpulseEngine(int distance)
     {
-        ImpulseEngine.CalculateFuelRequired(distance);
+        return ImpulseEngine.CalculateFuelRequired(distance);
     }
 
-    public abstract bool TakeDamage(IObstaclesBase obstacles, int countObstacles);
+    public abstract DamageResult TakeDamageResult(IObstaclesBase obstacles, int countObstacles);
 }

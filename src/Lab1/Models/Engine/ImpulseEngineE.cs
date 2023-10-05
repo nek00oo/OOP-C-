@@ -9,9 +9,9 @@ public class ImpulseEngineE : IImpulseEngine
     public int Speed { get; private set; } = 150;
     public double FuelQuantity { get; private set; }
 
-    public void CalculateFuelRequired(int distance)
+    public double CalculateFuelRequired(int distance)
     {
-        FuelQuantity += FuelConsumptionAe * Math.Exp(distance);
+        return FuelConsumptionAe * Math.Exp(distance);
     }
 
     public void SlowingSpeed(int nitroParticlesSpeedEffectAe, int distance)

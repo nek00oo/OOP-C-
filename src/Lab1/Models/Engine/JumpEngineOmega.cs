@@ -8,8 +8,8 @@ public class JumpEngineOmega : IJumpEngine
     public int JumpRange { get; } = 125;
     public double FuelQuantity { get; private set; }
 
-    public void CalculateFuelRequired(int distance)
+    public double CalculateFuelRequired(int distance)
     {
-       FuelQuantity += FuelConsumptionAe * distance * Math.Log2(distance);
+       return FuelConsumptionAe * distance * Math.Log2(distance);
     }
 }

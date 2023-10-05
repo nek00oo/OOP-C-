@@ -1,4 +1,6 @@
+using System;
 using Itmo.ObjectOrientedProgramming.Lab1.Models.Obstacles;
+using Itmo.ObjectOrientedProgramming.Lab1.Service.TransferDamage;
 
 namespace Itmo.ObjectOrientedProgramming.Lab1.Models.Deflector;
 
@@ -20,10 +22,11 @@ public class PhotonDeflector : DeflectorDecorator
         return HealthPointPhotonDeflector >= 0;
     }
 
-    public override int TakeDamage(IObstaclesBase obstacle, int countObstacles)
+    public override DamageResult TakeDamageResult(IObstaclesBase obstacle, int countObstacles)
     {
-        if (IsDisabled() is false)
-            HealthPoints -= obstacle.Damage * countObstacles;
-        return IsDisabled() ? HealthPoints : 0;
+        HealthPoints -= obstacle.Damage * countObstacles;
+        if (IsDisabled())
+            return new DamageResult.DamageOverflow(Math.Abs(HealthPoints));
+        return new DamageResult.DamageSustained();
     }
 }

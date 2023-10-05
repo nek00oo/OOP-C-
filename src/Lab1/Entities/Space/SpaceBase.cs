@@ -1,4 +1,5 @@
 using Itmo.ObjectOrientedProgramming.Lab1.Entities.SpaceShip;
+using Itmo.ObjectOrientedProgramming.Lab1.Service.FuelExchange;
 using Itmo.ObjectOrientedProgramming.Lab1.Service.NavigateRouteResult;
 
 namespace Itmo.ObjectOrientedProgramming.Lab1.Entities.Space;
@@ -13,5 +14,6 @@ public abstract class SpaceBase
 
     public int Distance { get; }
     public abstract bool NavigateSpace(SpaceShipBase spaceShip, ref NavigateRouteResult navigateRouteResult);
+    public abstract bool NavigateSpacePrice(SpaceShipBase spaceShip, IFuelExchange fuelExchange, ref double currentPriceRoute);
     public abstract bool OvercomingObstacles(SpaceShipBase spaceShip, ref NavigateRouteResult navigateRouteResult);
 }

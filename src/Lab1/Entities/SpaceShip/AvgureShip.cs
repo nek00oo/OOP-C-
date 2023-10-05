@@ -2,13 +2,14 @@ using Itmo.ObjectOrientedProgramming.Lab1.Models.Deflector;
 using Itmo.ObjectOrientedProgramming.Lab1.Models.Engine;
 using Itmo.ObjectOrientedProgramming.Lab1.Models.HullShip;
 using Itmo.ObjectOrientedProgramming.Lab1.Models.Obstacles;
+using Itmo.ObjectOrientedProgramming.Lab1.Service.TransferDamage;
 
 namespace Itmo.ObjectOrientedProgramming.Lab1.Entities.SpaceShip;
 
 public class AvgureShip : SpaceShipBase, ISpaceShipWithJumpEngine, ISpaceShipWithDeflector
 {
-    public AvgureShip(bool antineutrinoEmitter = false, bool photonDeflector = false)
-        : base(antineutrinoEmitter, new HullShipThirdClass(), new ImpulseEngineE())
+    public AvgureShip(bool photonDeflector = false)
+        : base(new HullShipThirdClass(), new ImpulseEngineE())
     {
         Deflector = new DeflectorThirdClass();
         if (photonDeflector)
@@ -19,16 +20,17 @@ public class AvgureShip : SpaceShipBase, ISpaceShipWithJumpEngine, ISpaceShipWit
     public DeflectorBase Deflector { get; }
     public IJumpEngine JumpEngine { get; }
 
-    public void UsingFuelJumpEngine(int distance)
+    public double UsingFuelJumpEngine(int distance)
     {
-        JumpEngine.CalculateFuelRequired(distance);
+        return JumpEngine.CalculateFuelRequired(distance);
     }
 
-    public override bool TakeDamage(IObstaclesBase obstacles,  int countObstacles)
+    public override DamageResult TakeDamageResult(IObstaclesBase obstacles,  int countObstacles)
     {
-        int residualDamage = Deflector.TakeDamage(obstacles, countObstacles);
-        if (residualDamage < 0)
-            return HullShip.TakeDamage(residualDamage) > 0;
-        return true;
+        if (Deflector.IsDisabled())
+            return HullShip.TakeDamageResult(obstacles, countObstacles);
+        if (Deflector.IsDisabled() is false && Deflector.TakeDamageResult(obstacles, countObstacles) is DamageResult.DamageOverflow damageOverflow)
+            return HullShip.TakeDamageResult(damageOverflow.Damage);
+        return new DamageResult.DamageSustained();
     }
 }

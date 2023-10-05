@@ -4,6 +4,8 @@
         <RootNamespace>Itmo.ObjectOrientedProgramming.Lab1.Tests</RootNamespace>
         <IsPackable>false</IsPackable>
         <IsTestProject>true</IsTestProject>
+        <NoWarn>$(NoWarn);CA1707</NoWarn>
+        <NoWarn>$(NoWarn);CA1024</NoWarn>
     </PropertyGroup>
 
     <ItemGroup>

@@ -6,5 +6,5 @@ public interface ISpaceShipWithJumpEngine
 {
     public IJumpEngine JumpEngine { get; }
 
-    public void UsingFuelJumpEngine(int distance);
+    public double UsingFuelJumpEngine(int distance);
 }

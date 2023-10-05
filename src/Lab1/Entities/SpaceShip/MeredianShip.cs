@@ -2,13 +2,14 @@ using Itmo.ObjectOrientedProgramming.Lab1.Models.Deflector;
 using Itmo.ObjectOrientedProgramming.Lab1.Models.Engine;
 using Itmo.ObjectOrientedProgramming.Lab1.Models.HullShip;
 using Itmo.ObjectOrientedProgramming.Lab1.Models.Obstacles;
+using Itmo.ObjectOrientedProgramming.Lab1.Service.TransferDamage;
 
 namespace Itmo.ObjectOrientedProgramming.Lab1.Entities.SpaceShip;
 
-public class MeredianShip : SpaceShipBase, ISpaceShipWithDeflector
+public class MeredianShip : SpaceShipBase, ISpaceShipWithDeflector, ISpaceShipWithAntineutrinoEmitter
 {
-    public MeredianShip(bool antineutrinoEmitter = false, bool photonDeflector = false)
-        : base(antineutrinoEmitter, new HullShipSecondClass(), new ImpulseEngineE())
+    public MeredianShip(bool photonDeflector = false)
+        : base(new HullShipSecondClass(), new ImpulseEngineE())
     {
         Deflector = new DeflectorSecondClass();
         if (photonDeflector)
@@ -16,11 +17,13 @@ public class MeredianShip : SpaceShipBase, ISpaceShipWithDeflector
     }
 
     public DeflectorBase Deflector { get; }
-    public override bool TakeDamage(IObstaclesBase obstacles,  int countObstacles)
+    public bool AntineutrinoEmitter { get; } = true;
+    public override DamageResult TakeDamageResult(IObstaclesBase obstacles,  int countObstacles)
     {
-        int residualDamage = Deflector.TakeDamage(obstacles, countObstacles);
-        if (residualDamage < 0)
-            return HullShip.TakeDamage(residualDamage) > 0;
-        return true;
+        if (Deflector.IsDisabled())
+            return HullShip.TakeDamageResult(obstacles, countObstacles);
+        if (Deflector.IsDisabled() is false && Deflector.TakeDamageResult(obstacles, countObstacles) is DamageResult.DamageOverflow damageOverflow)
+            return HullShip.TakeDamageResult(damageOverflow.Damage);
+        return new DamageResult.DamageSustained();
     }
 }
