@@ -3,9 +3,9 @@ using Itmo.ObjectOrientedProgramming.Lab1.Entities.Route;
 using Itmo.ObjectOrientedProgramming.Lab1.Entities.SpaceShip;
 using Itmo.ObjectOrientedProgramming.Lab1.Service.FuelExchange;
 
-namespace Itmo.ObjectOrientedProgramming.Lab1.Service;
+namespace Itmo.ObjectOrientedProgramming.Lab1.Service.DefinitionEffectiveShip;
 
-public class DefinitionEffectiveShip
+public class DefinitionEffectiveShip : ICanFindEffectiveShip
 {
     private readonly IReadOnlyCollection<SpaceShipBase> _spaceShips;
     private readonly Route _route;
@@ -24,10 +24,10 @@ public class DefinitionEffectiveShip
         double minPriceRoute = double.MaxValue;
         foreach (SpaceShipBase spaceShip in _spaceShips)
         {
-            double currentPriceRoute = 0;
-            if (_route.PriceRoute(spaceShip, _fuelExchange, ref currentPriceRoute) is NavigateRouteResult.NavigateRouteResult.Success && currentPriceRoute < minPriceRoute)
+            if (_route.RouteResult(spaceShip, _fuelExchange) is NavigateRouteResult.NavigateRouteResult.SuccessPriceAndTimeForRoute successPriceRoute
+                && successPriceRoute.PriceForRoute < minPriceRoute)
             {
-                minPriceRoute = currentPriceRoute;
+                minPriceRoute = successPriceRoute.PriceForRoute;
                 moreEffectiveSpaceShip = spaceShip;
             }
         }

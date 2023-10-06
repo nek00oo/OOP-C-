@@ -6,7 +6,7 @@ using Itmo.ObjectOrientedProgramming.Lab1.Service.TransferDamage;
 
 namespace Itmo.ObjectOrientedProgramming.Lab1.Entities.SpaceShip;
 
-public sealed class VaclasShip : SpaceShipBase, ISpaceShipWithJumpEngine, ISpaceShipWithDeflector
+public sealed class VaclasShip : SpaceShipBase, IHaveJumpEngine, IHaveDeflector
 {
     public VaclasShip(bool photonDeflector = false)
         : base(new HullShipSecondClass(), new ImpulseEngineE())

@@ -4,9 +4,11 @@ namespace Itmo.ObjectOrientedProgramming.Lab1.Models.Engine;
 
 public class ImpulseEngineE : IImpulseEngine
 {
-    public int FuelConsumptionAe { get; } = 75;
+    private const int FuelConsumptionAeImpulseEngineE = 75;
+    private const int SpeedImpulseEngineE = 5;
+    public int FuelConsumptionAe => FuelConsumptionAeImpulseEngineE;
 
-    public int Speed { get; private set; } = 150;
+    public int Speed { get; private set; } = SpeedImpulseEngineE;
 
     public double CalculateFuelRequired(int distance)
     {
@@ -15,6 +17,6 @@ public class ImpulseEngineE : IImpulseEngine
 
     public void SlowingSpeed(int nitroParticlesSpeedEffectAe, int distance)
     {
-        Speed -= nitroParticlesSpeedEffectAe * distance / 4;
+        Speed -= nitroParticlesSpeedEffectAe * distance / 10;
     }
 }

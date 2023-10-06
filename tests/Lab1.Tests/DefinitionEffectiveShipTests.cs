@@ -4,7 +4,7 @@ using Itmo.ObjectOrientedProgramming.Lab1.Entities.Route;
 using Itmo.ObjectOrientedProgramming.Lab1.Entities.Space;
 using Itmo.ObjectOrientedProgramming.Lab1.Entities.SpaceShip;
 using Itmo.ObjectOrientedProgramming.Lab1.Models.Obstacles;
-using Itmo.ObjectOrientedProgramming.Lab1.Service;
+using Itmo.ObjectOrientedProgramming.Lab1.Service.DefinitionEffectiveShip;
 using Itmo.ObjectOrientedProgramming.Lab1.Service.FuelExchange;
 using Xunit;
 
@@ -16,7 +16,7 @@ public class DefinitionEffectiveShipTests
     {
         yield return new object[]
         {
-            new OrdinarySpace(30),
+            new OrdinarySpace(20),
             new PleasureShuttle(),
             new VaclasShip(),
         };
@@ -28,13 +28,7 @@ public class DefinitionEffectiveShipTests
         };
         yield return new object[]
         {
-            new NebulaeNeutrinoParticles(50),
-            new VaclasShip(),
-            new PleasureShuttle(),
-        };
-        yield return new object[]
-        {
-            new NebulaeNeutrinoParticles(50),
+            new NebulaeNeutrinoParticles(14),
             new VaclasShip(),
             new PleasureShuttle(),
         };
@@ -45,7 +39,7 @@ public class DefinitionEffectiveShipTests
         var spaces = new List<SpaceBase>()
         {
             new OrdinarySpace(40, new ObstacleMeteorite()),
-            new NebulaeNeutrinoParticles(20),
+            new NebulaeNeutrinoParticles(2),
             new NebulaeIncreasedDensitySpace(75, new ObstacleAntimatterFlares()),
         };
         var spaceShips = new List<SpaceShipBase>()
@@ -71,7 +65,6 @@ public class DefinitionEffectiveShipTests
         IFuelExchange fuelExchange = new FuelExchange(10, 20);
         var route = new Route(space);
         var spaceShipsCollection = spaceShips.ToList();
-
         var definitionEffectiveShipService = new DefinitionEffectiveShip(spaceShipsCollection, route, fuelExchange);
 
         // Act
@@ -88,7 +81,6 @@ public class DefinitionEffectiveShipTests
         // Arrange
         IFuelExchange fuelExchange = new FuelExchange(10, 20);
         var route = new Route(spaces);
-
         var definitionEffectiveShipService = new DefinitionEffectiveShip(spaceShips, route, fuelExchange);
 
         // Act

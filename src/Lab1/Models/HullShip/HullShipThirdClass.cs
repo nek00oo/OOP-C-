@@ -6,19 +6,24 @@ namespace Itmo.ObjectOrientedProgramming.Lab1.Models.HullShip;
 
 public class HullShipThirdClass : HullShipBase
 {
+    private const int HealthPointsHullShipThirdClass = 252;
+    private const int CoefficientAbsorptionSmallDamageForHullShipThirdClass = 5;
+    private const int CoefficientAbsorptionAverageDamageForHullShipThirdClass = 2;
+    private const int SmallDamage = 70;
+    private const int AverageDamage = 170;
     public HullShipThirdClass()
     {
-        HealthPoints = 252;
+        HealthPoints = HealthPointsHullShipThirdClass;
     }
 
     public override DamageResult TakeDamageResult(IObstaclesBase obstacle, int countObstacles)
     {
         if (IsDestroyed() is false)
         {
-            if (obstacle.Damage < 65)
-                HealthPoints -= obstacle.Damage / 5 * countObstacles;
-            else if (obstacle.Damage < 170)
-                HealthPoints -= obstacle.Damage / 2 * countObstacles;
+            if (obstacle.Damage < SmallDamage)
+                HealthPoints -= obstacle.Damage / CoefficientAbsorptionSmallDamageForHullShipThirdClass * countObstacles;
+            else if (obstacle.Damage < AverageDamage)
+                HealthPoints -= obstacle.Damage / CoefficientAbsorptionAverageDamageForHullShipThirdClass * countObstacles;
             else
                 HealthPoints -= obstacle.Damage * countObstacles;
         }

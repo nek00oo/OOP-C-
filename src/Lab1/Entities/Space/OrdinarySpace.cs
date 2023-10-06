@@ -1,3 +1,4 @@
+using System;
 using Itmo.ObjectOrientedProgramming.Lab1.Entities.SpaceShip;
 using Itmo.ObjectOrientedProgramming.Lab1.Models.Obstacles;
 using Itmo.ObjectOrientedProgramming.Lab1.Service.FuelExchange;
@@ -13,24 +14,28 @@ public class OrdinarySpace : SpaceBase
     public OrdinarySpace(int distance, IObstacleSpace obstacleSpace, int countObstacles = 1)
         : base(distance)
     {
-        _countObstacles = 0;
-        if (countObstacles > 0)
-            _countObstacles = countObstacles;
+        if (countObstacles < 1)
+            throw new InvalidOperationException("The number of obstacles cannot be negative");
+        _countObstacles = countObstacles;
         _obstacleSpace = obstacleSpace;
     }
 
     public OrdinarySpace(int distance)
         : base(distance) { }
 
-    public override NavigateRouteResult NavigateSpace(SpaceShipBase spaceShip)
+    public override NavigateRouteResult NavigateSpace(SpaceShipBase spaceShip, IFuelExchange fuelExchange)
     {
-        return OvercomingObstacles(spaceShip);
-    }
+        double timeOvercomingSpace = Math.Round(Distance / (double)spaceShip.ImpulseEngine.Speed, 2);
+        double priceOvercomingSpace =
+            Math.Round(fuelExchange.FuelCost(spaceShip.ImpulseEngine, spaceShip.UsingFuelImpulseEngine(Distance)), 2);
 
-    public override NavigateRouteResult NavigateSpacePrice(SpaceShipBase spaceShip, IFuelExchange fuelExchange, ref double currentPriceRoute)
-    {
-        currentPriceRoute += fuelExchange.FuelCost(spaceShip.ImpulseEngine, spaceShip.UsingFuelImpulseEngine(Distance));
-        return OvercomingObstacles(spaceShip);
+        NavigateRouteResult resultOvercomingObstacles = OvercomingObstacles(spaceShip);
+        if (resultOvercomingObstacles is NavigateRouteResult.Success)
+        {
+            return new NavigateRouteResult.SuccessPriceAndTimeForRoute(priceOvercomingSpace, timeOvercomingSpace);
+        }
+
+        return resultOvercomingObstacles;
     }
 
     public override NavigateRouteResult OvercomingObstacles(SpaceShipBase spaceShip)

@@ -11,9 +11,8 @@ public abstract class DeflectorDecorator : DeflectorBase
         HealthPoints = Wrappee.HealthPoints;
     }
 
-    public DeflectorBase Wrappee { get; protected set; }
-
     public sealed override int HealthPoints { get; protected set; }
+    private DeflectorBase Wrappee { get; }
 
     public override DamageResult TakeDamageResult(IObstaclesBase obstacle, int countObstacles)
     {

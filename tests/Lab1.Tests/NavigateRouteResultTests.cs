@@ -3,6 +3,7 @@ using Itmo.ObjectOrientedProgramming.Lab1.Entities.Route;
 using Itmo.ObjectOrientedProgramming.Lab1.Entities.Space;
 using Itmo.ObjectOrientedProgramming.Lab1.Entities.SpaceShip;
 using Itmo.ObjectOrientedProgramming.Lab1.Models.Obstacles;
+using Itmo.ObjectOrientedProgramming.Lab1.Service.FuelExchange;
 using Itmo.ObjectOrientedProgramming.Lab1.Service.NavigateRouteResult;
 using Xunit;
 
@@ -16,11 +17,13 @@ public class NavigateRouteResultTests
         {
             new PleasureShuttle(),
             new NavigateRouteResult.ShipIsLost(),
+            new FuelExchange(5, 7),
         };
         yield return new object[]
         {
             new AvgureShip(),
             new NavigateRouteResult.ShipIsLost(),
+            new FuelExchange(1, 2),
         };
     }
 
@@ -30,11 +33,13 @@ public class NavigateRouteResultTests
         {
             new VaclasShip(),
             new NavigateRouteResult.CrewKilled(),
+            new FuelExchange(10, 20),
         };
         yield return new object[]
         {
             new VaclasShip(photonDeflector: true),
-            new NavigateRouteResult.Success(),
+            new NavigateRouteResult.SuccessPriceAndTimeForRoute(3025000, 1),
+            new FuelExchange(10, 20),
         };
     }
 
@@ -44,28 +49,31 @@ public class NavigateRouteResultTests
         {
             new VaclasShip(),
             new NavigateRouteResult.ShipIsDestroyed(),
+            new FuelExchange(10, 20),
         };
         yield return new object[]
         {
             new AvgureShip(),
-            new NavigateRouteResult.Success(),
+            new NavigateRouteResult.SuccessPriceAndTimeForRoute(22261.97, 1.25),
+            new FuelExchange(2, 7),
         };
         yield return new object[]
         {
             new MeredianShip(),
-            new NavigateRouteResult.Success(),
+            new NavigateRouteResult.SuccessPriceAndTimeForRoute(11130.99, 1.25),
+            new FuelExchange(1, 5),
         };
     }
 
     [Theory]
     [MemberData(nameof(GetShipAndNavigateRouteResultTest1))]
-    public void NavigateRouteResult_ReturnNavigateNebulaeIncreasedDensitySpaceResult(SpaceShipBase spaceShip, NavigateRouteResult expectedRouteResult)
+    public void NavigateRouteResult_ReturnNavigateNebulaeIncreasedDensitySpaceResult(SpaceShipBase spaceShip, NavigateRouteResult expectedRouteResult, IFuelExchange fuelExchange)
     {
         // Arrange
         var route = new Route(new NebulaeIncreasedDensitySpace(55));
 
         // Act
-        NavigateRouteResult result = route.RouteResult(spaceShip);
+        NavigateRouteResult result = route.RouteResult(spaceShip, fuelExchange);
 
         // Assert
         Assert.Equal(expectedRouteResult, result);
@@ -73,13 +81,13 @@ public class NavigateRouteResultTests
 
     [Theory]
     [MemberData(nameof(GetShipAndNavigateRouteResultTest2))]
-    public void NavigateRouteResult_ReturnNavigateNebulaeIncreasedDensitySpaceResult_WhenObstacleAntimatterFlares(SpaceShipBase spaceShip, NavigateRouteResult expectedRouteResult)
+    public void NavigateRouteResult_ReturnNavigateNebulaeIncreasedDensitySpaceResult_WhenObstacleAntimatterFlares(SpaceShipBase spaceShip, NavigateRouteResult expectedRouteResult, IFuelExchange fuelExchange)
     {
         // Arrange
         var route = new Route(new NebulaeIncreasedDensitySpace(55, new ObstacleAntimatterFlares()));
 
         // Act
-        NavigateRouteResult result = route.RouteResult(spaceShip);
+        NavigateRouteResult result = route.RouteResult(spaceShip, fuelExchange);
 
         // Assert
         Assert.Equal(expectedRouteResult, result);
@@ -87,13 +95,13 @@ public class NavigateRouteResultTests
 
     [Theory]
     [MemberData(nameof(GetShipAndNavigateRouteResultTest3))]
-    public void NavigateRouteResult_ReturnNavigateNebulaeNeutrinoParticlesResult_WhenCosmoWhale(SpaceShipBase spaceShip, NavigateRouteResult expectedRouteResult)
+    public void NavigateRouteResult_ReturnNavigateNebulaeNeutrinoParticlesResult_WhenCosmoWhale(SpaceShipBase spaceShip, NavigateRouteResult expectedRouteResult, IFuelExchange fuelExchange)
     {
         // Arrange
-        var route = new Route(new NebulaeNeutrinoParticles(20, new CosmoWhale()));
+        var route = new Route(new NebulaeNeutrinoParticles(5, new CosmoWhale()));
 
         // Act
-        NavigateRouteResult result = route.RouteResult(spaceShip);
+        NavigateRouteResult result = route.RouteResult(spaceShip, fuelExchange);
 
         // Assert
         Assert.Equal(expectedRouteResult, result);

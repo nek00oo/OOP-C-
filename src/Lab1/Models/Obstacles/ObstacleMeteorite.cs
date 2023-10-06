@@ -6,7 +6,8 @@ namespace Itmo.ObjectOrientedProgramming.Lab1.Models.Obstacles;
 
 public class ObstacleMeteorite : IObstacleSpace
 {
-    public int Damage { get; } = 100;
+    private const int DamageMeteorite = 100;
+    public int Damage => DamageMeteorite;
 
     public NavigateRouteResult InteractionWithSpaceShip(SpaceShipBase spaceShip, int countObstacles)
     {

@@ -6,14 +6,19 @@ namespace Itmo.ObjectOrientedProgramming.Lab1.Models.Deflector;
 
 public class DeflectorSecondClass : DeflectorBase
 {
-    public override int HealthPoints { get; protected set; } = 150;
+    private const int HealthPointsDeflectorSecondClass = 150;
+    private const int CoefficientAbsorptionSmallDamageForDeflectorSecondClass = 4;
+    private const int CoefficientAbsorptionAverageDamageForDeflectorSecondClass = 2;
+    private const int SmallDamage = 70;
+    private const int AverageDamage = 170;
+    public override int HealthPoints { get; protected set; } = HealthPointsDeflectorSecondClass;
 
     public override DamageResult TakeDamageResult(IObstaclesBase obstacle, int countObstacles)
     {
-        if (obstacle.Damage < 70)
-            HealthPoints -= obstacle.Damage / 4 * countObstacles;
-        else if (obstacle.Damage < 170)
-            HealthPoints -= obstacle.Damage / 2 * countObstacles;
+        if (obstacle.Damage < SmallDamage)
+            HealthPoints -= obstacle.Damage / CoefficientAbsorptionSmallDamageForDeflectorSecondClass * countObstacles;
+        else if (obstacle.Damage < AverageDamage)
+            HealthPoints -= obstacle.Damage / CoefficientAbsorptionAverageDamageForDeflectorSecondClass * countObstacles;
         else
             HealthPoints -= obstacle.Damage * countObstacles;
         if (IsDisabled())

@@ -10,8 +10,8 @@ public class FuelExchange : IFuelExchange
         GravitationalMatterPriceFuel = gravitationalMatterFuelAe;
     }
 
-    public double ActivePlasmaPriceFuel { get; private set; }
-    public double GravitationalMatterPriceFuel { get; private set; }
+    public double ActivePlasmaPriceFuel { get; }
+    public double GravitationalMatterPriceFuel { get; }
 
     public double FuelCost(IFuelUsage fuelType, double fuelQuantity)
     {

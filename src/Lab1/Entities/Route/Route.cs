@@ -20,29 +20,25 @@ public class Route
         _spaceBases = spaceBases;
     }
 
-    public NavigateRouteResult RouteResult(SpaceShipBase spaceShip)
+    public NavigateRouteResult RouteResult(SpaceShipBase spaceShip, IFuelExchange fuelExchange)
     {
-        NavigateRouteResult navigateRouteResult = new NavigateRouteResult.Success();
+        double priceOvercomingRoute = 0;
+        double timeOvercomingRoute = 0;
+        NavigateRouteResult navigateRouteResult;
         foreach (SpaceBase space in _spaceBases)
         {
-            navigateRouteResult = space.NavigateSpace(spaceShip);
-            if (navigateRouteResult is not NavigateRouteResult.Success)
+            navigateRouteResult = space.NavigateSpace(spaceShip, fuelExchange);
+            if (navigateRouteResult is NavigateRouteResult.SuccessPriceAndTimeForRoute successPriceRoute)
+            {
+                priceOvercomingRoute += successPriceRoute.PriceForRoute;
+                timeOvercomingRoute += successPriceRoute.TimeRoute;
+            }
+
+            if (navigateRouteResult is not NavigateRouteResult.SuccessPriceAndTimeForRoute)
                 return navigateRouteResult;
         }
 
-        return navigateRouteResult;
-    }
-
-    public NavigateRouteResult PriceRoute(SpaceShipBase spaceShip, IFuelExchange fuelExchange, ref double currentPriceRoute)
-    {
-        NavigateRouteResult navigateRouteResult = new NavigateRouteResult.Success();
-        foreach (SpaceBase space in _spaceBases)
-        {
-            navigateRouteResult = space.NavigateSpacePrice(spaceShip, fuelExchange, ref currentPriceRoute);
-            if (navigateRouteResult is not NavigateRouteResult.Success)
-                return navigateRouteResult;
-        }
-
+        navigateRouteResult = new NavigateRouteResult.SuccessPriceAndTimeForRoute(priceOvercomingRoute, timeOvercomingRoute);
         return navigateRouteResult;
     }
 }

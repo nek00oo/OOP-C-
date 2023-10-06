@@ -6,7 +6,8 @@ namespace Itmo.ObjectOrientedProgramming.Lab1.Models.Obstacles;
 
 public class ObstacleAsteroid : IObstacleSpace
 {
-    public int Damage { get; } = 60;
+    private const int DamageAsteroid = 60;
+    public int Damage => DamageAsteroid;
 
     public NavigateRouteResult InteractionWithSpaceShip(SpaceShipBase spaceShip,  int countObstacles)
     {

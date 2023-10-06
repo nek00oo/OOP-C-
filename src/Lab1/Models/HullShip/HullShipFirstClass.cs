@@ -6,9 +6,10 @@ namespace Itmo.ObjectOrientedProgramming.Lab1.Models.HullShip;
 
 public class HullShipFirstClass : HullShipBase
 {
+    private const int HealthPointsHullShipFirstClass = 100;
     public HullShipFirstClass()
     {
-        HealthPoints = 100;
+        HealthPoints = HealthPointsHullShipFirstClass;
     }
 
     public override DamageResult TakeDamageResult(IObstaclesBase obstacle, int countObstacles)

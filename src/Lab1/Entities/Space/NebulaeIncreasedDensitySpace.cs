@@ -1,3 +1,4 @@
+using System;
 using Itmo.ObjectOrientedProgramming.Lab1.Entities.SpaceShip;
 using Itmo.ObjectOrientedProgramming.Lab1.Models.Obstacles;
 using Itmo.ObjectOrientedProgramming.Lab1.Service.FuelExchange;
@@ -13,32 +14,33 @@ public class NebulaeIncreasedDensitySpace : SpaceBase
     public NebulaeIncreasedDensitySpace(int distance, IObstacleNebulaeIncreasedDensitySpace obstacleNebulaeIncreasedDensitySpace, int countObstacles = 1)
         : base(distance)
     {
-        _countObstacles = 1;
-        if (countObstacles > 0)
-            _countObstacles = countObstacles;
+        if (countObstacles < 1)
+            throw new InvalidOperationException("The number of obstacles cannot be negative");
+        _countObstacles = countObstacles;
         _obstacleNebulaeIncreasedDensitySpace = obstacleNebulaeIncreasedDensitySpace;
     }
 
     public NebulaeIncreasedDensitySpace(int distance)
-        : base(distance) { }
-    public override NavigateRouteResult NavigateSpace(SpaceShipBase spaceShip)
+        : base(distance)
     {
-        if (spaceShip is ISpaceShipWithJumpEngine spaceShipWithJumpEngine &&
-            spaceShipWithJumpEngine.JumpEngine.JumpRange >= Distance)
-        {
-            return OvercomingObstacles(spaceShip);
-        }
-
-        return new NavigateRouteResult.ShipIsLost();
     }
 
-    public override NavigateRouteResult NavigateSpacePrice(SpaceShipBase spaceShip, IFuelExchange fuelExchange, ref double currentPriceRoute)
+    public override NavigateRouteResult NavigateSpace(SpaceShipBase spaceShip, IFuelExchange fuelExchange)
     {
-        if (spaceShip is ISpaceShipWithJumpEngine spaceShipWithJumpEngine &&
+        if (spaceShip is IHaveJumpEngine spaceShipWithJumpEngine &&
             spaceShipWithJumpEngine.JumpEngine.JumpRange >= Distance)
         {
-            currentPriceRoute += fuelExchange.FuelCost(spaceShipWithJumpEngine.JumpEngine, spaceShipWithJumpEngine.UsingFuelJumpEngine(Distance));
-            return OvercomingObstacles(spaceShip);
+            const double timeOvercomingSpace = 1;
+            double priceOvercomingSpace =
+                Math.Round(fuelExchange.FuelCost(spaceShipWithJumpEngine.JumpEngine, spaceShipWithJumpEngine.UsingFuelJumpEngine(Distance)), 2);
+
+            NavigateRouteResult resultOvercomingObstacles = OvercomingObstacles(spaceShip);
+            if (resultOvercomingObstacles is NavigateRouteResult.Success)
+            {
+                return new NavigateRouteResult.SuccessPriceAndTimeForRoute(priceOvercomingSpace, timeOvercomingSpace);
+            }
+
+            return resultOvercomingObstacles;
         }
 
         return new NavigateRouteResult.ShipIsLost();
