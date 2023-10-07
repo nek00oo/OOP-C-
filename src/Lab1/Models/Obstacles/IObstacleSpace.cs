@@ -1,5 +1,5 @@
 namespace Itmo.ObjectOrientedProgramming.Lab1.Models.Obstacles;
 
-public interface IObstacleSpace : IObstaclesBase
+public interface IObstacleSpace : IObstacle
 {
 }

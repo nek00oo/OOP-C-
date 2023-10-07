@@ -6,31 +6,26 @@ using Itmo.ObjectOrientedProgramming.Lab1.Service.TransferDamage;
 
 namespace Itmo.ObjectOrientedProgramming.Lab1.Entities.SpaceShip;
 
-public sealed class StellaShip : SpaceShipBase, IJumpEngineHolder, IDeflectorHolder
+public class StellaShip : ISpaceShipWithJumpEngine, ISpaceShipWithDeflector
 {
-    public StellaShip(bool photonDeflector = false)
-        : base(new HullShipFirstClass(), new ImpulseEngineC())
+    public StellaShip(IDeflector deflector)
     {
-        Deflector = new DeflectorFirstClass();
-        if (photonDeflector)
-            Deflector = new PhotonDeflector(Deflector);
+        Deflector = deflector;
         JumpEngine = new JumpEngineOmega();
+        HullShip = new HullShipFirstClass();
+        ImpulseEngine = new ImpulseEngineC();
     }
 
-    public DeflectorBase Deflector { get; }
+    public IDeflector Deflector { get; }
     public IJumpEngine JumpEngine { get; }
 
-    public double UsingFuelJumpEngine(int distance)
+    public IImpulseEngine ImpulseEngine { get; }
+    public IHullShip HullShip { get; }
+    public DamageResult TakeDamageResult(IObstacle obstacles,  int countObstacles)
     {
-        return JumpEngine.CalculateFuelRequired(distance);
-    }
-
-    public override DamageResult TakeDamageResult(IObstaclesBase obstacles,  int countObstacles)
-    {
-        if (Deflector.IsDisabled())
-            return HullShip.TakeDamageResult(obstacles, countObstacles);
-        if (Deflector.IsDisabled() is false && Deflector.TakeDamageResult(obstacles, countObstacles) is DamageResult.DamageOverflow damageOverflow)
-            return HullShip.TakeDamageResult(damageOverflow.Damage);
-        return new DamageResult.DamageSustained();
+        DamageResult deflectorDamageResult = Deflector.TakeDamageResult(obstacles, countObstacles);
+        if (deflectorDamageResult is DamageResult.DamageOverflow damageOverflow)
+            return HullShip.TakeDamageResult(obstacles, damageOverflow.CountObstacle);
+        return deflectorDamageResult;
     }
 }

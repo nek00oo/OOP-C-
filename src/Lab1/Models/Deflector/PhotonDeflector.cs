@@ -2,10 +2,10 @@ using Itmo.ObjectOrientedProgramming.Lab1.Models.Obstacles;
 
 namespace Itmo.ObjectOrientedProgramming.Lab1.Models.Deflector;
 
-public class PhotonDeflector : DeflectorDecorator
+public class PhotonDeflector : DeflectorDecorator, IPhotonDeflector
 {
     private const int HpPhotonDeflector = 3;
-    public PhotonDeflector(DeflectorBase deflector)
+    public PhotonDeflector(IDeflector deflector)
         : base(deflector)
     {
     }

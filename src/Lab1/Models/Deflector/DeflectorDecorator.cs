@@ -3,19 +3,21 @@ using Itmo.ObjectOrientedProgramming.Lab1.Service.TransferDamage;
 
 namespace Itmo.ObjectOrientedProgramming.Lab1.Models.Deflector;
 
-public abstract class DeflectorDecorator : DeflectorBase
+public abstract class DeflectorDecorator : IDeflector
 {
-    protected DeflectorDecorator(DeflectorBase deflector)
+    private IDeflector _wrappee;
+
+    protected DeflectorDecorator(IDeflector deflector)
     {
-        Wrappee = deflector;
-        HealthPoints = Wrappee.HealthPoints;
+        _wrappee = deflector;
+        HealthPoints = _wrappee.HealthPoints;
     }
 
-    public sealed override int HealthPoints { get; protected set; }
-    private DeflectorBase Wrappee { get; }
+    public int HealthPoints { get; }
+    public bool IsDisabled() => HealthPoints < 0;
 
-    public override DamageResult TakeDamageResult(IObstaclesBase obstacle, int countObstacles)
+    public DamageResult TakeDamageResult(IObstacle obstacle, int countObstacles)
     {
-        return Wrappee.TakeDamageResult(obstacle, countObstacles);
+        return _wrappee.TakeDamageResult(obstacle, countObstacles);
     }
 }

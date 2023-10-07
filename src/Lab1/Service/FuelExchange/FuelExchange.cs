@@ -13,12 +13,12 @@ public class FuelExchange : IFuelExchange
     public double ActivePlasmaPriceFuel { get; }
     public double GravitationalMatterPriceFuel { get; }
 
-    public double FuelCost(IFuelUsage fuelType, double fuelQuantity)
+    public double FuelCost(IFuelUsage fuelType)
     {
         return fuelType switch
         {
-            IFuelUsageActivePlasma => fuelQuantity * ActivePlasmaPriceFuel,
-            IFuelUsageGravitonMatter => fuelQuantity * GravitationalMatterPriceFuel,
+            IFuelUsageActivePlasma => fuelType.FuelQuantity * ActivePlasmaPriceFuel,
+            IFuelUsageGravitonMatter => fuelType.FuelQuantity * GravitationalMatterPriceFuel,
             _ => throw new InvalidOperationException("indefinite type of fuel"),
         };
     }

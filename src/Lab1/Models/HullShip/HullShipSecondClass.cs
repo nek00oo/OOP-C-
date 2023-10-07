@@ -1,22 +1,19 @@
-using System;
 using Itmo.ObjectOrientedProgramming.Lab1.Models.Obstacles;
 using Itmo.ObjectOrientedProgramming.Lab1.Service.TransferDamage;
 
 namespace Itmo.ObjectOrientedProgramming.Lab1.Models.HullShip;
 
-public class HullShipSecondClass : HullShipBase
+public class HullShipSecondClass : IHullShip
 {
     private const int HealthPointsHullShipSecondClass = 120;
     private const int CoefficientAbsorptionSmallDamageForHullShipSecondClass = 3;
     private const int CoefficientAbsorptionAverageDamageForHullShipSecondClass = 2;
     private const int SmallDamage = 70;
     private const int AverageDamage = 170;
-    public HullShipSecondClass()
-    {
-        HealthPoints = HealthPointsHullShipSecondClass;
-    }
 
-    public override DamageResult TakeDamageResult(IObstaclesBase obstacle, int countObstacles)
+    public int HealthPoints { get; private set; } = HealthPointsHullShipSecondClass;
+    public bool IsDestroyed() => HealthPoints <= 0;
+    public DamageResult TakeDamageResult(IObstacle obstacle, int countObstacles)
     {
         if (IsDestroyed() is false)
         {
@@ -29,7 +26,7 @@ public class HullShipSecondClass : HullShipBase
         }
 
         if (IsDestroyed())
-            return new DamageResult.DamageOverflow(Math.Abs(HealthPoints));
+            return new DamageResult.Destroyed();
         return new DamageResult.DamageSustained();
     }
 }

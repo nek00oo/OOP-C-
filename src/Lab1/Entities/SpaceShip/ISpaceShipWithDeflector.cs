@@ -2,7 +2,7 @@ using Itmo.ObjectOrientedProgramming.Lab1.Models.Deflector;
 
 namespace Itmo.ObjectOrientedProgramming.Lab1.Entities.SpaceShip;
 
-public interface IDeflectorHolder
+public interface ISpaceShipWithDeflector : ISpaceShip
 {
-    public DeflectorBase Deflector { get; }
+    public IDeflector Deflector { get; }
 }

@@ -1,4 +1,5 @@
 using System;
+using Itmo.ObjectOrientedProgramming.Lab1.Service.FlySpaceResult;
 
 namespace Itmo.ObjectOrientedProgramming.Lab1.Models.Engine;
 
@@ -6,11 +7,17 @@ public class JumpEngineOmega : IJumpEngine
 {
     private const int FuelConsumptionAeJumpEngine = 50;
     private const int JumpRangeOmegaEngine = 125;
-    public int FuelConsumptionAe => FuelConsumptionAeJumpEngine;
-    public int JumpRange => JumpRangeOmegaEngine;
-
-    public double CalculateFuelRequired(int distance)
+    private const double JumpTimeOmegaEngine = 2;
+    public double FuelQuantity { get; private set; }
+    public FlyResult FlyingSpaceСanal(int distance)
     {
-       return FuelConsumptionAe * distance * Math.Log2(distance);
+        if (distance < JumpRangeOmegaEngine)
+            return new FlyResult.SuccessFlight(JumpTimeOmegaEngine);
+        return new FlyResult.ImpossibleFlight();
+    }
+
+    public void CalculateFuelRequired(int distance)
+    {
+       FuelQuantity += FuelConsumptionAeJumpEngine * distance * Math.Log2(distance);
     }
 }

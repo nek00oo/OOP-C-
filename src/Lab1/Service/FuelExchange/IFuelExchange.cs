@@ -4,5 +4,5 @@ public interface IFuelExchange
 {
     public double ActivePlasmaPriceFuel { get; }
     public double GravitationalMatterPriceFuel { get; }
-    public double FuelCost(IFuelUsage fuelType, double fuelQuantity);
+    public double FuelCost(IFuelUsage fuelType);
 }

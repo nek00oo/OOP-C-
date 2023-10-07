@@ -1,0 +1,12 @@
+using Itmo.ObjectOrientedProgramming.Lab1.Models.Obstacles;
+using Itmo.ObjectOrientedProgramming.Lab1.Service.TransferDamage;
+
+namespace Itmo.ObjectOrientedProgramming.Lab1.Models.Deflector;
+
+public interface IDeflector
+{
+    public int HealthPoints { get; }
+    public bool IsDisabled();
+
+    public DamageResult TakeDamageResult(IObstacle obstacle, int countObstacles);
+}

@@ -1,4 +1,6 @@
 using System;
+using Itmo.ObjectOrientedProgramming.Lab1.Entities.Space;
+using Itmo.ObjectOrientedProgramming.Lab1.Service.FlySpaceResult;
 
 namespace Itmo.ObjectOrientedProgramming.Lab1.Models.Engine;
 
@@ -6,17 +8,18 @@ public class ImpulseEngineE : IImpulseEngine
 {
     private const int FuelConsumptionAeImpulseEngineE = 75;
     private const int SpeedImpulseEngineE = 5;
-    public int FuelConsumptionAe => FuelConsumptionAeImpulseEngineE;
 
-    public int Speed { get; private set; } = SpeedImpulseEngineE;
+    public int Speed { get; } = SpeedImpulseEngineE;
 
-    public double CalculateFuelRequired(int distance)
+    public double FuelQuantity { get; private set; }
+
+    public void CalculateFuelRequired(int distance)
     {
-        return FuelConsumptionAe * Math.Exp(distance);
+        FuelQuantity += FuelConsumptionAeImpulseEngineE * Math.Exp(distance);
     }
 
-    public void SlowingSpeed(int nitroParticlesSpeedEffectAe, int distance)
+    public FlyResult FlyingSpace(ISpace space)
     {
-        Speed -= nitroParticlesSpeedEffectAe * distance / 10;
+        return new FlyResult.SuccessFlight(Math.Round(space.Distance / (double)Speed, 2));
     }
 }

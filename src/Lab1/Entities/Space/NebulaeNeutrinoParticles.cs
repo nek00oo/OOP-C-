@@ -1,20 +1,21 @@
 using System;
 using Itmo.ObjectOrientedProgramming.Lab1.Entities.SpaceShip;
 using Itmo.ObjectOrientedProgramming.Lab1.Models.Obstacles;
-using Itmo.ObjectOrientedProgramming.Lab1.Service.FuelExchange;
-using Itmo.ObjectOrientedProgramming.Lab1.Service.NavigateRouteResult;
+using Itmo.ObjectOrientedProgramming.Lab1.Service.FlySpaceResult;
+using Itmo.ObjectOrientedProgramming.Lab1.Service.RouteResult;
 
 namespace Itmo.ObjectOrientedProgramming.Lab1.Entities.Space;
 
-public class NebulaeNeutrinoParticles : SpaceBase
+public class NebulaeNeutrinoParticles : ISpace
 {
-    private const int NitroParticlesSpeedEffectAe = 2;
     private readonly IObstacleNebulaeNitrineParticles? _obstacleNebulaeNeutrinoParticles;
     private readonly int _countObstacles;
 
     public NebulaeNeutrinoParticles(int distance, IObstacleNebulaeNitrineParticles obstacleNebulaeNeutrinoParticles, int countObstacles = 1)
-        : base(distance)
     {
+        if (distance < 1)
+            throw new InvalidOperationException("The distance of space cannot be negative");
+        Distance = distance;
         if (countObstacles < 1)
             throw new InvalidOperationException("The number of obstacles cannot be negative");
         _countObstacles = countObstacles;
@@ -22,33 +23,32 @@ public class NebulaeNeutrinoParticles : SpaceBase
     }
 
     public NebulaeNeutrinoParticles(int distance)
-        : base(distance) { }
-
-    public override NavigateRouteResult NavigateSpace(SpaceShipBase spaceShip, IFuelExchange fuelExchange)
     {
-        spaceShip.ImpulseEngine.SlowingSpeed(NitroParticlesSpeedEffectAe, Distance);
-        if (spaceShip.ImpulseEngine.Speed > 0)
+        if (distance < 1)
+            throw new InvalidOperationException("The distance of space cannot be negative");
+        Distance = distance;
+    }
+
+    public int NitroParticlesSpeedEffectAe { get; } = 2;
+    public int Distance { get; }
+
+    public IRouteResult NavigateSpace(ISpaceShip spaceShip)
+    {
+        if (spaceShip.ImpulseEngine.FlyingSpace(this) is FlyResult.SuccessFlight successFlight)
         {
-            double timeOvercomingSpace = Math.Round(Distance / (double)spaceShip.ImpulseEngine.Speed, 2);
-            double priceOvercomingSpace =
-                Math.Round(fuelExchange.FuelCost(spaceShip.ImpulseEngine, spaceShip.UsingFuelImpulseEngine(Distance)), 2);
-
-            NavigateRouteResult resultOvercomingObstacles = OvercomingObstacles(spaceShip);
-            if (resultOvercomingObstacles is NavigateRouteResult.Success)
-            {
-                return new NavigateRouteResult.SuccessPriceAndTimeForRoute(priceOvercomingSpace, timeOvercomingSpace);
-            }
-
+            ObstacleCollisionResult resultOvercomingObstacles = OvercomingObstacles(spaceShip);
+            if (resultOvercomingObstacles is ObstacleCollisionResult.Success)
+                return new NavigateRouteResult.Success(successFlight.TimeRoute);
             return resultOvercomingObstacles;
         }
 
         return new NavigateRouteResult.ShipIsLost();
     }
 
-    public override NavigateRouteResult OvercomingObstacles(SpaceShipBase spaceShip)
+    public ObstacleCollisionResult OvercomingObstacles(ISpaceShip spaceShip)
     {
         if (_obstacleNebulaeNeutrinoParticles == null)
-            return new NavigateRouteResult.Success();
+            return new ObstacleCollisionResult.Success();
         return _obstacleNebulaeNeutrinoParticles.InteractionWithSpaceShip(spaceShip, _countObstacles);
     }
 }

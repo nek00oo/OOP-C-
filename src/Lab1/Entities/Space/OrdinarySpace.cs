@@ -1,19 +1,21 @@
 using System;
 using Itmo.ObjectOrientedProgramming.Lab1.Entities.SpaceShip;
 using Itmo.ObjectOrientedProgramming.Lab1.Models.Obstacles;
-using Itmo.ObjectOrientedProgramming.Lab1.Service.FuelExchange;
-using Itmo.ObjectOrientedProgramming.Lab1.Service.NavigateRouteResult;
+using Itmo.ObjectOrientedProgramming.Lab1.Service.FlySpaceResult;
+using Itmo.ObjectOrientedProgramming.Lab1.Service.RouteResult;
 
 namespace Itmo.ObjectOrientedProgramming.Lab1.Entities.Space;
 
-public class OrdinarySpace : SpaceBase
+public class OrdinarySpace : ISpace
 {
     private readonly IObstacleSpace? _obstacleSpace;
     private readonly int _countObstacles;
 
     public OrdinarySpace(int distance, IObstacleSpace obstacleSpace, int countObstacles = 1)
-        : base(distance)
     {
+        if (distance < 1)
+            throw new InvalidOperationException("The distance of space cannot be negative");
+        Distance = distance;
         if (countObstacles < 1)
             throw new InvalidOperationException("The number of obstacles cannot be negative");
         _countObstacles = countObstacles;
@@ -21,27 +23,31 @@ public class OrdinarySpace : SpaceBase
     }
 
     public OrdinarySpace(int distance)
-        : base(distance) { }
-
-    public override NavigateRouteResult NavigateSpace(SpaceShipBase spaceShip, IFuelExchange fuelExchange)
     {
-        double timeOvercomingSpace = Math.Round(Distance / (double)spaceShip.ImpulseEngine.Speed, 2);
-        double priceOvercomingSpace =
-            Math.Round(fuelExchange.FuelCost(spaceShip.ImpulseEngine, spaceShip.UsingFuelImpulseEngine(Distance)), 2);
-
-        NavigateRouteResult resultOvercomingObstacles = OvercomingObstacles(spaceShip);
-        if (resultOvercomingObstacles is NavigateRouteResult.Success)
-        {
-            return new NavigateRouteResult.SuccessPriceAndTimeForRoute(priceOvercomingSpace, timeOvercomingSpace);
-        }
-
-        return resultOvercomingObstacles;
+        if (distance < 1)
+            throw new InvalidOperationException("The distance of space cannot be negative");
+        Distance = distance;
     }
 
-    public override NavigateRouteResult OvercomingObstacles(SpaceShipBase spaceShip)
+    public int Distance { get; }
+
+    public IRouteResult NavigateSpace(ISpaceShip spaceShip)
+    {
+        if (spaceShip.ImpulseEngine.FlyingSpace(this) is FlyResult.SuccessFlight successFlight)
+        {
+            ObstacleCollisionResult resultOvercomingObstacles = OvercomingObstacles(spaceShip);
+            if (resultOvercomingObstacles is ObstacleCollisionResult.Success)
+                return new NavigateRouteResult.Success(successFlight.TimeRoute);
+            return resultOvercomingObstacles;
+        }
+
+        return new NavigateRouteResult.ShipIsLost();
+    }
+
+    public ObstacleCollisionResult OvercomingObstacles(ISpaceShip spaceShip)
     {
         if (_obstacleSpace == null)
-            return new NavigateRouteResult.Success();
+            return new ObstacleCollisionResult.Success();
         return _obstacleSpace.InteractionWithSpaceShip(spaceShip, _countObstacles);
     }
 }

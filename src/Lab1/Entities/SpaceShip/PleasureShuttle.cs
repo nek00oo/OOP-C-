@@ -5,14 +5,11 @@ using Itmo.ObjectOrientedProgramming.Lab1.Service.TransferDamage;
 
 namespace Itmo.ObjectOrientedProgramming.Lab1.Entities.SpaceShip;
 
-public class PleasureShuttle : SpaceShipBase
+public class PleasureShuttle : ISpaceShip
 {
-    public PleasureShuttle()
-        : base(new HullShipFirstClass(), new ImpulseEngineC())
-    {
-    }
-
-    public override DamageResult TakeDamageResult(IObstaclesBase obstacles, int countObstacles)
+    public IImpulseEngine ImpulseEngine { get; } = new ImpulseEngineC();
+    public IHullShip HullShip { get; } = new HullShipFirstClass();
+    public DamageResult TakeDamageResult(IObstacle obstacles, int countObstacles)
     {
         return HullShip.TakeDamageResult(obstacles, countObstacles);
     }

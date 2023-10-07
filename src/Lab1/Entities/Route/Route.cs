@@ -1,44 +1,38 @@
 using System.Collections.Generic;
 using Itmo.ObjectOrientedProgramming.Lab1.Entities.Space;
 using Itmo.ObjectOrientedProgramming.Lab1.Entities.SpaceShip;
-using Itmo.ObjectOrientedProgramming.Lab1.Service.FuelExchange;
-using Itmo.ObjectOrientedProgramming.Lab1.Service.NavigateRouteResult;
+using Itmo.ObjectOrientedProgramming.Lab1.Service.RouteResult;
 
 namespace Itmo.ObjectOrientedProgramming.Lab1.Entities.Route;
 
 public class Route
 {
-    private readonly IReadOnlyCollection<SpaceBase> _spaceBases;
+    private readonly IReadOnlyCollection<ISpace> _spaceBases;
 
-    public Route(SpaceBase space)
+    public Route(ISpace space)
     {
-        _spaceBases = new List<SpaceBase> { space };
+        _spaceBases = new List<ISpace> { space };
     }
 
-    public Route(IReadOnlyCollection<SpaceBase> spaceBases)
+    public Route(IReadOnlyCollection<ISpace> spaceBases)
     {
         _spaceBases = spaceBases;
     }
 
-    public NavigateRouteResult RouteResult(SpaceShipBase spaceShip, IFuelExchange fuelExchange)
+    public IRouteResult RouteResult(ISpaceShip spaceShip)
     {
-        double priceOvercomingRoute = 0;
-        double timeOvercomingRoute = 0;
-        NavigateRouteResult navigateRouteResult;
-        foreach (SpaceBase space in _spaceBases)
+        double timeRoute = 0;
+        IRouteResult navigateRouteResult;
+        foreach (ISpace space in _spaceBases)
         {
-            navigateRouteResult = space.NavigateSpace(spaceShip, fuelExchange);
-            if (navigateRouteResult is NavigateRouteResult.SuccessPriceAndTimeForRoute successPriceRoute)
-            {
-                priceOvercomingRoute += successPriceRoute.PriceForRoute;
-                timeOvercomingRoute += successPriceRoute.TimeRoute;
-            }
-
-            if (navigateRouteResult is not NavigateRouteResult.SuccessPriceAndTimeForRoute)
+            navigateRouteResult = space.NavigateSpace(spaceShip);
+            if (navigateRouteResult is NavigateRouteResult.Success success)
+                timeRoute += success.TimeRoute;
+            if (navigateRouteResult is not NavigateRouteResult.Success)
                 return navigateRouteResult;
         }
 
-        navigateRouteResult = new NavigateRouteResult.SuccessPriceAndTimeForRoute(priceOvercomingRoute, timeOvercomingRoute);
+        navigateRouteResult = new NavigateRouteResult.Success(timeRoute);
         return navigateRouteResult;
     }
 }

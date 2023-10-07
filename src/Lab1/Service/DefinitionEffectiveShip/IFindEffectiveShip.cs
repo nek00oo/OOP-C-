@@ -2,7 +2,7 @@ using Itmo.ObjectOrientedProgramming.Lab1.Entities.SpaceShip;
 
 namespace Itmo.ObjectOrientedProgramming.Lab1.Service.DefinitionEffectiveShip;
 
-public interface ICanFindEffectiveShip
+public interface IFindEffectiveShip
 {
-    public SpaceShipBase? FindEffectiveShip();
+    public ISpaceShip? FindEffectiveShip();
 }

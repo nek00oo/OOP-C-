@@ -2,9 +2,9 @@ using System.Collections.Generic;
 using Itmo.ObjectOrientedProgramming.Lab1.Entities.Route;
 using Itmo.ObjectOrientedProgramming.Lab1.Entities.Space;
 using Itmo.ObjectOrientedProgramming.Lab1.Entities.SpaceShip;
+using Itmo.ObjectOrientedProgramming.Lab1.Models.Deflector;
 using Itmo.ObjectOrientedProgramming.Lab1.Models.Obstacles;
-using Itmo.ObjectOrientedProgramming.Lab1.Service.FuelExchange;
-using Itmo.ObjectOrientedProgramming.Lab1.Service.NavigateRouteResult;
+using Itmo.ObjectOrientedProgramming.Lab1.Service.RouteResult;
 using Xunit;
 
 namespace Itmo.ObjectOrientedProgramming.Lab1.Tests;
@@ -17,63 +17,63 @@ public class NavigateRouteResultTests
         {
             new PleasureShuttle(),
             new NavigateRouteResult.ShipIsLost(),
-            new FuelExchange(5, 7),
         };
+        IDeflector deflectorThirdClassForAvgure1 = new DeflectorThirdClass();
         yield return new object[]
         {
-            new AvgureShip(),
+            new AvgureShip(deflectorThirdClassForAvgure1),
             new NavigateRouteResult.ShipIsLost(),
-            new FuelExchange(1, 2),
         };
     }
 
     public static IEnumerable<object[]> GetShipAndNavigateRouteResultTest2()
     {
+        IDeflector deflectorFirstClassForVaclas1 = new DeflectorFirstClass();
         yield return new object[]
         {
-            new VaclasShip(),
-            new NavigateRouteResult.CrewKilled(),
-            new FuelExchange(10, 20),
+            new VaclasShip(deflectorFirstClassForVaclas1),
+            new ObstacleCollisionResult.CrewKilled(),
         };
+        IDeflector deflectorFirstClassForVaclas2 = new DeflectorFirstClass();
+        deflectorFirstClassForVaclas2 = new PhotonDeflector(deflectorFirstClassForVaclas2);
         yield return new object[]
         {
-            new VaclasShip(photonDeflector: true),
-            new NavigateRouteResult.SuccessPriceAndTimeForRoute(3025000, 1),
-            new FuelExchange(10, 20),
+            new VaclasShip(deflectorFirstClassForVaclas2),
+            new NavigateRouteResult.Success(1),
         };
     }
 
     public static IEnumerable<object[]> GetShipAndNavigateRouteResultTest3()
     {
+        IDeflector deflectorFirstClassForVaclas1 = new DeflectorFirstClass();
         yield return new object[]
         {
-            new VaclasShip(),
-            new NavigateRouteResult.ShipIsDestroyed(),
-            new FuelExchange(10, 20),
+            new VaclasShip(deflectorFirstClassForVaclas1),
+            new ObstacleCollisionResult.ShipIsDestroyed(),
         };
+        IDeflector deflectorThirdClassForAvgure1 = new DeflectorThirdClass();
         yield return new object[]
         {
-            new AvgureShip(),
-            new NavigateRouteResult.SuccessPriceAndTimeForRoute(22261.97, 1.25),
-            new FuelExchange(2, 7),
+            new AvgureShip(deflectorThirdClassForAvgure1),
+            new NavigateRouteResult.Success(2),
         };
+        IDeflector deflectorSecondClassForMeredian1 = new DeflectorSecondClass();
         yield return new object[]
         {
-            new MeredianShip(),
-            new NavigateRouteResult.SuccessPriceAndTimeForRoute(11130.99, 1.25),
-            new FuelExchange(1, 5),
+            new MeredianShip(deflectorSecondClassForMeredian1),
+            new NavigateRouteResult.Success(2),
         };
     }
 
     [Theory]
     [MemberData(nameof(GetShipAndNavigateRouteResultTest1))]
-    public void NavigateRouteResult_ReturnNavigateNebulaeIncreasedDensitySpaceResult(SpaceShipBase spaceShip, NavigateRouteResult expectedRouteResult, IFuelExchange fuelExchange)
+    public void NavigateRouteResult_ReturnNavigateNebulaeIncreasedDensitySpaceResult(ISpaceShip spaceShip, IRouteResult expectedRouteResult)
     {
         // Arrange
         var route = new Route(new NebulaeIncreasedDensitySpace(55));
 
         // Act
-        NavigateRouteResult result = route.RouteResult(spaceShip, fuelExchange);
+        IRouteResult result = route.RouteResult(spaceShip);
 
         // Assert
         Assert.Equal(expectedRouteResult, result);
@@ -81,13 +81,13 @@ public class NavigateRouteResultTests
 
     [Theory]
     [MemberData(nameof(GetShipAndNavigateRouteResultTest2))]
-    public void NavigateRouteResult_ReturnNavigateNebulaeIncreasedDensitySpaceResult_WhenObstacleAntimatterFlares(SpaceShipBase spaceShip, NavigateRouteResult expectedRouteResult, IFuelExchange fuelExchange)
+    public void NavigateRouteResult_ReturnNavigateNebulaeIncreasedDensitySpaceResult_WhenObstacleAntimatterFlares(ISpaceShip spaceShip, IRouteResult expectedRouteResult)
     {
         // Arrange
         var route = new Route(new NebulaeIncreasedDensitySpace(55, new ObstacleAntimatterFlares()));
 
         // Act
-        NavigateRouteResult result = route.RouteResult(spaceShip, fuelExchange);
+        IRouteResult result = route.RouteResult(spaceShip);
 
         // Assert
         Assert.Equal(expectedRouteResult, result);
@@ -95,13 +95,13 @@ public class NavigateRouteResultTests
 
     [Theory]
     [MemberData(nameof(GetShipAndNavigateRouteResultTest3))]
-    public void NavigateRouteResult_ReturnNavigateNebulaeNeutrinoParticlesResult_WhenCosmoWhale(SpaceShipBase spaceShip, NavigateRouteResult expectedRouteResult, IFuelExchange fuelExchange)
+    public void NavigateRouteResult_ReturnNavigateNebulaeNeutrinoParticlesResult_WhenCosmoWhale(ISpaceShip spaceShip, IRouteResult expectedRouteResult)
     {
         // Arrange
-        var route = new Route(new NebulaeNeutrinoParticles(5, new CosmoWhale()));
+        var route = new Route(new NebulaeNeutrinoParticles(10, new CosmoWhale()));
 
         // Act
-        NavigateRouteResult result = route.RouteResult(spaceShip, fuelExchange);
+        IRouteResult result = route.RouteResult(spaceShip);
 
         // Assert
         Assert.Equal(expectedRouteResult, result);
