@@ -11,7 +11,7 @@ public class CosmoWhale : IObstacleNebulaeNitrineParticles
 
     public NavigateRouteResult InteractionWithSpaceShip(SpaceShipBase spaceShip,  int countObstacles)
     {
-        if (spaceShip is IHaveAntineutrinoEmitter || spaceShip.TakeDamageResult(this, countObstacles) is DamageResult.DamageSustained)
+        if (spaceShip is IAntineutrinoEmitterHolder || spaceShip.TakeDamageResult(this, countObstacles) is DamageResult.DamageSustained)
             return new NavigateRouteResult.Success();
 
         return new NavigateRouteResult.ShipIsDestroyed();

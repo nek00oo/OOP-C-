@@ -2,7 +2,7 @@ using Itmo.ObjectOrientedProgramming.Lab1.Models.Engine;
 
 namespace Itmo.ObjectOrientedProgramming.Lab1.Entities.SpaceShip;
 
-public interface IHaveJumpEngine
+public interface IJumpEngineHolder
 {
     public IJumpEngine JumpEngine { get; }
 

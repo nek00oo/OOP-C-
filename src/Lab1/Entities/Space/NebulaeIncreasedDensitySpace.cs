@@ -27,7 +27,7 @@ public class NebulaeIncreasedDensitySpace : SpaceBase
 
     public override NavigateRouteResult NavigateSpace(SpaceShipBase spaceShip, IFuelExchange fuelExchange)
     {
-        if (spaceShip is IHaveJumpEngine spaceShipWithJumpEngine &&
+        if (spaceShip is IJumpEngineHolder spaceShipWithJumpEngine &&
             spaceShipWithJumpEngine.JumpEngine.JumpRange >= Distance)
         {
             const double timeOvercomingSpace = 1;

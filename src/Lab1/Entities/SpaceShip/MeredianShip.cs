@@ -6,7 +6,7 @@ using Itmo.ObjectOrientedProgramming.Lab1.Service.TransferDamage;
 
 namespace Itmo.ObjectOrientedProgramming.Lab1.Entities.SpaceShip;
 
-public class MeredianShip : SpaceShipBase, IHaveDeflector, IHaveAntineutrinoEmitter
+public class MeredianShip : SpaceShipBase, IDeflectorHolder, IAntineutrinoEmitterHolder
 {
     public MeredianShip(bool photonDeflector = false)
         : base(new HullShipSecondClass(), new ImpulseEngineE())
