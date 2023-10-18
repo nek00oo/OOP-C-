@@ -7,5 +7,6 @@ public interface ISsdBuilder
     ISsdBuilder AddPowerConsumptionV(CountType powerConsumptionV);
     ISsdBuilder AddMemoryCapacityGb(CountType memoryCapacityGb);
     ISsdBuilder AddMaxBandWidth(SpeedType maxBandWidth);
+    ISsdBuilder AddPortType(PortType portType);
     ISsd Build();
 }

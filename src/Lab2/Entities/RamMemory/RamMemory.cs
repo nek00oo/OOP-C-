@@ -1,47 +1,52 @@
+using System.Collections.Generic;
 using Itmo.ObjectOrientedProgramming.Lab2.Entities.Jedec;
 using Itmo.ObjectOrientedProgramming.Lab2.Entities.MotherBoard;
+using Itmo.ObjectOrientedProgramming.Lab2.Entities.XMP;
 using Itmo.ObjectOrientedProgramming.Lab2.Type;
 
 namespace Itmo.ObjectOrientedProgramming.Lab2.Entities.RamMemory;
 
 public class RamMemory : IRamMemory
 {
-    private CountType _memoryCount;
-    private IJedec _jedec;
-    private IXMP _xmp;
-    private RamMemoryFormFactor _formFactor;
-    private DdrType _ddr;
-
     public RamMemory(
         CountType memoryCount,
         IJedec jedec,
-        IXMP xmp,
+        IReadOnlyCollection<IXmp> xmpProfiles,
         RamMemoryFormFactor formFactor,
         DdrType ddr,
         CountType powerConsumptionV)
     {
-        _memoryCount = memoryCount;
-        _jedec = jedec;
-        _xmp = xmp;
-        _formFactor = formFactor;
-        _ddr = ddr;
+        MemoryCount = memoryCount;
+        Jedec = jedec;
+        XmpProfiles = xmpProfiles;
+        this.FormFactor = formFactor;
+        Ddr = ddr;
         PowerConsumptionV = powerConsumptionV;
     }
 
+    public CountType MemoryCount { get; }
+    public IJedec Jedec { get; }
+    public IReadOnlyCollection<IXmp> XmpProfiles { get; }
+    public RamMemoryFormFactor FormFactor { get; }
+    public DdrType Ddr { get; }
     public CountType PowerConsumptionV { get; }
 
     public bool IsRamMemoryCompatibility(IMotherboard motherboard)
     {
-        throw new System.NotImplementedException();
+        return Ddr == motherboard.DdrType && motherboard.ConnectToRamSlots();
     }
 
     public IRamMemoryBuilder Direct(IRamMemoryBuilder ramMemoryBuilder)
     {
-        ramMemoryBuilder.AddMemoryCount(_memoryCount);
-        ramMemoryBuilder.AddJedec(_jedec);
-        ramMemoryBuilder.AddXmp(_xmp);
-        ramMemoryBuilder.AddFormFactor(_formFactor);
-        ramMemoryBuilder.AddDdr(_ddr);
+        foreach (IXmp xmp in XmpProfiles)
+        {
+            ramMemoryBuilder.AddXmp(xmp);
+        }
+
+        ramMemoryBuilder.AddMemoryCount(MemoryCount);
+        ramMemoryBuilder.AddJedec(Jedec);
+        ramMemoryBuilder.AddFormFactor(FormFactor);
+        ramMemoryBuilder.AddDdr(Ddr);
         ramMemoryBuilder.AddPowerConsumptionV(PowerConsumptionV);
         return ramMemoryBuilder;
     }

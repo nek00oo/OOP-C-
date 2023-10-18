@@ -1,16 +1,11 @@
-using Itmo.ObjectOrientedProgramming.Lab2.Entities.ProcessorCoolingSystem;
+using System;
+using Itmo.ObjectOrientedProgramming.Lab2.Entities.MotherBoard;
 using Itmo.ObjectOrientedProgramming.Lab2.Type;
 
 namespace Itmo.ObjectOrientedProgramming.Lab2.Entities;
 
-public class Processor : IProcessor
+public class Processor : IProcessor, IEquatable<Processor>
 {
-    private CountType _coreFrequency;
-    private CountType _countCore;
-    private SocketType _socket;
-    private CountType _frequencyMemory;
-    private CountType _tdp;
-
     public Processor(
         CountType coreFrequency,
         CountType countCore,
@@ -19,29 +14,55 @@ public class Processor : IProcessor
         CountType tdp,
         CountType powerConsumptionV)
     {
-        _coreFrequency = coreFrequency;
-        _countCore = countCore;
-        _socket = socket;
-        _frequencyMemory = frequencyMemory;
-        _tdp = tdp;
+        CoreFrequency = coreFrequency;
+        CountCore = countCore;
+        Socket = socket;
+        FrequencyMemory = frequencyMemory;
+        Tdp = tdp;
         PowerConsumptionV = powerConsumptionV;
     }
 
+    public CountType CoreFrequency { get; }
+    public CountType CountCore { get; }
+    public SocketType Socket { get; }
+    public CountType FrequencyMemory { get; }
+    public CountType Tdp { get; }
+
     public CountType PowerConsumptionV { get; }
 
-    public bool IsCoolingSystemCompatibility(IProcessorCoolingSystem coolingSystem)
+    public bool IsProcessorCompatibility(IMotherboard motherboard)
     {
-        throw new System.NotImplementedException();
+        return Socket == motherboard.Socket && motherboard.Bios.IsProcessorCompatibleWithMotherboard(this);
     }
 
     public IProcessorBuilder Direct(IProcessorBuilder processorBuilder)
     {
-        processorBuilder.AddCoreFrequency(_coreFrequency);
-        processorBuilder.AddCountCore(_countCore);
-        processorBuilder.AddSocket(_socket);
-        processorBuilder.AddFrequencyMemory(_frequencyMemory);
-        processorBuilder.AddTdp(_tdp);
+        processorBuilder.AddCoreFrequency(CoreFrequency);
+        processorBuilder.AddCountCore(CountCore);
+        processorBuilder.AddSocket(Socket);
+        processorBuilder.AddFrequencyMemory(FrequencyMemory);
+        processorBuilder.AddTdp(Tdp);
         processorBuilder.AddPowerConsumptionV(PowerConsumptionV);
         return processorBuilder;
+    }
+
+    public bool Equals(Processor? other)
+    {
+        if (other is null) return false;
+        if (ReferenceEquals(this, other)) return true;
+        return CoreFrequency.Equals(other.CoreFrequency) && CountCore.Equals(other.CountCore) && Socket.Equals(other.Socket) && FrequencyMemory.Equals(other.FrequencyMemory) && Tdp.Equals(other.Tdp) && PowerConsumptionV.Equals(other.PowerConsumptionV);
+    }
+
+    public override bool Equals(object? obj)
+    {
+        if (obj is null) return false;
+        if (ReferenceEquals(this, obj)) return true;
+        if (obj.GetType() != this.GetType()) return false;
+        return Equals((Processor)obj);
+    }
+
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(CoreFrequency, CountCore, Socket, FrequencyMemory, Tdp, PowerConsumptionV);
     }
 }

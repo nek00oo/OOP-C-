@@ -19,7 +19,9 @@ public class WiFiAdapter : IWiFiAdapter
 
     public bool IsWiFiCompatibility(IMotherboard motherboard)
     {
-        throw new System.NotImplementedException();
+        if (motherboard is IMotherboardWithWiFiModule)
+            return false;
+        return true;
     }
 
     public IWiFiAdapterBuilder Direct(IWiFiAdapterBuilder wiFiAdapterBuilder)

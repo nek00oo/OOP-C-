@@ -11,5 +11,5 @@ public class CountType
         Count = count;
     }
 
-    public int Count { get; }
+    public int Count { get; set; }
 }

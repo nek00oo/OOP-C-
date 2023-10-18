@@ -6,15 +6,6 @@ namespace Itmo.ObjectOrientedProgramming.Lab2.Entities.MotherBoard;
 
 public class MotherBoard : IMotherboard
 {
-    private CountType _countSataPorts;
-    private CountType _countPciELines;
-    private CountType _countRamSlots;
-    private MotherboardFormFactorType _formFactor;
-    private IBios _bios;
-    private DdrType _ddrType;
-    private IChipset _chipset;
-    private SocketType _socket;
-
     public MotherBoard(
         CountType countSataPorts,
         CountType countPciELines,
@@ -25,31 +16,59 @@ public class MotherBoard : IMotherboard
         IChipset chipset,
         SocketType socket)
     {
-        _countSataPorts = countSataPorts;
-        _countPciELines = countPciELines;
-        _countRamSlots = countRamSlots;
-        _formFactor = formFactor;
-        _bios = bios;
-        _ddrType = ddrType;
-        _chipset = chipset;
-        _socket = socket;
+        CountSataPorts = countSataPorts;
+        CountPciELines = countPciELines;
+        CountRamSlots = countRamSlots;
+        FormFactor = formFactor;
+        Bios = bios;
+        DdrType = ddrType;
+        Chipset = chipset;
+        Socket = socket;
     }
 
-    public bool IsProcessorCompatibility(IProcessor processor)
+    public CountType CountSataPorts { get; }
+    public CountType CountPciELines { get; }
+    public CountType CountRamSlots { get; }
+    public MotherboardFormFactorType FormFactor { get; }
+    public IBios Bios { get; }
+    public DdrType DdrType { get; }
+    public IChipset Chipset { get; }
+    public SocketType Socket { get; }
+
+    public bool ConnectToRamSlots()
     {
-        throw new System.NotImplementedException();
+        if (CountRamSlots.Count == 0)
+            return false;
+        CountRamSlots.Count--;
+        return true;
+    }
+
+    public bool ConnectToPciEPort()
+    {
+        if (CountPciELines.Count == 0)
+            return false;
+        CountPciELines.Count--;
+        return true;
+    }
+
+    public bool ConnectToSataPort()
+    {
+        if (CountSataPorts.Count == 0)
+            return false;
+        CountSataPorts.Count--;
+        return true;
     }
 
     public IMotherBoardBuilder Direct(IMotherBoardBuilder motherBoardBuilder)
     {
-        motherBoardBuilder.AddCountSataPorts(_countSataPorts);
-        motherBoardBuilder.AddCountPciELines(_countPciELines);
-        motherBoardBuilder.AddCountRamSlots(_countRamSlots);
-        motherBoardBuilder.AddMotherboardFormFactor(_formFactor);
-        motherBoardBuilder.AddBios(_bios);
-        motherBoardBuilder.AddDdrType(_ddrType);
-        motherBoardBuilder.AddChipset(_chipset);
-        motherBoardBuilder.AddSocketType(_socket);
+        motherBoardBuilder.AddCountSataPorts(CountSataPorts);
+        motherBoardBuilder.AddCountPciELines(CountPciELines);
+        motherBoardBuilder.AddCountRamSlots(CountRamSlots);
+        motherBoardBuilder.AddMotherboardFormFactor(FormFactor);
+        motherBoardBuilder.AddBios(Bios);
+        motherBoardBuilder.AddDdrType(DdrType);
+        motherBoardBuilder.AddChipset(Chipset);
+        motherBoardBuilder.AddSocketType(Socket);
         return motherBoardBuilder;
     }
 }

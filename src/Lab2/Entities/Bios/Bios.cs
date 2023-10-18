@@ -1,26 +1,27 @@
 using System.Collections.Generic;
+using System.Linq;
 using Itmo.ObjectOrientedProgramming.Lab2.Type;
 
 namespace Itmo.ObjectOrientedProgramming.Lab2.Entities.Bios;
 
 public class Bios : IBios
 {
-    private BiosType _biosType;
-    private VersionBios _versionBios;
-    private IReadOnlyCollection<IProcessor> _processorsSupport;
-
     public Bios(
         BiosType biosType,
         VersionBios versionBios,
         IReadOnlyCollection<IProcessor> processorsSupport)
     {
-        _biosType = biosType;
-        _versionBios = versionBios;
-        _processorsSupport = processorsSupport;
+        BiosType = biosType;
+        VersionBios = versionBios;
+        ProcessorsSupport = processorsSupport;
     }
+
+    public BiosType BiosType { get; }
+    public VersionBios VersionBios { get; }
+    public IReadOnlyCollection<IProcessor> ProcessorsSupport { get; }
 
     public bool IsProcessorCompatibleWithMotherboard(IProcessor processor)
     {
-        throw new System.NotImplementedException();
+        return ProcessorsSupport.Contains(processor);
     }
 }

@@ -1,16 +1,23 @@
 using System;
+using System.Collections.Generic;
 using Itmo.ObjectOrientedProgramming.Lab2.Entities.Jedec;
+using Itmo.ObjectOrientedProgramming.Lab2.Entities.XMP;
 using Itmo.ObjectOrientedProgramming.Lab2.Type;
 
 namespace Itmo.ObjectOrientedProgramming.Lab2.Entities.RamMemory;
 
 public class RamMemoryBuilder : IRamMemoryBuilder
 {
+    private readonly List<IXmp> _xmpProfiles;
     private CountType? _memoryCount;
     private IJedec? _jedec;
-    private IXMP? _xmp;
     private RamMemoryFormFactor? _formFactor;
     private DdrType? _ddr;
+
+    public RamMemoryBuilder()
+    {
+        _xmpProfiles = new List<IXmp>();
+    }
 
     public CountType? PowerConsumptionV { get; private set; }
 
@@ -26,9 +33,9 @@ public class RamMemoryBuilder : IRamMemoryBuilder
         return this;
     }
 
-    public IRamMemoryBuilder AddXmp(IXMP xmp)
+    public IRamMemoryBuilder AddXmp(IXmp xmp)
     {
-        _xmp = xmp;
+        _xmpProfiles.Add(xmp);
         return this;
     }
 
@@ -55,7 +62,7 @@ public class RamMemoryBuilder : IRamMemoryBuilder
         return new RamMemory(
             _memoryCount ?? throw new ArgumentNullException(nameof(_memoryCount)),
             _jedec ?? throw new ArgumentNullException(nameof(_jedec)),
-            _xmp ?? throw new ArgumentNullException(nameof(_xmp)),
+            _xmpProfiles ?? throw new ArgumentNullException(nameof(_xmpProfiles)),
             _formFactor ?? throw new ArgumentNullException(nameof(_formFactor)),
             _ddr ?? throw new ArgumentNullException(nameof(_ddr)),
             PowerConsumptionV ?? throw new ArgumentNullException(nameof(PowerConsumptionV)));

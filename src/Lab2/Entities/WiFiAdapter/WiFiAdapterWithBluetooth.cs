@@ -21,7 +21,7 @@ public class WiFiAdapterWithBluetooth : IWiFiAdapter, IBluetoothCapable
 
     public bool IsWiFiCompatibility(IMotherboard motherboard)
     {
-        throw new System.NotImplementedException();
+        return motherboard is not IMotherboardWithWiFiModule;
     }
 
     public IWiFiAdapterBuilder Direct(IWiFiAdapterBuilder wiFiAdapterBuilder)

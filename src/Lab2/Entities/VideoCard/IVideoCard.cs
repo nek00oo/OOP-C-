@@ -1,8 +1,11 @@
-using Itmo.ObjectOrientedProgramming.Lab2.Entities.MotherBoard;
+using Itmo.ObjectOrientedProgramming.Lab2.Type;
 
 namespace Itmo.ObjectOrientedProgramming.Lab2.Entities.VideoCard;
 
 public interface IVideoCard : IVideoCardBuilderDirect, IConsumeEnergy, IComputerComponent
 {
-    public bool IsVideoCardCompatibility(IMotherboard motherboard);
+    public SizeType VideoCardSizeType { get; }
+    public CountType CountVideoMemory { get; }
+    public PciEVersion PciEVersion { get; }
+    public CountType FrequencyChip { get; }
 }

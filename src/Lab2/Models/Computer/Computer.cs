@@ -7,8 +7,9 @@ using Itmo.ObjectOrientedProgramming.Lab2.Entities.ProcessorCoolingSystem;
 using Itmo.ObjectOrientedProgramming.Lab2.Entities.RamMemory;
 using Itmo.ObjectOrientedProgramming.Lab2.Entities.VideoCard;
 using Itmo.ObjectOrientedProgramming.Lab2.Entities.WiFiAdapter;
+using Itmo.ObjectOrientedProgramming.Lab2.Service;
 
-namespace Itmo.ObjectOrientedProgramming.Lab2.Models;
+namespace Itmo.ObjectOrientedProgramming.Lab2.Models.Computer;
 
 public class Computer : IComputer
 {
@@ -42,5 +43,23 @@ public class Computer : IComputer
         _powerUnit = powerUnit;
         _computerCase = computerCase;
         _wiFiAdapter = wiFiAdapter;
+    }
+
+    public IConfigurator Direct(IConfigurator configurator)
+    {
+        foreach (IRamMemory ramMemory in _ramMemories)
+            configurator.AddRamMemory(ramMemory);
+        foreach (IExternalMemory externalMemory in _externalMemories)
+            configurator.AddExternalMemory(externalMemory);
+        configurator.AddMotherboard(_motherboard);
+        configurator.AddProcessor(_processor);
+        configurator.AddProcessorCoolingSystem(_processorCoolingSystem);
+        configurator.AddPowerUnitBuilder(_powerUnit);
+        configurator.AddComputerCase(_computerCase);
+        if (_videoCard != null)
+            configurator.AddVideoCard(_videoCard);
+        if (_wiFiAdapter != null)
+            configurator.AddWiFiAdapter(_wiFiAdapter);
+        return configurator;
     }
 }

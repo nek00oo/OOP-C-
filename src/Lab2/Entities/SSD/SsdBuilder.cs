@@ -8,6 +8,7 @@ public class SsdBuilder : ISsdBuilder
     private CountType? _powerConsumptionV;
     private CountType? _memoryCapacityGb;
     private SpeedType? _maxBandWidth;
+    private PortType? _portType;
 
     public ISsdBuilder AddPowerConsumptionV(CountType powerConsumptionV)
     {
@@ -27,11 +28,18 @@ public class SsdBuilder : ISsdBuilder
         return this;
     }
 
+    public ISsdBuilder AddPortType(PortType portType)
+    {
+        _portType = portType;
+        return this;
+    }
+
     public ISsd Build()
     {
         return new Ssd(
             _powerConsumptionV ?? throw new ArgumentNullException(nameof(_powerConsumptionV)),
             _memoryCapacityGb ?? throw new ArgumentNullException(nameof(_memoryCapacityGb)),
-            _maxBandWidth ?? throw new ArgumentNullException(nameof(_maxBandWidth)));
+            _maxBandWidth ?? throw new ArgumentNullException(nameof(_maxBandWidth)),
+            _portType ?? throw new ArgumentNullException(nameof(_portType)));
     }
 }

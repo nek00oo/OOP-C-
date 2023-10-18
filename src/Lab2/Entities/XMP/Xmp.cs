@@ -2,7 +2,7 @@ using Itmo.ObjectOrientedProgramming.Lab2.Type;
 
 namespace Itmo.ObjectOrientedProgramming.Lab2.Entities.XMP;
 
-public class Xmp : IXMP
+public class Xmp : IXmp
 {
     public Xmp(CountType frequencyChip, CountType powerConsumptionV)
     {

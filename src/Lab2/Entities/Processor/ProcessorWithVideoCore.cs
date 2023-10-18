@@ -1,17 +1,10 @@
-using Itmo.ObjectOrientedProgramming.Lab2.Entities.ProcessorCoolingSystem;
+using Itmo.ObjectOrientedProgramming.Lab2.Entities.MotherBoard;
 using Itmo.ObjectOrientedProgramming.Lab2.Type;
 
 namespace Itmo.ObjectOrientedProgramming.Lab2.Entities;
 
 public class ProcessorWithVideoCore : IProcessor, IProcessorWithVideoCore
 {
-    private VideoCoreType _videoCoreType;
-    private CountType _coreFrequency;
-    private CountType _countCore;
-    private SocketType _socket;
-    private CountType _frequencyMemory;
-    private CountType _tdp;
-
     public ProcessorWithVideoCore(
         CountType coreFrequency,
         CountType countCore,
@@ -21,41 +14,48 @@ public class ProcessorWithVideoCore : IProcessor, IProcessorWithVideoCore
         CountType powerConsumptionV,
         VideoCoreType videoCoreType)
     {
-        _coreFrequency = coreFrequency;
-        _countCore = countCore;
-        _socket = socket;
-        _frequencyMemory = frequencyMemory;
-        _tdp = tdp;
+        CoreFrequency = coreFrequency;
+        CountCore = countCore;
+        Socket = socket;
+        FrequencyMemory = frequencyMemory;
+        Tdp = tdp;
         PowerConsumptionV = powerConsumptionV;
-        _videoCoreType = videoCoreType;
+        VideoCoreType = videoCoreType;
     }
+
+    public VideoCoreType VideoCoreType { get; }
+    public CountType CoreFrequency { get; }
+    public CountType CountCore { get; }
+    public SocketType Socket { get; }
+    public CountType FrequencyMemory { get; }
+    public CountType Tdp { get; }
 
     public CountType PowerConsumptionV { get; }
 
-    public bool IsCoolingSystemCompatibility(IProcessorCoolingSystem coolingSystem)
+    public bool IsProcessorCompatibility(IMotherboard motherboard)
     {
-        throw new System.NotImplementedException();
+        return Socket == motherboard.Socket && motherboard.Bios.IsProcessorCompatibleWithMotherboard(this);
     }
 
     public IProcessorBuilder Direct(IProcessorBuilder processorBuilder)
     {
         if (processorBuilder is IProcessorWithVideoCoreBuilder processorWithVideoCoreBuilder)
         {
-            processorWithVideoCoreBuilder.AddCoreFrequency(_coreFrequency);
-            processorWithVideoCoreBuilder.AddCountCore(_countCore);
-            processorWithVideoCoreBuilder.AddSocket(_socket);
-            processorWithVideoCoreBuilder.AddFrequencyMemory(_frequencyMemory);
-            processorWithVideoCoreBuilder.AddTdp(_tdp);
+            processorWithVideoCoreBuilder.AddCoreFrequency(CoreFrequency);
+            processorWithVideoCoreBuilder.AddCountCore(CountCore);
+            processorWithVideoCoreBuilder.AddSocket(Socket);
+            processorWithVideoCoreBuilder.AddFrequencyMemory(FrequencyMemory);
+            processorWithVideoCoreBuilder.AddTdp(Tdp);
             processorWithVideoCoreBuilder.AddPowerConsumptionV(PowerConsumptionV);
-            processorWithVideoCoreBuilder.AddVideoCore(_videoCoreType);
+            processorWithVideoCoreBuilder.AddVideoCore(VideoCoreType);
             return processorWithVideoCoreBuilder;
         }
 
-        processorBuilder.AddCoreFrequency(_coreFrequency);
-        processorBuilder.AddCountCore(_countCore);
-        processorBuilder.AddSocket(_socket);
-        processorBuilder.AddFrequencyMemory(_frequencyMemory);
-        processorBuilder.AddTdp(_tdp);
+        processorBuilder.AddCoreFrequency(CoreFrequency);
+        processorBuilder.AddCountCore(CountCore);
+        processorBuilder.AddSocket(Socket);
+        processorBuilder.AddFrequencyMemory(FrequencyMemory);
+        processorBuilder.AddTdp(Tdp);
         processorBuilder.AddPowerConsumptionV(PowerConsumptionV);
         return processorBuilder;
     }

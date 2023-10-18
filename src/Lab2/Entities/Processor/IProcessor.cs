@@ -1,8 +1,15 @@
-using Itmo.ObjectOrientedProgramming.Lab2.Entities.ProcessorCoolingSystem;
+using Itmo.ObjectOrientedProgramming.Lab2.Entities.MotherBoard;
+using Itmo.ObjectOrientedProgramming.Lab2.Type;
 
 namespace Itmo.ObjectOrientedProgramming.Lab2.Entities;
 
 public interface IProcessor : IProcessorBuilderDirect, IConsumeEnergy, IComputerComponent
 {
-    public bool IsCoolingSystemCompatibility(IProcessorCoolingSystem coolingSystem); // по сокету + комментарий о гарантии
+    public CountType CoreFrequency { get; }
+    public CountType CountCore { get; }
+    public SocketType Socket { get; }
+    public CountType FrequencyMemory { get; }
+    public CountType Tdp { get; }
+
+    public bool IsProcessorCompatibility(IMotherboard motherboard);
 }

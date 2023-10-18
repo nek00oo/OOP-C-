@@ -5,6 +5,6 @@ namespace Itmo.ObjectOrientedProgramming.Lab2.Entities.ComputerCase;
 
 public interface IComputerCase : IComputerCaseBuilderDirector, IComputerComponent
 {
-    public bool IsComputerCaseCompatibility(IVideoCard videoCard);
-    public bool IsComputerCaseCompatibility(IMotherboard motherboard);
+    public bool IsComputerCaseCompatibilityWithVideoCard(IVideoCard videoCard);
+    public bool IsComputerCaseCompatibilityWithMotherboard(IMotherboard motherboard);
 }
