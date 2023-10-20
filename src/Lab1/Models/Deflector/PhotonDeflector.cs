@@ -1,4 +1,4 @@
-using Itmo.ObjectOrientedProgramming.Lab1.Models.Obstacles;
+using Itmo.ObjectOrientedProgramming.Lab1.Service.TransferDamage;
 
 namespace Itmo.ObjectOrientedProgramming.Lab1.Models.Deflector;
 
@@ -13,11 +13,12 @@ public class PhotonDeflector : DeflectorDecorator, IPhotonDeflector
     public int HealthPointPhotonDeflector { get; private set; } = HpPhotonDeflector;
     public bool IsDisabledPhotonDeflector() => HealthPointPhotonDeflector <= 0;
 
-    public bool TakeDamagePhotonDeflector(ObstacleAntimatterFlares antimatterFlares, int countObstacles)
+    public DamageResult TakePhotonicDamage(int damage, int countObstacles)
     {
         if (IsDisabledPhotonDeflector())
-            return false;
-        HealthPointPhotonDeflector -= antimatterFlares.Damage * countObstacles;
-        return HealthPointPhotonDeflector >= 0;
+            return new DamageResult.Destroyed();
+        HealthPointPhotonDeflector -= damage * countObstacles;
+
+        return new DamageResult.DamageSustained();
     }
 }

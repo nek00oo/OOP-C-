@@ -7,11 +7,10 @@ namespace Itmo.ObjectOrientedProgramming.Lab1.Models.Obstacles;
 public class ObstacleMeteorite : IObstacleSpace
 {
     private const int DamageMeteorite = 100;
-    public int Damage => DamageMeteorite;
 
     public ObstacleCollisionResult InteractionWithSpaceShip(ISpaceShip spaceShip, int countObstacles)
     {
-        if (spaceShip.TakeDamageResult(this, countObstacles) is DamageResult.DamageSustained)
+        if (spaceShip.TakeDamageResult(DamageMeteorite, countObstacles) is DamageResult.DamageSustained)
             return new ObstacleCollisionResult.Success();
 
         return new ObstacleCollisionResult.ShipIsDestroyed();

@@ -5,6 +5,5 @@ namespace Itmo.ObjectOrientedProgramming.Lab1.Models.Obstacles;
 
 public interface IObstacle
 {
-    public int Damage { get; }
     public ObstacleCollisionResult InteractionWithSpaceShip(ISpaceShip spaceShip, int countObstacles);
 }

@@ -1,4 +1,3 @@
-using Itmo.ObjectOrientedProgramming.Lab1.Models.Obstacles;
 using Itmo.ObjectOrientedProgramming.Lab1.Service.TransferDamage;
 
 namespace Itmo.ObjectOrientedProgramming.Lab1.Models.HullShip;
@@ -14,16 +13,16 @@ public class HullShipThirdClass : IHullShip
     public int HealthPoints { get; private set; } = HealthPointsHullShipThirdClass;
     public bool IsDestroyed() => HealthPoints <= 0;
 
-    public DamageResult TakeDamageResult(IObstacle obstacle, int countObstacles)
+    public DamageResult TakeDamageResult(int damage, int countObstacles)
     {
         if (IsDestroyed() is false)
         {
-            if (obstacle.Damage < SmallDamage)
-                HealthPoints -= obstacle.Damage / CoefficientAbsorptionSmallDamageForHullShipThirdClass * countObstacles;
-            else if (obstacle.Damage < AverageDamage)
-                HealthPoints -= obstacle.Damage / CoefficientAbsorptionAverageDamageForHullShipThirdClass * countObstacles;
+            if (damage < SmallDamage)
+                HealthPoints -= damage / CoefficientAbsorptionSmallDamageForHullShipThirdClass * countObstacles;
+            else if (damage < AverageDamage)
+                HealthPoints -= damage / CoefficientAbsorptionAverageDamageForHullShipThirdClass * countObstacles;
             else
-                HealthPoints -= obstacle.Damage * countObstacles;
+                HealthPoints -= damage * countObstacles;
         }
 
         if (IsDestroyed())

@@ -1,6 +1,6 @@
 using System;
-using Itmo.ObjectOrientedProgramming.Lab1.Entities.Space;
 using Itmo.ObjectOrientedProgramming.Lab1.Service.FlySpaceResult;
+using Itmo.ObjectOrientedProgramming.Lab1.Service.FuelExchange;
 
 namespace Itmo.ObjectOrientedProgramming.Lab1.Models.Engine;
 
@@ -9,17 +9,16 @@ public class ImpulseEngineE : IImpulseEngine
     private const int FuelConsumptionAeImpulseEngineE = 75;
     private const int SpeedImpulseEngineE = 5;
 
-    public int Speed { get; } = SpeedImpulseEngineE;
+    public double Speed { get; } = SpeedImpulseEngineE;
 
-    public double FuelQuantity { get; private set; }
-
-    public void CalculateFuelRequired(int distance)
+    public FlyResult FlyingSpace(int distance, double speedEffectAe)
     {
-        FuelQuantity += FuelConsumptionAeImpulseEngineE * Math.Exp(distance);
+        CalculateFuelRequired(distance);
+        return new FlyResult.SuccessFlight(Math.Round(distance / (double)Speed, 2), new UsageFuelActivePlasma(CalculateFuelRequired(distance)));
     }
 
-    public FlyResult FlyingSpace(ISpace space)
+    private static double CalculateFuelRequired(int distance)
     {
-        return new FlyResult.SuccessFlight(Math.Round(space.Distance / (double)Speed, 2));
+        return FuelConsumptionAeImpulseEngineE * Math.Exp(distance);
     }
 }

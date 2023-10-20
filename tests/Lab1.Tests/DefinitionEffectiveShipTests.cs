@@ -44,7 +44,7 @@ public class DefinitionEffectiveShipTests
         var spaces = new List<ISpace>()
         {
             new OrdinarySpace(40, new ObstacleMeteorite()),
-            new NebulaeNeutrinoParticles(2),
+            new NebulaeNeutrinoParticles(1),
             new NebulaeIncreasedDensitySpace(75, new ObstacleAntimatterFlares()),
         };
         IDeflector deflectorFirstClassForStella1 = new DeflectorFirstClass();

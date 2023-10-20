@@ -8,6 +8,7 @@ namespace Itmo.ObjectOrientedProgramming.Lab1.Entities.Space;
 
 public class NebulaeNeutrinoParticles : ISpace
 {
+    private const double DecelerationFactor = 1;
     private readonly IObstacleNebulaeNitrineParticles? _obstacleNebulaeNeutrinoParticles;
     private readonly int _countObstacles;
 
@@ -29,23 +30,22 @@ public class NebulaeNeutrinoParticles : ISpace
         Distance = distance;
     }
 
-    public int NitroParticlesSpeedEffectAe { get; } = 2;
     public int Distance { get; }
 
     public IRouteResult NavigateSpace(ISpaceShip spaceShip)
     {
-        if (spaceShip.ImpulseEngine.FlyingSpace(this) is FlyResult.SuccessFlight successFlight)
+        if (spaceShip.ImpulseEngine.FlyingSpace(Distance, DecelerationFactor) is FlyResult.SuccessFlight successFlight)
         {
             ObstacleCollisionResult resultOvercomingObstacles = OvercomingObstacles(spaceShip);
             if (resultOvercomingObstacles is ObstacleCollisionResult.Success)
-                return new NavigateRouteResult.Success(successFlight.TimeRoute);
+                return new NavigateSpaceResult.Success(successFlight.TimeRoute, successFlight.FuelUsage);
             return resultOvercomingObstacles;
         }
 
         return new NavigateRouteResult.ShipIsLost();
     }
 
-    public ObstacleCollisionResult OvercomingObstacles(ISpaceShip spaceShip)
+    private ObstacleCollisionResult OvercomingObstacles(ISpaceShip spaceShip)
     {
         if (_obstacleNebulaeNeutrinoParticles == null)
             return new ObstacleCollisionResult.Success();

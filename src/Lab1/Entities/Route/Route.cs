@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Itmo.ObjectOrientedProgramming.Lab1.Entities.Space;
 using Itmo.ObjectOrientedProgramming.Lab1.Entities.SpaceShip;
+using Itmo.ObjectOrientedProgramming.Lab1.Service.FuelExchange;
 using Itmo.ObjectOrientedProgramming.Lab1.Service.RouteResult;
 
 namespace Itmo.ObjectOrientedProgramming.Lab1.Entities.Route;
@@ -21,18 +22,23 @@ public class Route
 
     public IRouteResult RouteResult(ISpaceShip spaceShip)
     {
+        ICollection<IFuelUsage> fuelUsages = new List<IFuelUsage>();
         double timeRoute = 0;
         IRouteResult navigateRouteResult;
         foreach (ISpace space in _spaceBases)
         {
             navigateRouteResult = space.NavigateSpace(spaceShip);
-            if (navigateRouteResult is NavigateRouteResult.Success success)
+            if (navigateRouteResult is NavigateSpaceResult.Success success)
+            {
                 timeRoute += success.TimeRoute;
-            if (navigateRouteResult is not NavigateRouteResult.Success)
+                fuelUsages.Add(success.FuelUsage);
+            }
+
+            if (navigateRouteResult is not NavigateSpaceResult.Success)
                 return navigateRouteResult;
         }
 
-        navigateRouteResult = new NavigateRouteResult.Success(timeRoute);
+        navigateRouteResult = new NavigateRouteResult.Success(timeRoute, fuelUsages);
         return navigateRouteResult;
     }
 }

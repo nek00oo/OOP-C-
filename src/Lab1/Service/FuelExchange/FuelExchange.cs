@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Itmo.ObjectOrientedProgramming.Lab1.Service.FuelExchange;
 
@@ -13,13 +15,13 @@ public class FuelExchange : IFuelExchange
     public double ActivePlasmaPriceFuel { get; }
     public double GravitationalMatterPriceFuel { get; }
 
-    public double FuelCost(IFuelUsage fuelType)
+    public double FuelCost(IReadOnlyCollection<IFuelUsage> fuelType)
     {
-        return fuelType switch
+        return fuelType.Sum(fuel => fuel switch
         {
-            IFuelUsageActivePlasma => fuelType.FuelQuantity * ActivePlasmaPriceFuel,
-            IFuelUsageGravitonMatter => fuelType.FuelQuantity * GravitationalMatterPriceFuel,
+            IUsageFuelActivePlasma => fuel.FuelQuantity * ActivePlasmaPriceFuel,
+            IUsageFuelGravitonMatter => fuel.FuelQuantity * GravitationalMatterPriceFuel,
             _ => throw new InvalidOperationException("indefinite type of fuel"),
-        };
+        });
     }
 }

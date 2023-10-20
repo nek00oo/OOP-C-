@@ -33,18 +33,18 @@ public class OrdinarySpace : ISpace
 
     public IRouteResult NavigateSpace(ISpaceShip spaceShip)
     {
-        if (spaceShip.ImpulseEngine.FlyingSpace(this) is FlyResult.SuccessFlight successFlight)
+        if (spaceShip.ImpulseEngine.FlyingSpace(Distance) is FlyResult.SuccessFlight successFlight)
         {
             ObstacleCollisionResult resultOvercomingObstacles = OvercomingObstacles(spaceShip);
             if (resultOvercomingObstacles is ObstacleCollisionResult.Success)
-                return new NavigateRouteResult.Success(successFlight.TimeRoute);
+                return new NavigateSpaceResult.Success(successFlight.TimeRoute, successFlight.FuelUsage);
             return resultOvercomingObstacles;
         }
 
         return new NavigateRouteResult.ShipIsLost();
     }
 
-    public ObstacleCollisionResult OvercomingObstacles(ISpaceShip spaceShip)
+    private ObstacleCollisionResult OvercomingObstacles(ISpaceShip spaceShip)
     {
         if (_obstacleSpace == null)
             return new ObstacleCollisionResult.Success();

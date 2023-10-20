@@ -4,6 +4,7 @@ using Itmo.ObjectOrientedProgramming.Lab1.Entities.Space;
 using Itmo.ObjectOrientedProgramming.Lab1.Entities.SpaceShip;
 using Itmo.ObjectOrientedProgramming.Lab1.Models.Deflector;
 using Itmo.ObjectOrientedProgramming.Lab1.Models.Obstacles;
+using Itmo.ObjectOrientedProgramming.Lab1.Service.FuelExchange;
 using Itmo.ObjectOrientedProgramming.Lab1.Service.RouteResult;
 using Xunit;
 
@@ -39,7 +40,7 @@ public class NavigateRouteResultTests
         yield return new object[]
         {
             new VaclasShip(deflectorFirstClassForVaclas2),
-            new NavigateRouteResult.Success(1),
+            new NavigateRouteResult.Success(1, new List<IFuelUsage>()),
         };
     }
 
@@ -55,13 +56,13 @@ public class NavigateRouteResultTests
         yield return new object[]
         {
             new AvgureShip(deflectorThirdClassForAvgure1),
-            new NavigateRouteResult.Success(2),
+            new NavigateRouteResult.Success(2, new List<IFuelUsage>()),
         };
         IDeflector deflectorSecondClassForMeredian1 = new DeflectorSecondClass();
         yield return new object[]
         {
             new MeredianShip(deflectorSecondClassForMeredian1),
-            new NavigateRouteResult.Success(2),
+            new NavigateRouteResult.Success(2, new List<IFuelUsage>()),
         };
     }
 
@@ -76,7 +77,7 @@ public class NavigateRouteResultTests
         IRouteResult result = route.RouteResult(spaceShip);
 
         // Assert
-        Assert.Equal(expectedRouteResult, result);
+        Assert.Equivalent(expectedRouteResult, result);
     }
 
     [Theory]
@@ -90,7 +91,7 @@ public class NavigateRouteResultTests
         IRouteResult result = route.RouteResult(spaceShip);
 
         // Assert
-        Assert.Equal(expectedRouteResult, result);
+        Assert.Equivalent(expectedRouteResult, result);
     }
 
     [Theory]
@@ -104,6 +105,6 @@ public class NavigateRouteResultTests
         IRouteResult result = route.RouteResult(spaceShip);
 
         // Assert
-        Assert.Equal(expectedRouteResult, result);
+        Assert.Equivalent(expectedRouteResult, result);
     }
 }

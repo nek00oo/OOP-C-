@@ -1,4 +1,3 @@
-using Itmo.ObjectOrientedProgramming.Lab1.Models.Obstacles;
 using Itmo.ObjectOrientedProgramming.Lab1.Service.TransferDamage;
 
 namespace Itmo.ObjectOrientedProgramming.Lab1.Models.Deflector;
@@ -13,18 +12,18 @@ public class DeflectorSecondClass : IDeflector
     public int HealthPoints { get; private set; } = HealthPointsDeflectorSecondClass;
     public bool IsDisabled() => HealthPoints < 0;
 
-    public DamageResult TakeDamageResult(IObstacle obstacle, int countObstacles)
+    public DamageResult TakeDamageResult(int damage, int countObstacles)
     {
         if (IsDisabled())
             return new DamageResult.DamageOverflow(countObstacles);
         for (int i = 0; i < countObstacles; i++)
         {
-            if (obstacle.Damage < SmallDamage)
-                HealthPoints -= obstacle.Damage / CoefficientAbsorptionSmallDamageForDeflectorSecondClass * countObstacles;
-            else if (obstacle.Damage < AverageDamage)
-                HealthPoints -= obstacle.Damage / CoefficientAbsorptionAverageDamageForDeflectorSecondClass * countObstacles;
+            if (damage < SmallDamage)
+                HealthPoints -= damage / CoefficientAbsorptionSmallDamageForDeflectorSecondClass * countObstacles;
+            else if (damage < AverageDamage)
+                HealthPoints -= damage / CoefficientAbsorptionAverageDamageForDeflectorSecondClass * countObstacles;
             else
-                HealthPoints -= obstacle.Damage * countObstacles;
+                HealthPoints -= damage * countObstacles;
             if (IsDisabled())
                 return new DamageResult.DamageOverflow(countObstacles - i);
         }
