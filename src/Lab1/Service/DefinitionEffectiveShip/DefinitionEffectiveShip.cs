@@ -26,15 +26,11 @@ public class DefinitionEffectiveShip
         double minPriceRoute = double.MaxValue;
         foreach (ISpaceShip spaceShip in _spaceShips)
         {
-            if (_route.RouteResult(spaceShip) is NavigateRouteResult.Success success)
-            {
-                double routePrice = _fuelExchange.FuelCost(success.FuelUsage.ToArray());
-                if (routePrice < minPriceRoute)
-                {
-                    minPriceRoute = routePrice;
-                    moreEffectiveSpaceShip = spaceShip;
-                }
-            }
+            if (_route.RouteResult(spaceShip) is not NavigateRouteResult.Success success) continue;
+            double routePrice = _fuelExchange.FuelCost(success.FuelUsage.ToArray());
+            if (!(routePrice < minPriceRoute)) continue;
+            minPriceRoute = routePrice;
+            moreEffectiveSpaceShip = spaceShip;
         }
 
         return moreEffectiveSpaceShip;

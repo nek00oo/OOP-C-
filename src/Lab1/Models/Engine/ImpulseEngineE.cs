@@ -9,7 +9,7 @@ public class ImpulseEngineE : IImpulseEngine
     private const int FuelConsumptionAeImpulseEngineE = 75;
     private const int SpeedImpulseEngineE = 5;
 
-    public double Speed { get; } = SpeedImpulseEngineE;
+    private double Speed { get; } = SpeedImpulseEngineE;
 
     public FlyResult FlyingSpace(int distance, double speedEffectAe)
     {

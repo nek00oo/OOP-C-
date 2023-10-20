@@ -9,8 +9,6 @@ public class JumpEngineGamma : IJumpEngine
     private const int JumpRangeGammaEngine = 200;
     private const double JumpTimeGammaEngine = 1;
 
-    public double FuelQuantity { get; private set; }
-
     public FlyResult FlyingSpaceСanal(int distance)
     {
         CalculateFuelRequired(distance);

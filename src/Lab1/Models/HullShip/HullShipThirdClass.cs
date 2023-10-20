@@ -10,8 +10,7 @@ public class HullShipThirdClass : IHullShip
     private const int SmallDamage = 70;
     private const int AverageDamage = 170;
 
-    public int HealthPoints { get; private set; } = HealthPointsHullShipThirdClass;
-    public bool IsDestroyed() => HealthPoints <= 0;
+    private int HealthPoints { get; set; } = HealthPointsHullShipThirdClass;
 
     public DamageResult TakeDamageResult(int damage, int countObstacles)
     {
@@ -29,4 +28,6 @@ public class HullShipThirdClass : IHullShip
             return new DamageResult.Destroyed();
         return new DamageResult.DamageSustained();
     }
+
+    private bool IsDestroyed() => HealthPoints <= 0;
 }
