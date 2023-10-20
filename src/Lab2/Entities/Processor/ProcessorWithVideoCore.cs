@@ -1,4 +1,5 @@
 using Itmo.ObjectOrientedProgramming.Lab2.Entities.MotherBoard;
+using Itmo.ObjectOrientedProgramming.Lab2.Result;
 using Itmo.ObjectOrientedProgramming.Lab2.Type;
 
 namespace Itmo.ObjectOrientedProgramming.Lab2.Entities;
@@ -32,9 +33,11 @@ public class ProcessorWithVideoCore : IProcessor, IProcessorWithVideoCore
 
     public CountType PowerConsumptionV { get; }
 
-    public bool IsProcessorCompatibility(IMotherboard motherboard)
+    public IValidateResult IsProcessorCompatibility(IMotherboard motherboard)
     {
-        return Socket == motherboard.Socket && motherboard.Bios.IsProcessorCompatibleWithMotherboard(this);
+        if (Socket == motherboard.Socket && motherboard.Bios.IsProcessorCompatibleWithMotherboard(this))
+            return new SuccessValidateResult.MotherboardAndProcessorCompability();
+        return new NegativeValidateResult.MotherboardAndProcessorIsNotCompability();
     }
 
     public IProcessorBuilder Direct(IProcessorBuilder processorBuilder)

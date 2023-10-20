@@ -13,16 +13,6 @@ namespace Itmo.ObjectOrientedProgramming.Lab2.Models.Computer;
 
 public class Computer : IComputer
 {
-    private IMotherboard _motherboard;
-    private IProcessor _processor;
-    private IProcessorCoolingSystem _processorCoolingSystem;
-    private IReadOnlyCollection<IRamMemory> _ramMemories;
-    private IReadOnlyCollection<IExternalMemory> _externalMemories;
-    private IPowerUnit _powerUnit;
-    private IComputerCase _computerCase;
-    private IVideoCard? _videoCard;
-    private IWiFiAdapter? _wiFiAdapter;
-
     public Computer(
         IMotherboard motherboard,
         IProcessor processor,
@@ -34,32 +24,42 @@ public class Computer : IComputer
         IComputerCase computerCase,
         IWiFiAdapter? wiFiAdapter)
     {
-        _motherboard = motherboard;
-        _processor = processor;
-        _processorCoolingSystem = processorCoolingSystem;
-        _ramMemories = ramMemories;
-        _videoCard = videoCard;
-        _externalMemories = externalMemories;
-        _powerUnit = powerUnit;
-        _computerCase = computerCase;
-        _wiFiAdapter = wiFiAdapter;
+        Motherboard = motherboard;
+        Processor = processor;
+        ProcessorCoolingSystem = processorCoolingSystem;
+        RamMemories = ramMemories;
+        VideoCard = videoCard;
+        ExternalMemories = externalMemories;
+        PowerUnit = powerUnit;
+        ComputerCase = computerCase;
+        WiFiAdapter = wiFiAdapter;
     }
+
+    public IMotherboard Motherboard { get; }
+    public IProcessor Processor { get; }
+    public IProcessorCoolingSystem ProcessorCoolingSystem { get; }
+    public IReadOnlyCollection<IRamMemory> RamMemories { get; }
+    public IReadOnlyCollection<IExternalMemory> ExternalMemories { get; }
+    public IPowerUnit PowerUnit { get; }
+    public IComputerCase ComputerCase { get; }
+    public IVideoCard? VideoCard { get; }
+    public IWiFiAdapter? WiFiAdapter { get; }
 
     public IConfigurator Direct(IConfigurator configurator)
     {
-        foreach (IRamMemory ramMemory in _ramMemories)
+        foreach (IRamMemory ramMemory in RamMemories)
             configurator.AddRamMemory(ramMemory);
-        foreach (IExternalMemory externalMemory in _externalMemories)
+        foreach (IExternalMemory externalMemory in ExternalMemories)
             configurator.AddExternalMemory(externalMemory);
-        configurator.AddMotherboard(_motherboard);
-        configurator.AddProcessor(_processor);
-        configurator.AddProcessorCoolingSystem(_processorCoolingSystem);
-        configurator.AddPowerUnitBuilder(_powerUnit);
-        configurator.AddComputerCase(_computerCase);
-        if (_videoCard != null)
-            configurator.AddVideoCard(_videoCard);
-        if (_wiFiAdapter != null)
-            configurator.AddWiFiAdapter(_wiFiAdapter);
+        configurator.AddMotherboard(Motherboard);
+        configurator.AddProcessor(Processor);
+        configurator.AddProcessorCoolingSystem(ProcessorCoolingSystem);
+        configurator.AddPowerUnitBuilder(PowerUnit);
+        configurator.AddComputerCase(ComputerCase);
+        if (VideoCard != null)
+            configurator.AddVideoCard(VideoCard);
+        if (WiFiAdapter != null)
+            configurator.AddWiFiAdapter(WiFiAdapter);
         return configurator;
     }
 }

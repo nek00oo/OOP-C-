@@ -1,12 +1,13 @@
 using System;
 using Itmo.ObjectOrientedProgramming.Lab2.Entities.MotherBoard;
+using Itmo.ObjectOrientedProgramming.Lab2.Result;
 using Itmo.ObjectOrientedProgramming.Lab2.Type;
 
 namespace Itmo.ObjectOrientedProgramming.Lab2.Entities;
 
 public class Processor : IProcessor, IEquatable<Processor>
 {
-    public Processor(
+    internal Processor(
         CountType coreFrequency,
         CountType countCore,
         SocketType socket,
@@ -30,9 +31,11 @@ public class Processor : IProcessor, IEquatable<Processor>
 
     public CountType PowerConsumptionV { get; }
 
-    public bool IsProcessorCompatibility(IMotherboard motherboard)
+    public IValidateResult IsProcessorCompatibility(IMotherboard motherboard)
     {
-        return Socket == motherboard.Socket && motherboard.Bios.IsProcessorCompatibleWithMotherboard(this);
+        if (Socket == motherboard.Socket && motherboard.Bios.IsProcessorCompatibleWithMotherboard(this))
+            return new SuccessValidateResult.MotherboardAndProcessorCompability();
+        return new NegativeValidateResult.MotherboardAndProcessorIsNotCompability();
     }
 
     public IProcessorBuilder Direct(IProcessorBuilder processorBuilder)
@@ -57,8 +60,7 @@ public class Processor : IProcessor, IEquatable<Processor>
     {
         if (obj is null) return false;
         if (ReferenceEquals(this, obj)) return true;
-        if (obj.GetType() != this.GetType()) return false;
-        return Equals((Processor)obj);
+        return obj.GetType() == this.GetType() && Equals((Processor)obj);
     }
 
     public override int GetHashCode()

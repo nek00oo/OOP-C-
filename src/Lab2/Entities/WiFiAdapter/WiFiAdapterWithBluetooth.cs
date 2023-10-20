@@ -1,4 +1,5 @@
 using Itmo.ObjectOrientedProgramming.Lab2.Entities.MotherBoard;
+using Itmo.ObjectOrientedProgramming.Lab2.Result;
 using Itmo.ObjectOrientedProgramming.Lab2.Type;
 
 namespace Itmo.ObjectOrientedProgramming.Lab2.Entities.WiFiAdapter;
@@ -8,7 +9,7 @@ public class WiFiAdapterWithBluetooth : IWiFiAdapter, IBluetoothCapable
     private WiFiVersion _wiFiVersion;
     private PciEVersion _pciEVersion;
 
-    public WiFiAdapterWithBluetooth(WiFiVersion wiFiVersion, BluetoothVersion bluetoothVersion, PciEVersion pciEVersion, CountType powerConsumptionV)
+    internal WiFiAdapterWithBluetooth(WiFiVersion wiFiVersion, BluetoothVersion bluetoothVersion, PciEVersion pciEVersion, CountType powerConsumptionV)
     {
         _wiFiVersion = wiFiVersion;
         _pciEVersion = pciEVersion;
@@ -19,9 +20,12 @@ public class WiFiAdapterWithBluetooth : IWiFiAdapter, IBluetoothCapable
     public CountType PowerConsumptionV { get; }
     public BluetoothVersion BluetoothVersion { get; }
 
-    public bool IsWiFiCompatibility(IMotherboard motherboard)
+    public IValidateResult IsWiFiCompatibility(IMotherboard motherboard)
     {
-        return motherboard is not IMotherboardWithWiFiModule;
+        if (motherboard is IMotherboardWithWiFiModule)
+            return new NegativeValidateResult.WiFiAdapterAndMotherboardIsNotCompability();
+
+        return new SuccessValidateResult.WiFiAdapterAndMotherboardCompability();
     }
 
     public IWiFiAdapterBuilder Direct(IWiFiAdapterBuilder wiFiAdapterBuilder)

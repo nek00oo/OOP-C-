@@ -4,7 +4,7 @@ namespace Itmo.ObjectOrientedProgramming.Lab2.Entities.HardDrive;
 
 public class HardDrive : IHardDrive
 {
-    public HardDrive(CountType powerConsumptionV, CountType memoryCapacityGb, SpeedType spindleSpeed)
+    internal HardDrive(CountType powerConsumptionV, CountType memoryCapacityGb, SpeedType spindleSpeed)
     {
         PowerConsumptionV = powerConsumptionV;
         MemoryCapacityGb = memoryCapacityGb;

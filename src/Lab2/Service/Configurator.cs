@@ -9,7 +9,8 @@ using Itmo.ObjectOrientedProgramming.Lab2.Entities.RamMemory;
 using Itmo.ObjectOrientedProgramming.Lab2.Entities.VideoCard;
 using Itmo.ObjectOrientedProgramming.Lab2.Entities.WiFiAdapter;
 using Itmo.ObjectOrientedProgramming.Lab2.Models.Computer;
-using Itmo.ObjectOrientedProgramming.Lab2.Type;
+using Itmo.ObjectOrientedProgramming.Lab2.Result;
+using Itmo.ObjectOrientedProgramming.Lab2.Service.Validator;
 
 namespace Itmo.ObjectOrientedProgramming.Lab2.Service;
 
@@ -24,13 +25,13 @@ public class Configurator : IConfigurator
     private IPowerUnit? _powerUnit;
     private IComputerCase? _computerCase;
     private IWiFiAdapter? _wiFiAdapter;
-    private List<ConfiguratorNegativeResult> _checkList;
+    private IList<IValidateResult> _checkList;
 
     public Configurator()
     {
         _ramMemories = new List<IRamMemory>();
         _externalMemories = new List<IExternalMemory>();
-        _checkList = new List<ConfiguratorNegativeResult>();
+        _checkList = new List<IValidateResult>();
     }
 
     public IConfigurator AddMotherboard(IMotherboard motherboard)
@@ -53,6 +54,7 @@ public class Configurator : IConfigurator
 
     public IConfigurator AddRamMemory(IRamMemory ramMemory)
     {
+        _ramMemories.Add(ramMemory);
         return this;
     }
 
@@ -88,14 +90,7 @@ public class Configurator : IConfigurator
 
     public IComputer Build()
     {
-        /*if (_powerUnit != null)
-        {
-            IConsumeEnergy[] array = _externalMemories.Concat<IConsumeEnergy>(_ramMemories).ToArray();
-
-            // переделать эту функцию, чтобы мб она принимала один параметр IConsumeEnergy и внутри себя как-то складывала
-        }*/
-
-        return new Computer(
+        IComputer computer = new Computer(
             _motherboard ?? throw new ArgumentNullException(nameof(_motherboard)),
             _processor ?? throw new ArgumentNullException(nameof(_processor)),
             _processorCoolingSystem ?? throw new ArgumentNullException(nameof(_processorCoolingSystem)),
@@ -105,5 +100,26 @@ public class Configurator : IConfigurator
             _powerUnit ?? throw new ArgumentNullException(nameof(_powerUnit)),
             _computerCase ?? throw new ArgumentNullException(nameof(_computerCase)),
             _wiFiAdapter);
+
+        // TODO сделать подсчёт энергии
+        ValidateComputer(computer);
+
+        foreach (IValidateResult validateResult in _checkList)
+        {
+            if (validateResult is INegativeValidateResult)
+                throw new InvalidOperationException($"configuration error : {validateResult}");
+        }
+
+        return computer;
+    }
+
+    private void ValidateComputer(IComputer computer)
+    {
+        new ProcessorValidator()
+            .SetNext(new ProcessorCoolingSystemValidator())
+            .SetNext(new RamMemoryValidator())
+            .SetNext(new ComputerCaseValidator())
+            .SetNext(new WiFiAdapterValidator())
+            .Validate(computer, ref _checkList);
     }
 }

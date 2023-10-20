@@ -4,7 +4,7 @@ namespace Itmo.ObjectOrientedProgramming.Lab2.Entities.VideoCard;
 
 public class VideoCard : IVideoCard
 {
-    public VideoCard(
+    internal VideoCard(
         SizeType videoCardSizeType,
         CountType countVideoMemory,
         PciEVersion pciEVersion,

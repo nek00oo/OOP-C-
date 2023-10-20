@@ -2,13 +2,14 @@ using System.Collections.Generic;
 using Itmo.ObjectOrientedProgramming.Lab2.Entities.Jedec;
 using Itmo.ObjectOrientedProgramming.Lab2.Entities.MotherBoard;
 using Itmo.ObjectOrientedProgramming.Lab2.Entities.XMP;
+using Itmo.ObjectOrientedProgramming.Lab2.Result;
 using Itmo.ObjectOrientedProgramming.Lab2.Type;
 
 namespace Itmo.ObjectOrientedProgramming.Lab2.Entities.RamMemory;
 
 public class RamMemory : IRamMemory
 {
-    public RamMemory(
+    internal RamMemory(
         CountType memoryCount,
         IJedec jedec,
         IReadOnlyCollection<IXmp> xmpProfiles,
@@ -31,9 +32,19 @@ public class RamMemory : IRamMemory
     public DdrType Ddr { get; }
     public CountType PowerConsumptionV { get; }
 
-    public bool IsRamMemoryCompatibility(IMotherboard motherboard)
+    public IValidateResult IsRamMemoryCompatibility(IMotherboard motherboard)
     {
-        return Ddr == motherboard.DdrType && motherboard.ConnectToRamSlots();
+        bool xmpProfileSupport = false;
+        foreach (IXmp xmp in XmpProfiles)
+        {
+            if (motherboard.Chipset.Frequency.Count <= xmp.FrequencyChip.Count)
+                xmpProfileSupport = true;
+        }
+
+        if (Ddr == motherboard.DdrType && xmpProfileSupport && motherboard.ConnectToRamSlots())
+            return new SuccessValidateResult.RamMemoryAndMotherboardCompability();
+
+        return new NegativeValidateResult.RamMemoryAndMotherboardIsNotCompability();
     }
 
     public IRamMemoryBuilder Direct(IRamMemoryBuilder ramMemoryBuilder)

@@ -6,7 +6,7 @@ namespace Itmo.ObjectOrientedProgramming.Lab2.Entities.MotherBoard;
 
 public class MotherBoard : IMotherboard
 {
-    public MotherBoard(
+    internal MotherBoard(
         CountType countSataPorts,
         CountType countPciELines,
         CountType countRamSlots,

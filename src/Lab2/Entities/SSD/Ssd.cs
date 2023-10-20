@@ -6,7 +6,7 @@ namespace Itmo.ObjectOrientedProgramming.Lab2.Entities.SSD;
 
 public class Ssd : ISsd
 {
-    public Ssd(CountType powerConsumptionV, CountType memoryCapacityGb, SpeedType maxBandWidth, PortType portType)
+    internal Ssd(CountType powerConsumptionV, CountType memoryCapacityGb, SpeedType maxBandWidth, PortType portType)
     {
         PowerConsumptionV = powerConsumptionV;
         MemoryCapacityGb = memoryCapacityGb;

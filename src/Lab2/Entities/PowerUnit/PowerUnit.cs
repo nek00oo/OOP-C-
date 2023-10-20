@@ -4,7 +4,7 @@ namespace Itmo.ObjectOrientedProgramming.Lab2.Entities.PowerUnit;
 
 public class PowerUnit : IPowerUnit
 {
-    public PowerUnit(CountType maxLoadW)
+    internal PowerUnit(CountType maxLoadW)
     {
         MaxLoadW = maxLoadW;
     }

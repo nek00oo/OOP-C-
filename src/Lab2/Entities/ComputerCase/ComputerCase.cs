@@ -2,13 +2,14 @@ using System.Collections.Generic;
 using System.Linq;
 using Itmo.ObjectOrientedProgramming.Lab2.Entities.MotherBoard;
 using Itmo.ObjectOrientedProgramming.Lab2.Entities.VideoCard;
+using Itmo.ObjectOrientedProgramming.Lab2.Result;
 using Itmo.ObjectOrientedProgramming.Lab2.Type;
 
 namespace Itmo.ObjectOrientedProgramming.Lab2.Entities.ComputerCase;
 
 public class ComputerCase : IComputerCase
 {
-    public ComputerCase(
+    internal ComputerCase(
         SizeType maxSizeTypeVideoCard,
         IReadOnlyCollection<MotherboardFormFactorType> motherboardFormFactorTypes,
         SizeType caseSizeType)
@@ -22,15 +23,19 @@ public class ComputerCase : IComputerCase
     public IReadOnlyCollection<MotherboardFormFactorType> MotherboardFormFactorSupported { get; }
     public SizeType CaseSizeType { get; }
 
-    public bool IsComputerCaseCompatibilityWithVideoCard(IVideoCard videoCard)
+    public IValidateResult IsComputerCaseCompatibilityWithVideoCard(IVideoCard videoCard)
     {
-        return MaxSizeTypeVideoCard.Lenght >= videoCard.VideoCardSizeType.Lenght
-               && MaxSizeTypeVideoCard.Width >= videoCard.VideoCardSizeType.Width;
+        if (MaxSizeTypeVideoCard.Lenght >= videoCard.VideoCardSizeType.Lenght &&
+            MaxSizeTypeVideoCard.Width >= videoCard.VideoCardSizeType.Width)
+            return new SuccessValidateResult.ComputerCaseAndVideoCardCompability();
+        return new NegativeValidateResult.ComputerCaseAndVideoCardIsNotCompability();
     }
 
-    public bool IsComputerCaseCompatibilityWithMotherboard(IMotherboard motherboard)
+    public IValidateResult IsComputerCaseCompatibilityWithMotherboard(IMotherboard motherboard)
     {
-        return MotherboardFormFactorSupported.Contains(motherboard.FormFactor);
+        if (MotherboardFormFactorSupported.Contains(motherboard.FormFactor))
+            return new SuccessValidateResult.ComputerCaseAndMotherboardCompability();
+        return new NegativeValidateResult.ComputerCaseAndMotherboardIsNotCompability();
     }
 
     public IComputerCaseBuilder Direct(IComputerCaseBuilder computerCaseBuilder)
