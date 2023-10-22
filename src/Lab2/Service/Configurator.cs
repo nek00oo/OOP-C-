@@ -1,14 +1,14 @@
 using System;
 using System.Collections.Generic;
-using Itmo.ObjectOrientedProgramming.Lab2.Entities;
-using Itmo.ObjectOrientedProgramming.Lab2.Entities.ComputerCase;
-using Itmo.ObjectOrientedProgramming.Lab2.Entities.MotherBoard;
-using Itmo.ObjectOrientedProgramming.Lab2.Entities.PowerUnit;
-using Itmo.ObjectOrientedProgramming.Lab2.Entities.ProcessorCoolingSystem;
-using Itmo.ObjectOrientedProgramming.Lab2.Entities.RamMemory;
-using Itmo.ObjectOrientedProgramming.Lab2.Entities.VideoCard;
-using Itmo.ObjectOrientedProgramming.Lab2.Entities.WiFiAdapter;
-using Itmo.ObjectOrientedProgramming.Lab2.Models.Computer;
+using Itmo.ObjectOrientedProgramming.Lab2.Entities.Computer;
+using Itmo.ObjectOrientedProgramming.Lab2.Models;
+using Itmo.ObjectOrientedProgramming.Lab2.Models.ComputerCase;
+using Itmo.ObjectOrientedProgramming.Lab2.Models.MotherBoard;
+using Itmo.ObjectOrientedProgramming.Lab2.Models.PowerUnit;
+using Itmo.ObjectOrientedProgramming.Lab2.Models.ProcessorCoolingSystem;
+using Itmo.ObjectOrientedProgramming.Lab2.Models.RamMemory;
+using Itmo.ObjectOrientedProgramming.Lab2.Models.VideoCard;
+using Itmo.ObjectOrientedProgramming.Lab2.Models.WiFiAdapter;
 using Itmo.ObjectOrientedProgramming.Lab2.Result;
 using Itmo.ObjectOrientedProgramming.Lab2.Service.Validator;
 
@@ -101,7 +101,6 @@ public class Configurator : IConfigurator
             _computerCase ?? throw new ArgumentNullException(nameof(_computerCase)),
             _wiFiAdapter);
 
-        // TODO сделать подсчёт энергии
         ValidateComputer(computer);
 
         foreach (IValidateResult validateResult in _checkList)
@@ -118,6 +117,8 @@ public class Configurator : IConfigurator
         new ProcessorValidator()
             .SetNext(new ProcessorCoolingSystemValidator())
             .SetNext(new RamMemoryValidator())
+            .SetNext(new VideoCardValidator())
+            .SetNext(new PowerUnitValidator())
             .SetNext(new ComputerCaseValidator())
             .SetNext(new WiFiAdapterValidator())
             .Validate(computer, ref _checkList);

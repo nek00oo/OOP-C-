@@ -1,6 +1,6 @@
 using System.Collections.Generic;
-using Itmo.ObjectOrientedProgramming.Lab2.Entities;
-using Itmo.ObjectOrientedProgramming.Lab2.Models.Computer;
+using Itmo.ObjectOrientedProgramming.Lab2.Entities.Computer;
+using Itmo.ObjectOrientedProgramming.Lab2.Models;
 using Itmo.ObjectOrientedProgramming.Lab2.Result;
 
 namespace Itmo.ObjectOrientedProgramming.Lab2.Service.Validator;

@@ -1,12 +1,12 @@
-using Itmo.ObjectOrientedProgramming.Lab2.Entities;
-using Itmo.ObjectOrientedProgramming.Lab2.Entities.ComputerCase;
-using Itmo.ObjectOrientedProgramming.Lab2.Entities.MotherBoard;
-using Itmo.ObjectOrientedProgramming.Lab2.Entities.PowerUnit;
-using Itmo.ObjectOrientedProgramming.Lab2.Entities.ProcessorCoolingSystem;
-using Itmo.ObjectOrientedProgramming.Lab2.Entities.RamMemory;
-using Itmo.ObjectOrientedProgramming.Lab2.Entities.VideoCard;
-using Itmo.ObjectOrientedProgramming.Lab2.Entities.WiFiAdapter;
-using Itmo.ObjectOrientedProgramming.Lab2.Models.Computer;
+using Itmo.ObjectOrientedProgramming.Lab2.Entities.Computer;
+using Itmo.ObjectOrientedProgramming.Lab2.Models;
+using Itmo.ObjectOrientedProgramming.Lab2.Models.ComputerCase;
+using Itmo.ObjectOrientedProgramming.Lab2.Models.MotherBoard;
+using Itmo.ObjectOrientedProgramming.Lab2.Models.PowerUnit;
+using Itmo.ObjectOrientedProgramming.Lab2.Models.ProcessorCoolingSystem;
+using Itmo.ObjectOrientedProgramming.Lab2.Models.RamMemory;
+using Itmo.ObjectOrientedProgramming.Lab2.Models.VideoCard;
+using Itmo.ObjectOrientedProgramming.Lab2.Models.WiFiAdapter;
 
 namespace Itmo.ObjectOrientedProgramming.Lab2.Service;
 
