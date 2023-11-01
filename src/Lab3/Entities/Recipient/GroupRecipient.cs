@@ -18,6 +18,11 @@ public class GroupRecipient : IRecipient
     public LvlImportant LvlImportant { get; }
     public IMessage? Message { get; private set; }
 
+    public MessageStatus GetMessageStatus()
+    {
+        throw new NotImplementedException();
+    }
+
     public void TransferMessage()
     {
         if (Message == null)

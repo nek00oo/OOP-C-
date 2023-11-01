@@ -11,20 +11,17 @@ public class RecipientImportanceShell : IRecipient
     {
         _recipient = recipient;
         LvlImportant = lvlImportant;
-        Message = recipient.Message;
     }
 
-    public IMessage? Message { get; private set; }
     public LvlImportant LvlImportant { get; }
 
     public void ReceiveMessage(IMessage message)
     {
         if (LvlImportant == message.LvlImportant)
-            Message = message;
+            _recipient.ReceiveMessage(message);
     }
 
-    public void TransferMessage()
-    {
-        _recipient.TransferMessage();
-    }
+    public MessageStatus GetMessageStatus() => _recipient.GetMessageStatus();
+
+    public void TransferMessage() => _recipient.TransferMessage();
 }

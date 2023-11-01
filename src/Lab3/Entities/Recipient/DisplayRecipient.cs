@@ -16,6 +16,13 @@ public class DisplayRecipient : IRecipient
 
     public LvlImportant LvlImportant { get; }
     public IMessage? Message { get; private set; }
+    public MessageStatus GetMessageStatus()
+    {
+        if (Message != null)
+            return new MessageStatus.Success(Message.Title);
+        return new MessageStatus.MessageNotDelivered();
+    }
+
     public void TransferMessage()
     {
         if (Message == null)

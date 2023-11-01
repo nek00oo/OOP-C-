@@ -23,5 +23,12 @@ public class MessengerRecipient : IRecipient
         _messenger.ReceiveMessage(Message);
     }
 
+    public MessageStatus GetMessageStatus()
+    {
+        if (Message != null)
+            return new MessageStatus.Success(Message.Title);
+        return new MessageStatus.MessageNotDelivered();
+    }
+
     public void ReceiveMessage(IMessage message) => Message = message;
 }
