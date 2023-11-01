@@ -8,27 +8,25 @@ namespace Itmo.ObjectOrientedProgramming.Lab3.Entities.Recipient;
 public class GroupRecipient : IRecipient
 {
     private readonly List<IRecipient> _recipients;
-
-    public GroupRecipient(LvlImportant lvlImportant, IRecipient recipient)
+    private IMessage? _message;
+    public GroupRecipient(IRecipient recipient)
     {
         _recipients = new List<IRecipient> { recipient };
-        LvlImportant = lvlImportant;
     }
-
-    public LvlImportant LvlImportant { get; }
-    public IMessage? Message { get; private set; }
 
     public MessageStatus GetMessageStatus()
     {
-        throw new NotImplementedException();
+        if (_message != null)
+            return new MessageStatus.Success(_message.Title);
+        return new MessageStatus.MessageNotDelivered();
     }
 
     public void TransferMessage()
     {
-        if (Message == null)
+        if (_message == null)
             throw new InvalidOperationException("message not detected");
         foreach (IRecipient recipient in _recipients)
-            recipient.ReceiveMessage(Message);
+            recipient.ReceiveMessage(_message);
     }
 
     public void AddRecipient(IRecipient recipient)
@@ -41,5 +39,5 @@ public class GroupRecipient : IRecipient
         _recipients.Remove(recipient);
     }
 
-    public void ReceiveMessage(IMessage message) => Message = message;
+    public void ReceiveMessage(IMessage message) => _message = message;
 }

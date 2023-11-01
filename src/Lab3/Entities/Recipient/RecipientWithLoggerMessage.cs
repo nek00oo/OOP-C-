@@ -9,14 +9,11 @@ public class RecipientWithLoggerMessage : IRecipient
     private readonly IRecipient _recipient;
     private readonly ILogger _logger;
 
-    public RecipientWithLoggerMessage(IRecipient recipient, ILogger logger, IMessage? message)
+    public RecipientWithLoggerMessage(IRecipient recipient, ILogger logger)
     {
         _recipient = recipient;
         _logger = logger;
-        Message = message;
     }
-
-    public IMessage? Message { get; }
 
     public void ReceiveMessage(IMessage message)
     {

@@ -7,28 +7,27 @@ namespace Itmo.ObjectOrientedProgramming.Lab3.Entities.Recipient;
 
 public class DisplayRecipient : IRecipient
 {
+    private IMessage? _message;
     private IReceiveAndShowMessageOnDisplay _displayAdapter;
-    public DisplayRecipient(LvlImportant lvlImportant, IReceiveAndShowMessageOnDisplay display)
+
+    public DisplayRecipient(IReceiveAndShowMessageOnDisplay display)
     {
         _displayAdapter = display;
-        LvlImportant = lvlImportant;
     }
 
-    public LvlImportant LvlImportant { get; }
-    public IMessage? Message { get; private set; }
     public MessageStatus GetMessageStatus()
     {
-        if (Message != null)
-            return new MessageStatus.Success(Message.Title);
+        if (_message != null)
+            return new MessageStatus.Success(_message.Title);
         return new MessageStatus.MessageNotDelivered();
     }
 
     public void TransferMessage()
     {
-        if (Message == null)
+        if (_message == null)
             throw new InvalidOperationException("message not detected");
-        _displayAdapter.ReceiveMessage(Message);
+        _displayAdapter.ReceiveMessage(_message);
     }
 
-    public void ReceiveMessage(IMessage message) => Message = message;
+    public void ReceiveMessage(IMessage message) => _message = message;
 }

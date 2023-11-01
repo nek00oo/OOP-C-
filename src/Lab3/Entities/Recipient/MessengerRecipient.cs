@@ -8,27 +8,26 @@ namespace Itmo.ObjectOrientedProgramming.Lab3.Entities.Recipient;
 public class MessengerRecipient : IRecipient
 {
     private IReceiveAndShowMessageOnMessenger _messenger;
-    public MessengerRecipient(LvlImportant lvlImportant, IReceiveAndShowMessageOnMessenger messenger)
+    private IMessage? _message;
+
+    public MessengerRecipient(IReceiveAndShowMessageOnMessenger messenger)
     {
         _messenger = messenger;
-        LvlImportant = lvlImportant;
     }
 
-    public LvlImportant LvlImportant { get; }
-    public IMessage? Message { get; private set; }
     public void TransferMessage()
     {
-        if (Message == null)
+        if (_message == null)
             throw new InvalidOperationException("message not detected");
-        _messenger.ReceiveMessage(Message);
+        _messenger.ReceiveMessage(_message);
     }
 
     public MessageStatus GetMessageStatus()
     {
-        if (Message != null)
-            return new MessageStatus.Success(Message.Title);
+        if (_message != null)
+            return new MessageStatus.Success(_message.Title);
         return new MessageStatus.MessageNotDelivered();
     }
 
-    public void ReceiveMessage(IMessage message) => Message = message;
+    public void ReceiveMessage(IMessage message) => _message = message;
 }
