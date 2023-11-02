@@ -2,7 +2,7 @@ using Itmo.ObjectOrientedProgramming.Lab3.Models.Message;
 
 namespace Itmo.ObjectOrientedProgramming.Lab3.Models;
 
-public interface IMessageReceiver
+public interface IReceiverMessage
 {
     void ReceiveMessage(IMessage message);
 }

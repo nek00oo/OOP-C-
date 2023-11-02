@@ -8,9 +8,9 @@ namespace Itmo.ObjectOrientedProgramming.Lab3.Entities.Recipient;
 public class DisplayRecipient : IRecipient
 {
     private IMessage? _message;
-    private IReceiveAndShowMessageOnDisplay _displayAdapter;
+    private IReceiveMessageOnDisplay _displayAdapter;
 
-    public DisplayRecipient(IReceiveAndShowMessageOnDisplay display)
+    public DisplayRecipient(IReceiveMessageOnDisplay display)
     {
         _displayAdapter = display;
     }

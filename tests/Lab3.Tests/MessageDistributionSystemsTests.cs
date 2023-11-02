@@ -110,7 +110,7 @@ public class MessageDistributionSystemsTests
             .SetLvlImportantForMessage(new LvlImportant.Third())
             .Build();
         IMessenger messenger = new Messenger();
-        IReceiveAndShowMessageOnMessenger messengerAdapter = new MessengerAdapter(messenger);
+        IReceiveMessageOnMessenger messengerAdapter = new MessengerAdapter(messenger);
         IRecipient messengerRecipient = new MessengerRecipient(messengerAdapter);
         ILogger logger = new Logger();
         var messengerRecipientWithLoggerMessage = new RecipientWithLoggerMessage(messengerRecipient, logger);
@@ -136,7 +136,7 @@ public class MessageDistributionSystemsTests
             .SetLvlImportantForMessage(new LvlImportant.Third())
             .Build();
         IMessenger messenger = new Messenger();
-        IReceiveAndShowMessageOnMessenger messengerAdapter = new MessengerAdapter(messenger);
+        IReceiveMessageOnMessenger messengerAdapter = new MessengerAdapter(messenger);
         IRecipient messengerRecipient = new MessengerRecipient(messengerAdapter);
         IRecipientTopic topic = new RecipientTopic("topic", messengerRecipient);
 

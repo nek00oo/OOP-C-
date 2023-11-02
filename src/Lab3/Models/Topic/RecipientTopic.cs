@@ -14,8 +14,5 @@ public class RecipientTopic : IRecipientTopic
     public string Title { get; }
     public IRecipient Recipient { get; }
 
-    public void SendMessage(IMessage message)
-    {
-        Recipient.ReceiveMessage(message);
-    }
+    public void SendMessage(IMessage message) => Recipient.ReceiveMessage(message);
 }

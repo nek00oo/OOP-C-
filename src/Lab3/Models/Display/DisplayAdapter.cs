@@ -1,9 +1,8 @@
-using System.Drawing;
 using Itmo.ObjectOrientedProgramming.Lab3.Models.Message;
 
 namespace Itmo.ObjectOrientedProgramming.Lab3.Models.Display;
 
-public class DisplayAdapter : IReceiveAndShowMessageOnDisplay
+public class DisplayAdapter : IReceiveMessageOnDisplay
 {
     private IDisplay _display;
     public DisplayAdapter(IDisplay display)
@@ -12,6 +11,4 @@ public class DisplayAdapter : IReceiveAndShowMessageOnDisplay
     }
 
     public void ReceiveMessage(IMessage message) => _display.ReceiveText(message.Render());
-    public void SetColor(Color color) => _display.SetColor(color);
-    public void ShowMessage() => _display.ShowText();
 }

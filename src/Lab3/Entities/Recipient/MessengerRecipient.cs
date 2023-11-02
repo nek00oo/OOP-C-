@@ -7,10 +7,10 @@ namespace Itmo.ObjectOrientedProgramming.Lab3.Entities.Recipient;
 
 public class MessengerRecipient : IRecipient
 {
-    private IReceiveAndShowMessageOnMessenger _messenger;
+    private IReceiveMessageOnMessenger _messenger;
     private IMessage? _message;
 
-    public MessengerRecipient(IReceiveAndShowMessageOnMessenger messenger)
+    public MessengerRecipient(IReceiveMessageOnMessenger messenger)
     {
         _messenger = messenger;
     }
