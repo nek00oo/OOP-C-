@@ -11,11 +11,13 @@ public class Display : IDisplay
         _displayDriver = displayDriver;
     }
 
+    public void ReceiveText(string text) => _displayDriver.ReceiveText(text);
+
     public void SetColor(Color color) => _displayDriver.SetColor(color);
 
-    public void ShowText(string text)
+    public void ShowText()
     {
         _displayDriver.ClearOutput();
-        _displayDriver.OutputText(text);
+        _displayDriver.OutputText();
     }
 }

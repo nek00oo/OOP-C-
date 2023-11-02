@@ -5,7 +5,7 @@ namespace Itmo.ObjectOrientedProgramming.Lab3.Models.Message;
 
 public class Message : IMessage, IEquatable<IMessage>
 {
-    public Message(string title, string content, LvlImportant lvlImportant)
+    internal Message(string title, string content, LvlImportant lvlImportant)
     {
         Title = title;
         Content = content;
@@ -28,7 +28,7 @@ public class Message : IMessage, IEquatable<IMessage>
         return HashCode.Combine(LvlImportant, Title, Content);
     }
 
-    protected bool Equals(Message other)
+    private bool Equals(Message other)
     {
         return LvlImportant.Equals(other.LvlImportant) && Title == other.Title && Content == other.Content;
     }

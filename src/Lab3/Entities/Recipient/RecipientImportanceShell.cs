@@ -5,19 +5,17 @@ namespace Itmo.ObjectOrientedProgramming.Lab3.Entities.Recipient;
 
 public class RecipientImportanceShell : IRecipient
 {
-    private IRecipient _recipient;
-
+    private readonly IRecipient _recipient;
+    private readonly LvlImportant _lvlImportant;
     protected RecipientImportanceShell(IRecipient recipient, LvlImportant lvlImportant)
     {
         _recipient = recipient;
-        LvlImportant = lvlImportant;
+        _lvlImportant = lvlImportant;
     }
-
-    public LvlImportant LvlImportant { get; }
 
     public void ReceiveMessage(IMessage message)
     {
-        if (LvlImportant == message.LvlImportant)
+        if (_lvlImportant == message.LvlImportant)
             _recipient.ReceiveMessage(message);
     }
 

@@ -6,6 +6,7 @@ public interface IDisplayDriver
 {
     void ClearOutput();
     void SetColor(Color color);
+    void ReceiveText(string text);
 
-    void OutputText(string text);
+    void OutputText();
 }
