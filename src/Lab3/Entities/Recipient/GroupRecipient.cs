@@ -29,15 +29,7 @@ public class GroupRecipient : IRecipient
             recipient.ReceiveMessage(_message);
     }
 
-    public void AddRecipient(IRecipient recipient)
-    {
-        _recipients.Add(recipient);
-    }
-
-    public void RemoveRecipient(IRecipient recipient)
-    {
-        _recipients.Remove(recipient);
-    }
-
+    public void AddRecipient(IRecipient recipient) => _recipients.Add(recipient);
+    public void RemoveRecipient(IRecipient recipient) => _recipients.Remove(recipient);
     public void ReceiveMessage(IMessage message) => _message = message;
 }
