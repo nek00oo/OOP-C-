@@ -8,4 +8,5 @@ public interface IMessage : IEquatable<IMessage>
     public LvlImportant LvlImportant { get; }
     public string Title { get; }
     public string Content { get; }
+    public string Render();
 }

@@ -1,4 +1,5 @@
 using System;
+using System.Text;
 using Itmo.ObjectOrientedProgramming.Lab3.Type;
 
 namespace Itmo.ObjectOrientedProgramming.Lab3.Models.Message;
@@ -15,6 +16,14 @@ public class Message : IMessage, IEquatable<IMessage>
     public LvlImportant LvlImportant { get; }
     public string Title { get; }
     public string Content { get; }
+    public string Render()
+    {
+        var stringBuilder = new StringBuilder();
+        stringBuilder.Append(Title)
+            .Append('\n')
+            .Append(Content);
+        return stringBuilder.ToString();
+    }
 
     public bool Equals(IMessage? other)
     {

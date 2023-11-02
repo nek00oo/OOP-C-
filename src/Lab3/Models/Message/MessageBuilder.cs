@@ -38,7 +38,7 @@ public class MessageBuilder : IMessageBuilder
     {
         var builder = new StringBuilder();
         foreach (string content in _contents)
-            builder.Append('\n').Append(content);
+            builder.Append(content);
         return new Message(
             _title ?? throw new ArgumentNullException(nameof(_title)),
             builder.ToString() ?? throw new ArgumentNullException(nameof(_contents)),
