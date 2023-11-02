@@ -15,7 +15,6 @@ public class MessengerAdapter : IReceiveAndShowMessageOnMessenger
     {
         var stringBuilder = new StringBuilder();
         stringBuilder.Append(message.Title)
-            .Append('\n')
             .Append(message.Content);
         _messenger.ReceiveText(stringBuilder.ToString());
     }

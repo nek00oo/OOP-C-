@@ -7,7 +7,7 @@ public class RecipientImportanceShell : IRecipient
 {
     private readonly IRecipient _recipient;
     private readonly LvlImportant _lvlImportant;
-    protected RecipientImportanceShell(IRecipient recipient, LvlImportant lvlImportant)
+    public RecipientImportanceShell(IRecipient recipient, LvlImportant lvlImportant)
     {
         _recipient = recipient;
         _lvlImportant = lvlImportant;
