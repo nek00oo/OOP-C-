@@ -1,6 +1,6 @@
-using System;
 using System.Collections.Generic;
 using Itmo.ObjectOrientedProgramming.Lab3.Models.Message;
+using Itmo.ObjectOrientedProgramming.Lab3.Type;
 
 namespace Itmo.ObjectOrientedProgramming.Lab3.Models.User;
 
@@ -13,11 +13,12 @@ public class User : IUser
         _readMessages = new Dictionary<IMessage, bool>();
     }
 
-    public void MarkMessageRead(IMessage message)
+    public MessageStatus MarkMessageRead(IMessage message)
     {
         if (!_readMessages.ContainsKey(message) || _readMessages[message])
-            throw new InvalidOperationException("This message has already been marked as read");
+            return new MessageStatus.ErrorMessageIsRead();
         _readMessages[message] = true;
+        return new MessageStatus.Success(message.Title);
     }
 
     public bool IsMessageRead(IMessage message) => _readMessages.TryGetValue(message, out bool value) && value;

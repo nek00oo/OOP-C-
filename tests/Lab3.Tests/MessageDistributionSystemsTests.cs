@@ -76,7 +76,7 @@ public class MessageDistributionSystemsTests
         user.MarkMessageRead(message);
 
         // Assert
-        Assert.Throws<InvalidOperationException>(() => user.MarkMessageRead(message));
+        Assert.Equal(new MessageStatus.ErrorMessageIsRead(), user.MarkMessageRead(message));
     }
 
     [Fact]

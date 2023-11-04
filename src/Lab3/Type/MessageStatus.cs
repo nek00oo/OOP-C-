@@ -7,4 +7,6 @@ public abstract record MessageStatus
     public sealed record Success(string TitleMessage) : MessageStatus;
 
     public sealed record MessageNotDelivered : MessageStatus;
+
+    public sealed record ErrorMessageIsRead : MessageStatus;
 }
