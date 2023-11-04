@@ -1,10 +1,8 @@
-using Itmo.ObjectOrientedProgramming.Lab3.Models;
-using Itmo.ObjectOrientedProgramming.Lab3.Type;
+using Itmo.ObjectOrientedProgramming.Lab3.Models.Message;
 
 namespace Itmo.ObjectOrientedProgramming.Lab3.Entities.Recipient;
 
-public interface IRecipient : IReceiverMessage
+public interface IRecipient
 {
-    MessageStatus GetMessageStatus();
-    void TransferMessage();
+    void TransferMessage(IMessage message);
 }

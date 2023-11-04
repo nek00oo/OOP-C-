@@ -5,17 +5,13 @@ namespace Itmo.ObjectOrientedProgramming.Lab3.Models.Display;
 
 public class ConsoleDisplayDriver : IDisplayDriver
 {
-    private Color _color = Color.Azure;
-    private string? _text;
+    private Color _color = Color.White;
     public void ClearOutput() => Console.Clear();
 
     public void SetColor(Color color) => _color = color;
-    public void ReceiveText(string text) => _text = text;
 
-    public void OutputText()
+    public void OutputText(string text)
     {
-        if (_text == null)
-            throw new InvalidOperationException();
-        Console.WriteLine(Crayon.Output.Rgb(_color.R, _color.G, _color.B).Text(_text));
+        Console.WriteLine(Crayon.Output.Rgb(_color.R, _color.G, _color.B).Text(text));
     }
 }

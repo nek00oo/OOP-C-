@@ -1,13 +1,11 @@
-using System;
-using System.IO;
 using Itmo.ObjectOrientedProgramming.Lab3.Entities.Recipient;
-using Itmo.ObjectOrientedProgramming.Lab3.Models;
 using Itmo.ObjectOrientedProgramming.Lab3.Models.Logger;
 using Itmo.ObjectOrientedProgramming.Lab3.Models.Message;
 using Itmo.ObjectOrientedProgramming.Lab3.Models.Messenger;
 using Itmo.ObjectOrientedProgramming.Lab3.Models.Topic;
 using Itmo.ObjectOrientedProgramming.Lab3.Models.User;
 using Itmo.ObjectOrientedProgramming.Lab3.Type;
+using NSubstitute;
 using Xunit;
 
 namespace Itmo.ObjectOrientedProgramming.Lab3.Tests;
@@ -15,13 +13,13 @@ namespace Itmo.ObjectOrientedProgramming.Lab3.Tests;
 public class MessageDistributionSystemsTests
 {
     [Fact]
-    public void IsReadReceivedMessage_ReturnIsNotRead()
+    public void TestedMethodIsMessageRead_ExpectedResultFalse_WhenMessageIsNotRead()
     {
         // Arrange
         var messageBuilder = new MessageBuilder();
         IMessage message = messageBuilder.SelectTitle("Title")
             .SelectContent("Content")
-            .SetLvlImportantForMessage(new LvlImportant.Second())
+            .SetLvlImportantForMessage(2)
             .Build();
         IUser user = new User();
         IRecipient userRecipient = new UserRecipient(user);
@@ -29,20 +27,19 @@ public class MessageDistributionSystemsTests
 
         // Act
         topic.SendMessage(message);
-        userRecipient.TransferMessage();
 
         // Assert
         Assert.False(user.IsMessageRead(message));
     }
 
     [Fact]
-    public void MarkMessageIsRead_ReturnMessageIsRead()
+    public void TestedMethodIsMessageRead_ExpectedResultTrue_WhenMessageIsRead()
     {
         // Arrange
         var messageBuilder = new MessageBuilder();
         IMessage message = messageBuilder.SelectTitle("Title")
             .SelectContent("Content")
-            .SetLvlImportantForMessage(new LvlImportant.Second())
+            .SetLvlImportantForMessage(2)
             .Build();
         IUser user = new User();
         IRecipient userRecipient = new UserRecipient(user);
@@ -50,7 +47,6 @@ public class MessageDistributionSystemsTests
 
         // Act
         topic.SendMessage(message);
-        userRecipient.TransferMessage();
         user.MarkMessageRead(message);
 
         // Assert
@@ -58,13 +54,13 @@ public class MessageDistributionSystemsTests
     }
 
     [Fact]
-    public void MarkMessageIsRead_ReturnException()
+    public void TestedMethodMarkMessageIsRead_ExpectedResultMessageAlreadyBeenRead_WhenMessageIsRead()
     {
         // Arrange
         var messageBuilder = new MessageBuilder();
         IMessage message = messageBuilder.SelectTitle("Title")
             .SelectContent("Content")
-            .SetLvlImportantForMessage(new LvlImportant.Second())
+            .SetLvlImportantForMessage(2)
             .Build();
         IUser user = new User();
         IRecipient userRecipient = new UserRecipient(user);
@@ -72,32 +68,30 @@ public class MessageDistributionSystemsTests
 
         // Act
         topic.SendMessage(message);
-        userRecipient.TransferMessage();
         user.MarkMessageRead(message);
 
         // Assert
-        Assert.Equal(new MessageStatus.ErrorMessageIsRead(), user.MarkMessageRead(message));
+        Assert.Equal(new MessageStatus.MessageAlreadyBeenRead(), user.MarkMessageRead(message));
     }
 
     [Fact]
-    public void GetMessageStatus_ReturnMessageNotDelivered()
+    public void TestedMethodTransferMessage_ExpectedResult_TestConditionSendMessage_ShouldBeIgnored_WhenPriorityIsLow()
     {
         // Arrange
         var messageBuilder = new MessageBuilder();
         IMessage message = messageBuilder.SelectTitle("Title")
             .SelectContent("Content")
-            .SetLvlImportantForMessage(new LvlImportant.Third())
+            .SetLvlImportantForMessage(3)
             .Build();
-        IUser user = new User();
-        IRecipient userRecipient = new UserRecipient(user);
-        var userRecipientImportanceShell = new RecipientImportanceShell(userRecipient, new LvlImportant.Second());
+        IRecipient userRecipient = Substitute.For<IRecipient>();
+        var userRecipientImportanceShell = new RecipientImportanceShell(userRecipient, 2);
         IRecipientTopic topic = new RecipientTopic("topic", userRecipientImportanceShell);
 
         // Act
         topic.SendMessage(message);
 
         // Assert
-        Assert.Equal(new MessageStatus.MessageNotDelivered(), userRecipient.GetMessageStatus());
+        userRecipient.DidNotReceive().TransferMessage(message);
     }
 
     [Fact]
@@ -107,23 +101,19 @@ public class MessageDistributionSystemsTests
         var messageBuilder = new MessageBuilder();
         IMessage message = messageBuilder.SelectTitle("Title")
             .SelectContent("Content")
-            .SetLvlImportantForMessage(new LvlImportant.Third())
+            .SetLvlImportantForMessage(3)
             .Build();
         IMessenger messenger = new Messenger();
-        IReceiveMessageOnMessenger messengerAdapter = new MessengerAdapter(messenger);
-        IRecipient messengerRecipient = new MessengerRecipient(messengerAdapter);
-        ILogger logger = new Logger();
+        IRecipient messengerRecipient = new MessengerRecipient(messenger);
+        ILogger logger = Substitute.For<ILogger>();
         var messengerRecipientWithLoggerMessage = new RecipientWithLoggerMessage(messengerRecipient, logger);
         IRecipientTopic topic = new RecipientTopic("topic", messengerRecipientWithLoggerMessage);
 
         // Act
-        using var stringWriter = new StringWriter();
-        Console.SetOut(stringWriter);
         topic.SendMessage(message);
 
         // Assert
-        string expectedOutput = "The message Title reached the MessengerRecipient\r\n";
-        Assert.Equal(expectedOutput, stringWriter.ToString());
+        logger.Received().ShowStatus("Logger : The TransferMessage is called. MessengerRecipient");
     }
 
     [Fact]
@@ -133,22 +123,16 @@ public class MessageDistributionSystemsTests
         var messageBuilder = new MessageBuilder();
         IMessage message = messageBuilder.SelectTitle("Title")
             .SelectContent("Content")
-            .SetLvlImportantForMessage(new LvlImportant.Third())
+            .SetLvlImportantForMessage(3)
             .Build();
-        IMessenger messenger = new Messenger();
-        IReceiveMessageOnMessenger messengerAdapter = new MessengerAdapter(messenger);
-        IRecipient messengerRecipient = new MessengerRecipient(messengerAdapter);
+        IMessenger messenger = Substitute.For<IMessenger>();
+        IRecipient messengerRecipient = new MessengerRecipient(messenger);
         IRecipientTopic topic = new RecipientTopic("topic", messengerRecipient);
 
         // Act
         topic.SendMessage(message);
-        messengerRecipient.TransferMessage();
-        using var stringWriter = new StringWriter();
-        Console.SetOut(stringWriter);
-        messenger.WriteText();
 
         // Assert
-        string expectedOutput = "Messenger:\nTitle\nContent\r\n";
-        Assert.Equal(expectedOutput, stringWriter.ToString());
+        messenger.Received().WriteText("Title\nContent");
     }
 }

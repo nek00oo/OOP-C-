@@ -4,13 +4,8 @@ namespace Itmo.ObjectOrientedProgramming.Lab3.Models.Messenger;
 
 public class Messenger : IMessenger
 {
-    private string? _text;
-    public void WriteText()
+    public void WriteText(string text)
     {
-        if (_text == null)
-            throw new InvalidOperationException("No output text found");
-        Console.WriteLine("Messenger:\n" + _text);
+        Console.WriteLine("Messenger:\n" + text);
     }
-
-    public void ReceiveText(string text) => _text = text;
 }

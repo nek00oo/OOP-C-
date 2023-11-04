@@ -4,9 +4,6 @@ public abstract record MessageStatus
 {
     private MessageStatus() { }
 
-    public sealed record Success(string TitleMessage) : MessageStatus;
-
-    public sealed record MessageNotDelivered : MessageStatus;
-
-    public sealed record ErrorMessageIsRead : MessageStatus;
+    public sealed record Success() : MessageStatus;
+    public sealed record MessageAlreadyBeenRead : MessageStatus;
 }

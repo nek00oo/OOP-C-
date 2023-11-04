@@ -1,19 +1,20 @@
 using System;
 using System.Text;
-using Itmo.ObjectOrientedProgramming.Lab3.Type;
 
 namespace Itmo.ObjectOrientedProgramming.Lab3.Models.Message;
 
 public class Message : IMessage, IEquatable<IMessage>
 {
-    internal Message(string title, string content, LvlImportant lvlImportant)
+    internal Message(string title, string content, int lvlImportant)
     {
         Title = title;
         Content = content;
+        if (lvlImportant < 0)
+            throw new InvalidOperationException("The importance level should not be negative");
         LvlImportant = lvlImportant;
     }
 
-    public LvlImportant LvlImportant { get; }
+    public int LvlImportant { get; }
     public string Title { get; }
     public string Content { get; }
     public string Render()

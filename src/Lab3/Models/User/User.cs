@@ -16,9 +16,9 @@ public class User : IUser
     public MessageStatus MarkMessageRead(IMessage message)
     {
         if (!_readMessages.ContainsKey(message) || _readMessages[message])
-            return new MessageStatus.ErrorMessageIsRead();
+            return new MessageStatus.MessageAlreadyBeenRead();
         _readMessages[message] = true;
-        return new MessageStatus.Success(message.Title);
+        return new MessageStatus.Success();
     }
 
     public bool IsMessageRead(IMessage message) => _readMessages.TryGetValue(message, out bool value) && value;

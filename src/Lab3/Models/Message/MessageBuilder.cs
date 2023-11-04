@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Itmo.ObjectOrientedProgramming.Lab3.Type;
 
 namespace Itmo.ObjectOrientedProgramming.Lab3.Models.Message;
 
@@ -9,7 +8,7 @@ public class MessageBuilder : IMessageBuilder
 {
     private string? _title;
     private List<string> _contents;
-    private LvlImportant? _lvlImportant;
+    private int? _lvlImportant;
 
     public MessageBuilder()
     {
@@ -28,7 +27,7 @@ public class MessageBuilder : IMessageBuilder
         return this;
     }
 
-    public IMessageBuilder SetLvlImportantForMessage(LvlImportant lvlImportant)
+    public IMessageBuilder SetLvlImportantForMessage(int lvlImportant)
     {
         _lvlImportant = lvlImportant;
         return this;
