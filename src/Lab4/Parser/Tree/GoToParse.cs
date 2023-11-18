@@ -1,10 +1,11 @@
+using Itmo.ObjectOrientedProgramming.Lab4.Command;
 using Itmo.ObjectOrientedProgramming.Lab4.Iterator;
 
 namespace Itmo.ObjectOrientedProgramming.Lab4.Parser.Tree;
 
 public class GoToParse : CommandParserBase
 {
-    public override CommandArgument CheckCommand(IIterator iterator)
+    public override CommandArgument CheckCommand(IIterator iterator, ICommand? command)
     {
         if (iterator.GetCurrent().ToUpperInvariant() == "GOTO")
         {

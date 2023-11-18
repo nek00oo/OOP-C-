@@ -4,15 +4,17 @@ namespace Itmo.ObjectOrientedProgramming.Lab4.Command;
 
 public class TreeGoTo : ICommand
 {
-    private readonly string _path;
+    private string? _path;
 
-    public TreeGoTo(string path)
+    public void SetParameters(string path)
     {
         _path = path;
     }
 
     public OperationResult Execute(IExecuteContext executeContext)
     {
-        return executeContext.TreeGoTo(_path);
+        if (_path is not null)
+            return executeContext.TreeGoTo(_path);
+        return new OperationResult.ExecutionError();
     }
 }

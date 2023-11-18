@@ -4,10 +4,10 @@ namespace Itmo.ObjectOrientedProgramming.Lab4.Command;
 
 public class MoveFileCommand : ICommand
 {
-    private readonly string _sourcePath;
-    private readonly string _destinationPath;
+    private string? _sourcePath;
+    private string? _destinationPath;
 
-    public MoveFileCommand(string sourcePath, string destinationPath)
+    public void SetParameters(string? sourcePath, string? destinationPath)
     {
         _sourcePath = sourcePath;
         _destinationPath = destinationPath;
@@ -15,6 +15,8 @@ public class MoveFileCommand : ICommand
 
     public OperationResult Execute(IExecuteContext executeContext)
     {
-        return executeContext.MoveFile(_sourcePath, _destinationPath);
+        if (_sourcePath is not null && _destinationPath is not null)
+            return executeContext.MoveFile(_sourcePath, _destinationPath);
+        return new OperationResult.ExecutionError();
     }
 }

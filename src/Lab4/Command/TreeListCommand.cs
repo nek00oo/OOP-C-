@@ -5,17 +5,20 @@ namespace Itmo.ObjectOrientedProgramming.Lab4.Command;
 
 public class TreeListCommand : ICommand
 {
-    private readonly IOutputMode _outputMode;
-    private readonly int _depth;
+    private IOutputMode? _outputMode;
+    private int _depth = 1;
 
-    public TreeListCommand(IOutputMode outputMode, int depth)
+    public void SetParameters(IOutputMode? outputMode, int depth)
     {
+        if (_depth > 1)
+            _depth = depth;
         _outputMode = outputMode;
-        _depth = depth;
     }
 
     public OperationResult Execute(IExecuteContext executeContext)
     {
-        return executeContext.TreeList(_outputMode, _depth);
+        if (_outputMode is not null)
+            return executeContext.TreeList(_outputMode, _depth);
+        return new OperationResult.ExecutionError();
     }
 }

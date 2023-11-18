@@ -1,3 +1,4 @@
+using Itmo.ObjectOrientedProgramming.Lab4.Command;
 using Itmo.ObjectOrientedProgramming.Lab4.Iterator;
 
 namespace Itmo.ObjectOrientedProgramming.Lab4.Parser;
@@ -14,5 +15,5 @@ public abstract class CommandParserBase : ICommandParser
         return this;
     }
 
-    public abstract CommandArgument CheckCommand(IIterator iterator);
+    public abstract CommandArgument CheckCommand(IIterator iterator, ICommand? command);
 }
