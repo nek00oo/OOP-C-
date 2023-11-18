@@ -8,11 +8,12 @@ public class TreeListCommand : ICommand
     private IOutputMode? _outputMode;
     private int _depth = 1;
 
-    public void SetParameters(IOutputMode? outputMode, int depth)
+    public TreeListCommand SetParameters(IOutputMode? outputMode, int? depth)
     {
-        if (_depth > 1)
-            _depth = depth;
+        if (depth != null && depth > 1)
+            _depth = (int)depth;
         _outputMode = outputMode;
+        return this;
     }
 
     public OperationResult Execute(IExecuteContext executeContext)

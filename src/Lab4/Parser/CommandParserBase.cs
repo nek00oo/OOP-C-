@@ -1,19 +1,28 @@
-using Itmo.ObjectOrientedProgramming.Lab4.Command;
+using System.Collections.Generic;
 using Itmo.ObjectOrientedProgramming.Lab4.Iterator;
 
 namespace Itmo.ObjectOrientedProgramming.Lab4.Parser;
 
 public abstract class CommandParserBase : ICommandParser
 {
-    protected ICommandParser? NextCommand { get; private set; }
-    protected ICommandParser? IntoCommand { get; private set; }
+    protected CommandParserBase()
+    {
+        IntoCommand = new List<ISupportiveParse>();
+    }
 
-    public ICommandParser SetNext(ICommandParser nextCommand, ICommandParser intoCommand)
+    protected IList<ISupportiveParse> IntoCommand { get; }
+    protected ICommandParser? NextCommand { get; private set; }
+
+    public ICommandParser SetNextCommand(ICommandParser nextCommand)
     {
         NextCommand = nextCommand;
-        IntoCommand = intoCommand;
         return this;
     }
 
-    public abstract CommandArgument CheckCommand(IIterator iterator, ICommand? command);
+    public void SetNextSupportiveCommand(ISupportiveParse nextCommand)
+    {
+        IntoCommand.Add(nextCommand);
+    }
+
+    public abstract CommandArgument CheckCommand(IIterator iterator);
 }

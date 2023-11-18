@@ -3,18 +3,18 @@ using Itmo.ObjectOrientedProgramming.Lab4.Iterator;
 
 namespace Itmo.ObjectOrientedProgramming.Lab4.Parser.Tree;
 
-public class GoToParse : CommandParserBase
+public class GoToParse : SupportiveParseBase
 {
-    public override CommandArgument CheckCommand(IIterator iterator, ICommand? command)
+    public override CommandArgument CheckCommand(IIterator iterator)
     {
         if (iterator.GetCurrent().ToUpperInvariant() == "GOTO")
         {
             if (iterator.MoveNext())
             {
-                return IntoCommand?.CheckCommand(iterator) ?? new CommandArgument.CommandNotDetected();
+                return new CommandArgument.Success(new TreeGoTo().SetParameters(iterator.GetCurrent()));
             }
         }
 
-        return NextCommand?.CheckCommand(iterator) ?? new CommandArgument.CommandNotDetected();
+        return new CommandArgument.CommandNotDetected();
     }
 }

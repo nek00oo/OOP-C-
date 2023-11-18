@@ -1,17 +1,17 @@
-using Itmo.ObjectOrientedProgramming.Lab4.Command;
 using Itmo.ObjectOrientedProgramming.Lab4.Iterator;
 
 namespace Itmo.ObjectOrientedProgramming.Lab4.Parser.Connect;
 
 public class ConnectParse : CommandParserBase
 {
-    public override CommandArgument CheckCommand(IIterator iterator, ICommand? command)
+    public override CommandArgument CheckCommand(IIterator iterator)
     {
-        if (iterator.GetCurrent().ToUpperInvariant() == "CONNECT")
+        if (iterator.GetCurrent().ToUpperInvariant() == "CONNECT" && iterator.MoveNext())
         {
-            if (iterator.MoveNext())
+            foreach (ISupportiveParse commandParse in IntoCommand)
             {
-                return IntoCommand?.CheckCommand(iterator) ?? new CommandArgument.CommandNotDetected();
+                if (commandParse.CheckCommand(iterator) is CommandArgument.Success success)
+                    return success;
             }
         }
 

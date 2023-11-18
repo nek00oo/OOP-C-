@@ -6,9 +6,10 @@ public class TreeGoTo : ICommand
 {
     private string? _path;
 
-    public void SetParameters(string path)
+    public TreeGoTo SetParameters(string path)
     {
         _path = path;
+        return this;
     }
 
     public OperationResult Execute(IExecuteContext executeContext)

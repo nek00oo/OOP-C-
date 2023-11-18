@@ -1,10 +1,10 @@
 using Itmo.ObjectOrientedProgramming.Lab4.Iterator;
+using Itmo.ObjectOrientedProgramming.Lab4.Parser.FlagsParse;
 
 namespace Itmo.ObjectOrientedProgramming.Lab4.Parser;
 
-public interface ICommandParser
+public interface ISupportiveParse
 {
-    ICommandParser SetNextCommand(ICommandParser nextCommand);
-    void SetNextSupportiveCommand(ISupportiveParse nextCommand);
+    void SetSupportiveCommand(IFlagParse flagParse);
     CommandArgument CheckCommand(IIterator iterator);
 }
