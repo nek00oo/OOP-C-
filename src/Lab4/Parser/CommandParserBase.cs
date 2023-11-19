@@ -1,16 +1,11 @@
-using System.Collections.Generic;
 using Itmo.ObjectOrientedProgramming.Lab4.Iterator;
+using Itmo.ObjectOrientedProgramming.Lab4.Parser.FlagsParse;
 
 namespace Itmo.ObjectOrientedProgramming.Lab4.Parser;
 
 public abstract class CommandParserBase : ICommandParser
 {
-    protected CommandParserBase()
-    {
-        IntoCommand = new List<ISupportiveParse>();
-    }
-
-    protected IList<ISupportiveParse> IntoCommand { get; }
+    protected IFlagParse? FlagParse { get; set; }
     protected ICommandParser? NextCommand { get; private set; }
 
     public ICommandParser SetNextCommand(ICommandParser nextCommand)
@@ -19,10 +14,10 @@ public abstract class CommandParserBase : ICommandParser
         return this;
     }
 
-    public void SetNextSupportiveCommand(ISupportiveParse nextCommand)
+    public void SetNextSupportiveCommand(IFlagParse flagParse)
     {
-        IntoCommand.Add(nextCommand);
+        FlagParse = flagParse;
     }
 
-    public abstract CommandArgument CheckCommand(IIterator iterator);
+    public abstract ParseResult CheckCommand(IIterator iterator);
 }

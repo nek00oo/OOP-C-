@@ -4,8 +4,8 @@ namespace Itmo.ObjectOrientedProgramming.Lab4.Command;
 
 public class DisconnectCommand : ICommand
 {
-    public OperationResult Execute(IExecuteContext executeContext)
+    public OperationResult Execute(IExecuteContext? executeContext)
     {
-       return executeContext.Disconnect();
+        return executeContext?.Disconnect() ?? new OperationResult.ExecutionError();
     }
 }

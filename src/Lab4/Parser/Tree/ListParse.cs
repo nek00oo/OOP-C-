@@ -4,19 +4,19 @@ using Itmo.ObjectOrientedProgramming.Lab4.Parser.FlagsParse;
 
 namespace Itmo.ObjectOrientedProgramming.Lab4.Parser.Tree;
 
-public class ListParse : SupportiveParseBase
+public class ListParse : CommandParserBase
 {
-    public override CommandArgument CheckCommand(IIterator iterator)
+    public override ParseResult CheckCommand(IIterator iterator)
     {
         if (iterator.GetCurrent().ToUpperInvariant() == "LIST")
         {
             if (iterator.MoveNext() && FlagParse is not null)
             {
                 FlagsArgument flagsArgument = FlagParse.CheckValue(iterator);
-                return new CommandArgument.Success(new TreeListCommand().SetParameters(flagsArgument.OutputMode, flagsArgument.Depth));
+                return new ParseResult.Success(new TreeListCommand(flagsArgument?.OutputMode, flagsArgument?.Depth));
             }
         }
 
-        return new CommandArgument.CommandNotDetected();
+        return NextCommand?.CheckCommand(iterator) ?? new ParseResult.CommandNotDetected();
     }
 }

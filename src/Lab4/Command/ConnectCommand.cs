@@ -4,19 +4,19 @@ namespace Itmo.ObjectOrientedProgramming.Lab4.Command;
 
 public class ConnectCommand : ICommand
 {
-    private string? _rootPath;
-    private FileSystemMode? _fileSystemMode;
+    private readonly string _rootPath;
+    private readonly FileSystemMode? _fileSystemMode;
 
-    public void SetParameters(string? rootPath, FileSystemMode? fileSystemMode)
+    public ConnectCommand(string rootPath, FileSystemMode? fileSystemMode)
     {
         _rootPath = rootPath;
         _fileSystemMode = fileSystemMode;
     }
 
-    public OperationResult Execute(IExecuteContext executeContext)
+    public OperationResult Execute(IExecuteContext? executeContext)
     {
-        if (_rootPath is not null && _fileSystemMode is not null)
-            return executeContext.Connect(_rootPath, _fileSystemMode);
+        if (_fileSystemMode is FileSystemMode.Local)
+            return new OperationResult.Success(new LocalExecuteContext(_rootPath));
         return new OperationResult.ExecutionError();
     }
 }

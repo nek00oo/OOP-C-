@@ -10,22 +10,28 @@ public class LocalExecuteContext : IExecuteContext
     private string? _rootPath;
     private string? _currentPath;
 
-    public LocalExecuteContext(string path)
+    public LocalExecuteContext(string rootPath)
+    {
+        if (!Path.IsPathRooted(rootPath))
+            throw new InvalidOperationException("a non-absolute path in the attached file system was passed");
+        _rootPath = rootPath;
+        _currentPath = rootPath;
+    }
+
+    public OperationResult Connect(string path, FileSystemMode fileSystemMode)
     {
         if (!Path.IsPathRooted(path))
             throw new InvalidOperationException("a non-absolute path in the attached file system was passed");
         _rootPath = path;
         _currentPath = path;
-    }
-
-    public OperationResult Connect(string path, FileSystemMode fileSystemMode)
-    {
-        throw new NotImplementedException();
+        return new OperationResult.Success(this);
     }
 
     public OperationResult Disconnect()
     {
-        throw new NotImplementedException();
+        _rootPath = null;
+        _currentPath = null;
+        return new OperationResult.Success(this);
     }
 
     public OperationResult TreeGoTo(string path)
@@ -35,7 +41,7 @@ public class LocalExecuteContext : IExecuteContext
             return new OperationResult.ExecutionError();
 
         _currentPath = fullPath;
-        return new OperationResult.Success();
+        return new OperationResult.Success(this);
     }
 
     public OperationResult TreeList(IOutputMode outputMode, int depth)
@@ -43,7 +49,7 @@ public class LocalExecuteContext : IExecuteContext
         if (_currentPath is null) return new OperationResult.ExecutionError();
         TreeList(outputMode, depth, 0, _currentPath);
 
-        return new OperationResult.Success();
+        return new OperationResult.Success(this);
     }
 
     public OperationResult ShowFile(IOutputMode outputMode, string filename)
@@ -55,7 +61,7 @@ public class LocalExecuteContext : IExecuteContext
 
         string content = File.ReadAllText(filename);
         outputMode.Output(content);
-        return new OperationResult.Success();
+        return new OperationResult.Success(this);
     }
 
     public OperationResult MoveFile(string sourcePath, string destinationPath)
@@ -66,7 +72,7 @@ public class LocalExecuteContext : IExecuteContext
             return new OperationResult.ExecutionError();
 
         File.Move(sourceFullPath, Path.Combine(destinationFullPath, Path.GetFileName(sourceFullPath)));
-        return new OperationResult.Success();
+        return new OperationResult.Success(this);
     }
 
     public OperationResult CopyFile(string sourcePath, string destinationPath)
@@ -77,7 +83,7 @@ public class LocalExecuteContext : IExecuteContext
             return new OperationResult.ExecutionError();
 
         File.Copy(sourceFullPath, Path.Combine(destinationFullPath, Path.GetFileName(sourceFullPath)));
-        return new OperationResult.Success();
+        return new OperationResult.Success(this);
     }
 
     public OperationResult FileDelete(string fileName)
@@ -88,7 +94,7 @@ public class LocalExecuteContext : IExecuteContext
             return new OperationResult.ExecutionError();
 
         File.Delete(fullPath);
-        return new OperationResult.Success();
+        return new OperationResult.Success(this);
     }
 
     public OperationResult RenameFile(string filePath, string newFileName)
@@ -103,12 +109,12 @@ public class LocalExecuteContext : IExecuteContext
         {
             string newFilePath = Path.Combine(directoryFullPath, newFileName);
             File.Move(fullPath, newFilePath);
-            return new OperationResult.Success();
+            return new OperationResult.Success(this);
         }
 
         File.Move(fullPath, newFileName);
 
-        return new OperationResult.Success();
+        return new OperationResult.Success(this);
     }
 
     private string GetFullPath(string path)

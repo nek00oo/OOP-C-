@@ -1,23 +1,22 @@
 using System;
 using Itmo.ObjectOrientedProgramming.Lab4.Iterator;
-using Itmo.ObjectOrientedProgramming.Lab4.OutputMode;
 
 namespace Itmo.ObjectOrientedProgramming.Lab4.Parser.FlagsParse;
 
-public class OutputModeParse : FlagParseBase
+public class FileSystemMadeParse : FlagParseBase
 {
     public override FlagsArgument CheckValue(IIterator iterator)
     {
         if (iterator.GetCurrent().ToUpperInvariant() == "-M" && iterator.MoveNext())
         {
-            if (iterator.GetCurrent().ToUpperInvariant() == "CONSOLE")
+            if (iterator.GetCurrent().ToUpperInvariant() == "LOCAL")
             {
                 if (iterator.MoveNext())
-                    return NextFlag?.CheckValue(iterator).WithOutputMode(new ConsoleOutputMode()) ?? new FlagsArgument();
-                return new FlagsArgument().WithOutputMode(new ConsoleOutputMode());
+                    return NextFlag?.CheckValue(iterator).WithFileSystemMode(new FileSystemMode.Local()) ?? new FlagsArgument();
+                return new FlagsArgument().WithFileSystemMode(new FileSystemMode.Local());
             }
 
-            throw new InvalidOperationException("output mode is not implemented");
+            throw new InvalidOperationException("file system mode is not implemented");
         }
 
         return NextFlag?.CheckValue(iterator) ?? new FlagsArgument();

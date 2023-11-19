@@ -4,6 +4,6 @@ public abstract record OperationResult
 {
     private OperationResult() { }
 
-    public sealed record Success : OperationResult;
+    public sealed record Success(IExecuteContext ExecuteContext) : OperationResult;
     public sealed record ExecutionError : OperationResult;
 }
