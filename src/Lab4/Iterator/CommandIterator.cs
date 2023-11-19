@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -16,8 +15,6 @@ public class CommandIterator : IIterator
 
     public bool MoveNext()
     {
-        if (_command.ElementAt(_currentPosition).StartsWith("-", StringComparison.InvariantCulture))
-            return false;
         _currentPosition++;
         return _currentPosition < _command.Count;
     }

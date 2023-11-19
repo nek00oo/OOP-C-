@@ -5,18 +5,26 @@ namespace Itmo.ObjectOrientedProgramming.Lab4.Parser;
 
 public abstract class CommandParserBase : ICommandParser
 {
-    protected IFlagParse? FlagParse { get; set; }
+    protected IFlagParse? FlagParse { get; private set; }
     protected ICommandParser? NextCommand { get; private set; }
 
-    public ICommandParser SetNextCommand(ICommandParser nextCommand)
+    public ICommandParser SetNextCommandParse(ICommandParser nextCommand)
     {
         NextCommand = nextCommand;
-        return this;
+        return nextCommand;
     }
 
-    public void SetNextSupportiveCommand(IFlagParse flagParse)
+    public ICommandParser SetChainFlagParse(params IFlagParse[] flagParses)
     {
-        FlagParse = flagParse;
+        FlagParse = flagParses[0];
+        IFlagParse currentFlag = FlagParse;
+        for (int i = 1; i < flagParses.Length; i++)
+        {
+            currentFlag?.SetNext(flagParses[i]);
+            currentFlag = flagParses[i];
+        }
+
+        return this;
     }
 
     public abstract ParseResult CheckCommand(IIterator iterator);

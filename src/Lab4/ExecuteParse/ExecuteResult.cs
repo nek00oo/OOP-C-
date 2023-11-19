@@ -1,4 +1,4 @@
-namespace Itmo.ObjectOrientedProgramming.Lab4;
+namespace Itmo.ObjectOrientedProgramming.Lab4.ExecuteParse;
 
 public abstract record ExecuteResult
 {

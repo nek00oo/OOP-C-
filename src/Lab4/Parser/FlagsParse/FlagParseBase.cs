@@ -8,7 +8,7 @@ public abstract class FlagParseBase : IFlagParse
     public IFlagParse SetNext(IFlagParse flagParse)
     {
         NextFlag = flagParse;
-        return this;
+        return flagParse;
     }
 
     public abstract FlagsArgument CheckValue(IIterator iterator);

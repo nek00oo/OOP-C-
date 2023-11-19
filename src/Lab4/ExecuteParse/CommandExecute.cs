@@ -1,7 +1,8 @@
 using Itmo.ObjectOrientedProgramming.Lab4.ExecutionContext;
 using Itmo.ObjectOrientedProgramming.Lab4.Iterator;
+using Itmo.ObjectOrientedProgramming.Lab4.Parser;
 
-namespace Itmo.ObjectOrientedProgramming.Lab4.Parser;
+namespace Itmo.ObjectOrientedProgramming.Lab4.ExecuteParse;
 
 public class CommandExecute
 {

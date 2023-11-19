@@ -5,7 +5,7 @@ namespace Itmo.ObjectOrientedProgramming.Lab4.Parser;
 
 public interface ICommandParser
 {
-    ICommandParser SetNextCommand(ICommandParser nextCommand);
-    void SetNextSupportiveCommand(IFlagParse flagParse);
+    ICommandParser SetNextCommandParse(ICommandParser nextCommand);
+    ICommandParser SetChainFlagParse(params IFlagParse[] flagParses);
     ParseResult CheckCommand(IIterator iterator);
 }

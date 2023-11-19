@@ -1,4 +1,5 @@
 using Itmo.ObjectOrientedProgramming.Lab4.OutputMode;
+using Itmo.ObjectOrientedProgramming.Lab4.Parser.FlagsParse;
 
 namespace Itmo.ObjectOrientedProgramming.Lab4.ExecutionContext;
 

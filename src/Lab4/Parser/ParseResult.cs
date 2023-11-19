@@ -1,6 +1,6 @@
 using Itmo.ObjectOrientedProgramming.Lab4.Command;
 
-namespace Itmo.ObjectOrientedProgramming.Lab4;
+namespace Itmo.ObjectOrientedProgramming.Lab4.Parser;
 
 public abstract record ParseResult
 {
