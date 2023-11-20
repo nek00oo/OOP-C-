@@ -5,10 +5,10 @@ namespace Itmo.ObjectOrientedProgramming.Lab4.Command;
 
 public class ShowFile : ICommand
 {
-    private readonly string? _filename;
-    private readonly IOutputMode? _outputMode;
+    private readonly string _filename;
+    private readonly IOutputMode _outputMode;
 
-    public ShowFile(string? filename, IOutputMode? outputMode)
+    public ShowFile(string filename, IOutputMode outputMode)
     {
         _filename = filename;
         _outputMode = outputMode;
@@ -16,8 +16,6 @@ public class ShowFile : ICommand
 
     public OperationResult Execute(IExecuteContext? executeContext)
     {
-        if (executeContext is not null && _filename is not null && _outputMode is not null)
-            return executeContext.ShowFile(_outputMode, _filename);
-        return new OperationResult.ExecutionError();
+        return executeContext?.ShowFile(_outputMode, _filename) ?? new OperationResult.ExecutionError("check the connection to the file system");
     }
 }

@@ -18,6 +18,6 @@ public class ConnectCommand : ICommand
     {
         if (_fileSystemMode is FileSystemMode.Local)
             return new OperationResult.Success(new LocalExecuteContext(_rootPath));
-        return new OperationResult.ExecutionError();
+        return new OperationResult.ExecutionError("Work with the specified file system has not yet been implemented");
     }
 }

@@ -4,10 +4,10 @@ namespace Itmo.ObjectOrientedProgramming.Lab4.Command;
 
 public class CopyFileCommand : ICommand
 {
-    private readonly string? _sourcePath;
-    private readonly string? _destinationPath;
+    private readonly string _sourcePath;
+    private readonly string _destinationPath;
 
-    public CopyFileCommand(string? sourcePath, string? destinationPath)
+    public CopyFileCommand(string sourcePath, string destinationPath)
     {
         _sourcePath = sourcePath;
         _destinationPath = destinationPath;
@@ -15,8 +15,6 @@ public class CopyFileCommand : ICommand
 
     public OperationResult Execute(IExecuteContext? executeContext)
     {
-        if (_sourcePath is not null && _destinationPath is not null)
-            return executeContext?.CopyFile(_sourcePath, _destinationPath) ?? new OperationResult.ExecutionError();
-        return new OperationResult.ExecutionError();
+        return executeContext?.CopyFile(_sourcePath, _destinationPath) ?? new OperationResult.ExecutionError("check the connection to the file system");
     }
 }

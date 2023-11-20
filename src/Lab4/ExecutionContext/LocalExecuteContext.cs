@@ -29,7 +29,7 @@ public class LocalExecuteContext : IExecuteContext
     {
         string fullPath = GetFullPath(path);
         if (fullPath.Length == 0 || !Path.Exists(fullPath))
-            return new OperationResult.ExecutionError();
+            return new OperationResult.ExecutionError("the specified directory does not exist");
 
         _currentPath = fullPath;
         return new OperationResult.Success(this);
@@ -37,7 +37,8 @@ public class LocalExecuteContext : IExecuteContext
 
     public OperationResult TreeList(IOutputMode outputMode, int depth)
     {
-        if (_currentPath is null) return new OperationResult.ExecutionError();
+        if (_currentPath is null)
+            return new OperationResult.ExecutionError("the specified directory does not exist");
         TreeList(outputMode, depth, 0, _currentPath);
 
         return new OperationResult.Success(this);
@@ -48,7 +49,7 @@ public class LocalExecuteContext : IExecuteContext
         string fullPathFileName = GetFullPath(filename);
 
         if (fullPathFileName.Length == 0 || !Path.Exists(fullPathFileName))
-            return new OperationResult.ExecutionError();
+            return new OperationResult.ExecutionError("the specified directory does not exist");
 
         string content = File.ReadAllText(filename);
         outputMode.Output(content);
@@ -59,8 +60,10 @@ public class LocalExecuteContext : IExecuteContext
     {
         string sourceFullPath = GetFullPath(sourcePath);
         string destinationFullPath = GetFullPath(destinationPath);
-        if (!File.Exists(sourceFullPath) || !System.IO.Directory.Exists(destinationFullPath))
-            return new OperationResult.ExecutionError();
+        if (File.Exists(sourceFullPath) is false)
+            return new OperationResult.ExecutionError("the specified file does not exist");
+        if (Directory.Exists(destinationFullPath) is false)
+            return new OperationResult.ExecutionError("the specified directory does not exist");
 
         File.Move(sourceFullPath, Path.Combine(destinationFullPath, Path.GetFileName(sourceFullPath)));
         return new OperationResult.Success(this);
@@ -70,8 +73,10 @@ public class LocalExecuteContext : IExecuteContext
     {
         string sourceFullPath = GetFullPath(sourcePath);
         string destinationFullPath = GetFullPath(destinationPath);
-        if (!File.Exists(sourceFullPath) || !System.IO.Directory.Exists(destinationFullPath))
-            return new OperationResult.ExecutionError();
+        if (File.Exists(sourceFullPath) is false)
+            return new OperationResult.ExecutionError("the specified file does not exist");
+        if (Directory.Exists(destinationFullPath) is false)
+            return new OperationResult.ExecutionError("the specified directory does not exist");
 
         File.Copy(sourceFullPath, Path.Combine(destinationFullPath, Path.GetFileName(sourceFullPath)));
         return new OperationResult.Success(this);
@@ -82,7 +87,7 @@ public class LocalExecuteContext : IExecuteContext
         string fullPath = GetFullPath(fileName);
 
         if (!File.Exists(fullPath))
-            return new OperationResult.ExecutionError();
+            return new OperationResult.ExecutionError("the specified file does not exist");
 
         File.Delete(fullPath);
         return new OperationResult.Success(this);
@@ -93,7 +98,7 @@ public class LocalExecuteContext : IExecuteContext
         string fullPath = GetFullPath(filePath);
 
         if (!File.Exists(fullPath))
-            return new OperationResult.ExecutionError();
+            return new OperationResult.ExecutionError("the specified file does not exist");
 
         string? directoryFullPath = Path.GetDirectoryName(fullPath);
         if (directoryFullPath != null)

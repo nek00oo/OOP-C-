@@ -19,13 +19,15 @@ public class CommandExecute
         IIterator iterator = new CommandIterator(command);
         if (_command.CheckCommand(iterator) is ParseResult.Success success)
         {
-            if (success.Command.Execute(_executeContext) is OperationResult.Success complete)
+            OperationResult result = success.Command.Execute(_executeContext);
+            if (result is OperationResult.Success complete)
             {
                 _executeContext = complete.ExecuteContext;
                 return new ExecuteResult.Success($"The {success.Command.GetType().Name} is executed");
             }
 
-            return new ExecuteResult.ExecutionError($"The {success.Command.GetType().Name} is not executed");
+            if (result is OperationResult.ExecutionError error)
+                return new ExecuteResult.ExecutionError($"The {success.Command.GetType().Name} is not executed : {error.Error}");
         }
 
         return new ExecuteResult.ExecutionError("Command not detected");
