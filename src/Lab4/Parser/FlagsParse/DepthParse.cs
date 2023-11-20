@@ -11,14 +11,12 @@ public class DepthParse : FlagParseBase
         {
             if (int.TryParse(iterator.GetCurrent(), out int depth))
             {
-                if (iterator.MoveNext())
-                    return NextFlag?.CheckValue(iterator).WithDepth(depth) ?? new FlagsArgument();
                 return new FlagsArgument(depth);
             }
 
-            throw new InvalidOperationException();
+            throw new InvalidOperationException("failed to read the depth");
         }
 
-        return NextFlag?.CheckValue(iterator) ?? new FlagsArgument();
+        return new FlagsArgument();
     }
 }

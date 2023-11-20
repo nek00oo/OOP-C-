@@ -12,14 +12,12 @@ public class OutputModeParse : FlagParseBase
         {
             if (iterator.GetCurrent().ToUpperInvariant() == "CONSOLE")
             {
-                if (iterator.MoveNext())
-                    return NextFlag?.CheckValue(iterator).WithOutputMode(new ConsoleOutputMode()) ?? new FlagsArgument();
                 return new FlagsArgument().WithOutputMode(new ConsoleOutputMode());
             }
 
             throw new InvalidOperationException("output mode is not implemented");
         }
 
-        return NextFlag?.CheckValue(iterator) ?? new FlagsArgument();
+        return new FlagsArgument();
     }
 }

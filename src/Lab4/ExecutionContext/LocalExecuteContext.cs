@@ -2,7 +2,6 @@ using System;
 using System.IO;
 using System.Text.Json;
 using Itmo.ObjectOrientedProgramming.Lab4.OutputMode;
-using Itmo.ObjectOrientedProgramming.Lab4.Parser.FlagsParse;
 
 namespace Itmo.ObjectOrientedProgramming.Lab4.ExecutionContext;
 
@@ -17,15 +16,6 @@ public class LocalExecuteContext : IExecuteContext
             throw new InvalidOperationException("a non-absolute path in the attached file system was passed");
         _rootPath = rootPath;
         _currentPath = rootPath;
-    }
-
-    public OperationResult Connect(string path, FileSystemMode fileSystemMode)
-    {
-        if (!Path.IsPathRooted(path))
-            throw new InvalidOperationException("a non-absolute path in the attached file system was passed");
-        _rootPath = path;
-        _currentPath = path;
-        return new OperationResult.Success(this);
     }
 
     public OperationResult Disconnect()
