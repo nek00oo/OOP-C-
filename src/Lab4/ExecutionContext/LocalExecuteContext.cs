@@ -48,8 +48,8 @@ public class LocalExecuteContext : IExecuteContext
     {
         string fullPathFileName = GetFullPath(filename);
 
-        if (fullPathFileName.Length == 0 || !Path.Exists(fullPathFileName))
-            return new OperationResult.ExecutionError("the specified directory does not exist");
+        if (fullPathFileName.Length == 0 || !File.Exists(fullPathFileName))
+            return new OperationResult.ExecutionError("the specified file does not exist or is a directory");
 
         string content = File.ReadAllText(filename);
         outputMode.Output(content);

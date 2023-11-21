@@ -12,7 +12,7 @@ public class ConnectParse : CommandParserBase
         {
             string address = iterator.GetCurrent();
             FileSystemMode? fileSystemMode = null;
-            while (iterator.MoveNext() && FlagParse is not null)
+            while (iterator.MoveNext())
             {
                 foreach (IFlagParse flagParse in FlagParse)
                 {

@@ -11,11 +11,14 @@ public class ShowParse : CommandParserBase
         if (iterator.GetCurrent().ToUpperInvariant() == "SHOW" && iterator.MoveNext())
         {
             string fileName = iterator.GetCurrent();
-            foreach (IFlagParse flagParse in FlagParse)
+            if (iterator.MoveNext())
             {
-                FlagsArgument flagsArgument = flagParse.CheckValue(iterator);
-                if (flagsArgument.OutputMode is not null)
-                    return new ParseResult.Success(new ShowFile(fileName, flagsArgument.OutputMode));
+                foreach (IFlagParse flagParse in FlagParse)
+                {
+                    FlagsArgument flagsArgument = flagParse.CheckValue(iterator);
+                    if (flagsArgument.OutputMode is not null)
+                        return new ParseResult.Success(new ShowFile(fileName, flagsArgument.OutputMode));
+                }
             }
         }
 
