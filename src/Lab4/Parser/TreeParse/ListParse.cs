@@ -2,6 +2,7 @@ using Itmo.ObjectOrientedProgramming.Lab4.Command;
 using Itmo.ObjectOrientedProgramming.Lab4.Iterator;
 using Itmo.ObjectOrientedProgramming.Lab4.OutputMode;
 using Itmo.ObjectOrientedProgramming.Lab4.Parser.FlagsParse;
+using Itmo.ObjectOrientedProgramming.Lab4.Parser.FlagsParse.FlagArgument;
 
 namespace Itmo.ObjectOrientedProgramming.Lab4.Parser.TreeParse;
 
@@ -17,11 +18,11 @@ public class ListParse : CommandParserBase
             {
                 foreach (IFlagParse flagParse in FlagParse)
                 {
-                    FlagsArgument flagsArgument = flagParse.CheckValue(iterator);
-                    if (flagsArgument.OutputMode is not null)
-                        outputMode = flagsArgument.OutputMode;
-                    if (flagsArgument.Depth is not null)
-                        depth = flagsArgument.Depth;
+                    IFlagArgument flagsArgument = flagParse.CheckValue(iterator);
+                    if (flagsArgument is OutputModeValue { Mode: not null } modeValue)
+                        outputMode = modeValue.Mode;
+                    if (flagsArgument is DepthValue { Depth: not null } value)
+                        depth = value.Depth;
                 }
             }
 

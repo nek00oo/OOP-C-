@@ -1,6 +1,7 @@
 using Itmo.ObjectOrientedProgramming.Lab4.Command;
 using Itmo.ObjectOrientedProgramming.Lab4.Iterator;
 using Itmo.ObjectOrientedProgramming.Lab4.Parser.FlagsParse;
+using Itmo.ObjectOrientedProgramming.Lab4.Parser.FlagsParse.FlagArgument;
 
 namespace Itmo.ObjectOrientedProgramming.Lab4.Parser;
 
@@ -12,13 +13,13 @@ public class ConnectParse : CommandParserBase
         {
             string address = iterator.GetCurrent();
             FileSystemMode? fileSystemMode = null;
-            while (iterator.MoveNext())
+            if (iterator.MoveNext())
             {
                 foreach (IFlagParse flagParse in FlagParse)
                 {
-                    FlagsArgument flagsArgument = flagParse.CheckValue(iterator);
-                    if (flagsArgument.FileSystemMode is not null)
-                        fileSystemMode = flagsArgument.FileSystemMode;
+                    IFlagArgument flagsArgument = flagParse.CheckValue(iterator);
+                    if (flagsArgument is FileSystemModeValue { SystemMode: not null } value)
+                        fileSystemMode = value.SystemMode;
                 }
 
                 return new ParseResult.Success(new ConnectCommand(address, fileSystemMode));

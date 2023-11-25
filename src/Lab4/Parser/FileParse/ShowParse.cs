@@ -1,6 +1,7 @@
 using Itmo.ObjectOrientedProgramming.Lab4.Command;
 using Itmo.ObjectOrientedProgramming.Lab4.Iterator;
 using Itmo.ObjectOrientedProgramming.Lab4.Parser.FlagsParse;
+using Itmo.ObjectOrientedProgramming.Lab4.Parser.FlagsParse.FlagArgument;
 
 namespace Itmo.ObjectOrientedProgramming.Lab4.Parser.FileParse;
 
@@ -15,9 +16,9 @@ public class ShowParse : CommandParserBase
             {
                 foreach (IFlagParse flagParse in FlagParse)
                 {
-                    FlagsArgument flagsArgument = flagParse.CheckValue(iterator);
-                    if (flagsArgument.OutputMode is not null)
-                        return new ParseResult.Success(new ShowFile(fileName, flagsArgument.OutputMode));
+                    IFlagArgument flagsArgument = flagParse.CheckValue(iterator);
+                    if (flagsArgument is OutputModeValue modeValue)
+                        return new ParseResult.Success(new ShowFile(fileName, modeValue.Mode));
                 }
             }
         }

@@ -8,10 +8,12 @@ public class ShowFile : ICommand
     private readonly string _filename;
     private readonly IOutputMode _outputMode;
 
-    public ShowFile(string filename, IOutputMode outputMode)
+    public ShowFile(string filename, IOutputMode? outputMode)
     {
         _filename = filename;
-        _outputMode = outputMode;
+        _outputMode = new ConsoleOutputMode();
+        if (outputMode is not null)
+            _outputMode = outputMode;
     }
 
     public OperationResult Execute(IExecuteContext? executeContext)

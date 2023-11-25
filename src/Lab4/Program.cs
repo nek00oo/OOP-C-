@@ -45,7 +45,7 @@ public static class Program
 // connect C:\Users\valer\RiderProjects\nek00oo\src\Lab4\ -m local
 // tree list -d 2 -m console
 // tree goto Parser\
-// tree goto src\Lab4\Parser\
+// tree goto C:\Users\valer\RiderProjects\nek00oo\src\Lab4\\Parser\
 // tree list -m console -d 2
 // file move MyFile.txt Iterator
 // file rename Iterator\MyFile.txt RenameFile.txt

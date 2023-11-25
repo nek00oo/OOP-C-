@@ -1,21 +1,30 @@
 using System;
 using System.IO;
-using System.Text.Json;
+using Itmo.ObjectOrientedProgramming.Lab4.ExecutionContext.IconVisitor;
+using Itmo.ObjectOrientedProgramming.Lab4.ExecutionContext.ValidateCommand;
 using Itmo.ObjectOrientedProgramming.Lab4.OutputMode;
 
 namespace Itmo.ObjectOrientedProgramming.Lab4.ExecutionContext;
 
 public class LocalExecuteContext : IExecuteContext
 {
+    private readonly IValidatePath _fileExistValidate;
+    private readonly IValidatePath _directoryExistValidate;
+    private readonly IValidatePath _pathExistValidate;
+    private readonly IValidatePath _rootPathValidate;
     private string? _rootPath;
     private string? _currentPath;
 
     public LocalExecuteContext(string rootPath)
     {
-        if (!Path.IsPathRooted(rootPath))
-            throw new InvalidOperationException("a non-absolute path in the attached file system was passed");
+        _rootPathValidate = new PathIsRooted();
+        if (_rootPathValidate.Execute(rootPath) is ValidatePathResult.NotExist notExist)
+            throw new InvalidOperationException(notExist.Error);
         _rootPath = rootPath;
         _currentPath = rootPath;
+        _fileExistValidate = new FileIsExistPath();
+        _directoryExistValidate = new DirectoryIsExistPath();
+        _pathExistValidate = new PathIsExistPath();
     }
 
     public OperationResult Disconnect()
@@ -28,18 +37,19 @@ public class LocalExecuteContext : IExecuteContext
     public OperationResult TreeGoTo(string path)
     {
         string fullPath = GetFullPath(path);
-        if (fullPath.Length == 0 || !Path.Exists(fullPath))
-            return new OperationResult.ExecutionError("the specified directory does not exist");
+        if (_pathExistValidate.Execute(fullPath) is ValidatePathResult.NotExist notExist)
+            return new OperationResult.ExecutionError(notExist.Error);
 
         _currentPath = fullPath;
         return new OperationResult.Success(this);
     }
 
-    public OperationResult TreeList(IOutputMode outputMode, int depth)
+    public OperationResult TreeList(IOutputMode outputMode, IIconsVisitor? iconsVisitor, int depth)
     {
         if (_currentPath is null)
             return new OperationResult.ExecutionError("the specified directory does not exist");
-        TreeList(outputMode, depth, 0, _currentPath);
+        iconsVisitor ??= new JsonIconVisitor("C:\\Users\\valer\\RiderProjects\\nek00oo\\src\\Lab4\\Icons.json");
+        TreeList(outputMode, depth, 0, _currentPath, iconsVisitor);
 
         return new OperationResult.Success(this);
     }
@@ -48,8 +58,8 @@ public class LocalExecuteContext : IExecuteContext
     {
         string fullPathFileName = GetFullPath(filename);
 
-        if (fullPathFileName.Length == 0 || !File.Exists(fullPathFileName))
-            return new OperationResult.ExecutionError("the specified file does not exist or is a directory");
+        if (_fileExistValidate.Execute(fullPathFileName) is ValidatePathResult.NotExist notExist)
+            return new OperationResult.ExecutionError(notExist.Error);
 
         string content = File.ReadAllText(filename);
         outputMode.Output(content);
@@ -60,10 +70,10 @@ public class LocalExecuteContext : IExecuteContext
     {
         string sourceFullPath = GetFullPath(sourcePath);
         string destinationFullPath = GetFullPath(destinationPath);
-        if (File.Exists(sourceFullPath) is false)
-            return new OperationResult.ExecutionError("the specified file does not exist");
-        if (Directory.Exists(destinationFullPath) is false)
-            return new OperationResult.ExecutionError("the specified directory does not exist");
+        if (_fileExistValidate.Execute(sourceFullPath) is ValidatePathResult.NotExist notExistFile)
+            return new OperationResult.ExecutionError(notExistFile.Error);
+        if (_directoryExistValidate.Execute(destinationFullPath) is ValidatePathResult.NotExist notExistDirectory)
+            return new OperationResult.ExecutionError(notExistDirectory.Error);
 
         File.Move(sourceFullPath, Path.Combine(destinationFullPath, Path.GetFileName(sourceFullPath)));
         return new OperationResult.Success(this);
@@ -73,10 +83,10 @@ public class LocalExecuteContext : IExecuteContext
     {
         string sourceFullPath = GetFullPath(sourcePath);
         string destinationFullPath = GetFullPath(destinationPath);
-        if (File.Exists(sourceFullPath) is false)
-            return new OperationResult.ExecutionError("the specified file does not exist");
-        if (Directory.Exists(destinationFullPath) is false)
-            return new OperationResult.ExecutionError("the specified directory does not exist");
+        if (_fileExistValidate.Execute(sourceFullPath) is ValidatePathResult.NotExist notExistFile)
+            return new OperationResult.ExecutionError(notExistFile.Error);
+        if (_directoryExistValidate.Execute(destinationFullPath) is ValidatePathResult.NotExist notExistDirectory)
+            return new OperationResult.ExecutionError(notExistDirectory.Error);
 
         File.Copy(sourceFullPath, Path.Combine(destinationFullPath, Path.GetFileName(sourceFullPath)));
         return new OperationResult.Success(this);
@@ -86,8 +96,8 @@ public class LocalExecuteContext : IExecuteContext
     {
         string fullPath = GetFullPath(fileName);
 
-        if (!File.Exists(fullPath))
-            return new OperationResult.ExecutionError("the specified file does not exist");
+        if (_fileExistValidate.Execute(fullPath) is ValidatePathResult.NotExist notExistFile)
+            return new OperationResult.ExecutionError(notExistFile.Error);
 
         File.Delete(fullPath);
         return new OperationResult.Success(this);
@@ -97,8 +107,8 @@ public class LocalExecuteContext : IExecuteContext
     {
         string fullPath = GetFullPath(filePath);
 
-        if (!File.Exists(fullPath))
-            return new OperationResult.ExecutionError("the specified file does not exist");
+        if (_fileExistValidate.Execute(fullPath) is ValidatePathResult.NotExist notExistFile)
+            return new OperationResult.ExecutionError(notExistFile.Error);
 
         string? directoryFullPath = Path.GetDirectoryName(fullPath);
         if (directoryFullPath != null)
@@ -115,37 +125,33 @@ public class LocalExecuteContext : IExecuteContext
 
     private string GetFullPath(string path)
     {
-        if (Path.IsPathRooted(path))
+        if (_rootPathValidate.Execute(path) is ValidatePathResult.Success)
             return path;
-        return _currentPath == null ? string.Empty : Path.Combine(_currentPath, path);
+        return _rootPath == null ? string.Empty : Path.Combine(_rootPath, path);
     }
 
-    private void TreeList(IOutputMode outputMode, int depth, int currentDepth, string path)
+    private void TreeList(IOutputMode outputMode, int depth, int currentDepth, string path, IIconsVisitor iconsVisitor)
     {
         if (currentDepth >= depth)
             return;
-        if (System.IO.Directory.Exists(path) is false) return;
+        if (Directory.Exists(path) is false) return;
 
-        string json = File.ReadAllText("C:\\Users\\valer\\RiderProjects\\nek00oo\\src\\Lab4\\Icons.json");
-        JsonIcons? icons = JsonSerializer.Deserialize<JsonIcons>(json);
-        Console.OutputEncoding = System.Text.Encoding.UTF8;
-
-        string[] directories = System.IO.Directory.GetFileSystemEntries(path);
+        string[] directories = Directory.GetFileSystemEntries(path);
         outputMode.Output($"{new string(' ', currentDepth * 5)}|");
         foreach (string directory in directories)
         {
             string? icon;
-            if (System.IO.Directory.Exists(directory)) icon = icons?.Folder;
-            else if (File.Exists(directory)) icon = icons?.File;
+            if (_directoryExistValidate.Execute(directory) is ValidatePathResult.Success) icon = iconsVisitor.VisitFolderIcon();
+            else if (_fileExistValidate.Execute(directory) is ValidatePathResult.Success) icon = iconsVisitor.VisitFileIcon();
             else icon = "??";
             try
             {
                 outputMode.Output($"{new string(' ', currentDepth * 5)}|_{icon}[{Path.GetFileName(directory)}]");
-                TreeList(outputMode, depth, currentDepth + 1, directory);
+                TreeList(outputMode, depth, currentDepth + 1, directory, iconsVisitor);
             }
             catch (UnauthorizedAccessException)
             {
-                outputMode.Output($"{new string(' ', (currentDepth + 1) * 5)}{icons?.NoAccess}  No access for {Path.GetFileName(directory)} directory");
+                outputMode.Output($"{new string(' ', (currentDepth + 1) * 5)}{iconsVisitor.VisitNoAccessIcon()}  No access for {Path.GetFileName(directory)} directory");
             }
         }
     }
