@@ -1,4 +1,4 @@
-using Itmo.Dev.Platform.Postgres.Plugins;
+/*using Itmo.Dev.Platform.Postgres.Plugins;
 using Models.Users;
 using Npgsql;
 
@@ -10,4 +10,4 @@ public class MappingPlugin : IDataSourcePlugin
     {
         builder.MapEnum<UserRole>();
     }
-}
+}*/

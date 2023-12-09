@@ -1,29 +1,30 @@
 using Contracts.Users;
 using Spectre.Console;
 
-namespace Console.Scenarios.ToUpBalance;
+namespace Console.Scenarios.MakeWithdrawal;
 
-public class ToUpBalanceScenario : IScenario
+public class MakeWithdrawalScenario : IScenario
 {
     private readonly IUserService _accountService;
     private readonly long _accountId;
 
-    public ToUpBalanceScenario(IUserService accountService, long accountId)
+    public MakeWithdrawalScenario(IUserService accountService, long accountId)
     {
         _accountService = accountService;
         _accountId = accountId;
     }
 
-    public string Name => "To up the balance";
+    public string Name => "Make a withdrawal";
 
     public void Run()
     {
         long toUpBalance = AnsiConsole.Ask<long>("Enter the amount of money");
-        ToUpBalanceResult result = _accountService.ToUpAccountBalance(_accountId, toUpBalance);
+        MakeWithdrawalResult result = _accountService.MakeWithdrawal(_accountId, toUpBalance);
+
         string message = result switch
         {
-            ToUpBalanceResult.Success success => $"Successful replenishment, current balance: {success.CurrentBalance}",
-            ToUpBalanceResult.FailedTopUp => "An error occurred while performing the operation",
+            MakeWithdrawalResult.Success success => $"Successful cash withdrawal, current balance: {success.CurrentBalance}",
+            MakeWithdrawalResult.NotEnoughMoneyInAccount => "Insufficient money in the bank",
             _ => throw new ArgumentOutOfRangeException(nameof(result)),
         };
 

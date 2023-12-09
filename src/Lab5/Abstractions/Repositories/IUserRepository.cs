@@ -1,8 +1,11 @@
+using Contracts.Users;
 using Models.Accounts;
 namespace Abstractions.Repositories;
 
 public interface IUserRepository
 {
-    public Task<Account?> FindAccountUserByAccountNumberAndPasswordAsync(long accountNumber, string password);
-    public Task<bool> ToUpBalance(long id, long amountMoney);
+    public Task<UserAccount?> FindAccountUserByAccountNumberAndPasswordAsync(long accountNumber, string password);
+    public Task<long?> ToUpBalanceAsync(long id, long amountMoney);
+    public Task<MakeWithdrawalResult?> MakeWithdrawalAsync(long id, long amountMoney);
+    public Task<long?> CheckBalance(long id);
 }

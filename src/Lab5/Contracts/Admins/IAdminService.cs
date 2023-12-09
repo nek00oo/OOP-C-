@@ -1,8 +1,6 @@
-using Contracts.Users;
-
 namespace Contracts.Admins;
 
 public interface IAdminService
 {
-    LoginResult Login(string password);
+    AccessCheckResult Login(string password);
 }

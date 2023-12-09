@@ -29,6 +29,7 @@ public class UserLoginScenario : IScenario
         };
 
         AnsiConsole.WriteLine(message);
-        AnsiConsole.Ask<string>("Ok");
+        System.Console.WriteLine("Press Enter");
+        System.Console.ReadKey();
     }
 }

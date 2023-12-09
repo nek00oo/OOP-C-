@@ -4,7 +4,7 @@ public abstract record ToUpBalanceResult
 {
     private ToUpBalanceResult() { }
 
-    public sealed record Success : ToUpBalanceResult;
+    public sealed record Success(long CurrentBalance) : ToUpBalanceResult;
 
     public sealed record FailedTopUp : ToUpBalanceResult;
 }

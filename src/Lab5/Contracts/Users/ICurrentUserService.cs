@@ -4,5 +4,5 @@ namespace Contracts.Users;
 
 public interface ICurrentUserService
 {
-    Account? UserAccount { get; }
+    UserAccount? UserAccount { get; }
 }

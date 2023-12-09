@@ -17,7 +17,7 @@ internal class UserService : IUserService
 
     public LoginResult Login(long accountNumber, string password)
     {
-        Task<Account?> user = _repository.FindAccountUserByAccountNumberAndPasswordAsync(accountNumber, password);
+        Task<UserAccount?> user = _repository.FindAccountUserByAccountNumberAndPasswordAsync(accountNumber, password);
         if (user.Result is null)
             return new LoginResult.NotFound();
 
@@ -27,9 +27,26 @@ internal class UserService : IUserService
 
     public ToUpBalanceResult ToUpAccountBalance(long id, long amountMoney)
     {
-        if (_repository.ToUpBalance(id, amountMoney).Result is false)
+        long? result = _repository.ToUpBalanceAsync(id, amountMoney).Result;
+        if (result is null)
             return new ToUpBalanceResult.FailedTopUp();
 
-        return new ToUpBalanceResult.Success();
+        return new ToUpBalanceResult.Success(result.Value);
+    }
+
+    public MakeWithdrawalResult MakeWithdrawal(long id, long amountMoney)
+    {
+        Task<MakeWithdrawalResult?> result = _repository.MakeWithdrawalAsync(id, amountMoney);
+        if (result.Result is null)
+            return new MakeWithdrawalResult.OperationMakeWithdrawalError();
+        return result.Result;
+    }
+
+    public CheckBalanceResult CheckBalance(long id)
+    {
+        long? balance = _repository.CheckBalance(id).Result;
+        if (balance is null)
+            return new CheckBalanceResult.NotFoundAccount();
+        return new CheckBalanceResult.Success((long)balance);
     }
 }

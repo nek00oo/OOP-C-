@@ -8,35 +8,31 @@ public class Initial : SqlMigration
 {
     protected override string GetUpSql(IServiceProvider serviceProvider) =>
     """
-    create type user_role as enum
-    (
-        'admin',
-        'user'
-    );
-
-    create table users
-    (
-        user_id bigint primary key generated always as identity ,
-        user_name text not null ,
-        user_role user_role not null 
-    );
-
-    create table account
+    create table user_account
     (
         account_id bigint primary key generated always as identity ,
         account_number bigint not null ,
         account_password text not null ,
-        balance bigint not null
+        balance bigint not null ,
+            
+        unique (account_number)
         
     );
+    
+    create table admins
+    (
+        admin_id bigint primary key generated always as identity ,
+        admin_password text not null,
+        
+        unique (admin_password)
+    )
 
     """;
 
     protected override string GetDownSql(IServiceProvider serviceProvider) =>
     """
-    drop table users;
-    drop table account;
+    drop table user_account;
+    drop table admins;
 
-    drop type user_role;
     """;
 }

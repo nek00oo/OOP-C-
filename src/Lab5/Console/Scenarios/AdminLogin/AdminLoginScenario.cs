@@ -1,33 +1,37 @@
-using Contracts.Users;
+using Contracts.Admins;
 using Spectre.Console;
 
 namespace Console.Scenarios.AdminLogin;
 
 public class AdminLoginScenario : IScenario
 {
-    private readonly IUserService _userService; // поменять (AdminService)
+    private readonly IAdminService _adminService;
 
-    public AdminLoginScenario(IUserService userService)
+    public AdminLoginScenario(IAdminService adminService)
     {
-        _userService = userService;
+        _adminService = adminService;
     }
 
     public string Name => "Admin Login";
 
     public void Run()
     {
-        long username = AnsiConsole.Ask<long>("Enter your username");
+        string password = AnsiConsole.Ask<string>("Enter admin password");
 
-        LoginResult result = _userService.Login(username, "dsf");
+        AccessCheckResult result = _adminService.Login(password);
 
         string message = result switch
         {
-            LoginResult.Success => "Successful login",
-            LoginResult.NotFound => "User not found",
+            AccessCheckResult.Success => "Successful",
+            AccessCheckResult.IncorrectPassword => "The password is incorrect",
             _ => throw new ArgumentOutOfRangeException(nameof(result)),
         };
 
+        if (result is AccessCheckResult.IncorrectPassword)
+            Environment.Exit(0);
+
         AnsiConsole.WriteLine(message);
-        AnsiConsole.Ask<string>("Ok");
+        System.Console.WriteLine("Press Enter");
+        System.Console.ReadKey();
     }
 }

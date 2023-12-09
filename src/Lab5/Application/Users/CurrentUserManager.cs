@@ -5,5 +5,5 @@ namespace Application.Users;
 
 internal class CurrentUserManager : ICurrentUserService
 {
-    public Account? UserAccount { get; set; }
+    public UserAccount? UserAccount { get; set; }
 }
