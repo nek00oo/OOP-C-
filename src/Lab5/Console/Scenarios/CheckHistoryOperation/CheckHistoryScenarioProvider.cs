@@ -1,0 +1,31 @@
+using System.Diagnostics.CodeAnalysis;
+using Contracts.Users;
+
+namespace Console.Scenarios.CheckHistoryOperation;
+
+public class CheckHistoryScenarioProvider : IScenarioProvider
+{
+    private readonly IUserService _service;
+    private readonly ICurrentUserService _currentUser;
+
+    public CheckHistoryScenarioProvider(
+        IUserService service,
+        ICurrentUserService currentUser)
+    {
+        _service = service;
+        _currentUser = currentUser;
+    }
+
+    public bool TryGetScenario(
+        [NotNullWhen(true)] out IScenario? scenario)
+    {
+        if (_currentUser?.UserAccount is not null)
+        {
+            scenario = new CheckHistoryScenario(_service, _currentUser.UserAccount.Id);
+            return true;
+        }
+
+        scenario = null;
+        return false;
+    }
+}

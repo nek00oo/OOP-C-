@@ -25,6 +25,14 @@ public class Initial : SqlMigration
         admin_password text not null,
         
         unique (admin_password)
+    );
+    
+    create table history_operations
+    (
+        operation_id bigint primary key generated always as identity ,
+        account_id bigint not null references user_account(account_id) ,
+        operation text not null
+        
     )
 
     """;
@@ -33,6 +41,7 @@ public class Initial : SqlMigration
     """
     drop table user_account;
     drop table admins;
+    drop table history_operations
 
     """;
 }

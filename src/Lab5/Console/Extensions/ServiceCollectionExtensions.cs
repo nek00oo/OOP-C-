@@ -1,5 +1,6 @@
 using Console.Scenarios.AdminLogin;
 using Console.Scenarios.CheckBalance;
+using Console.Scenarios.CheckHistoryOperation;
 using Console.Scenarios.MakeWithdrawal;
 using Console.Scenarios.ToUpBalance;
 using Console.Scenarios.UserLogin;
@@ -18,6 +19,7 @@ public static class ServiceCollectionExtensions
         collection.AddScoped<IScenarioProvider, ToUpBalanceScenarioProvider>();
         collection.AddScoped<IScenarioProvider, MakeWithdrawalScenarioProvider>();
         collection.AddScoped<IScenarioProvider, CheckBalanceScenarioProvider>();
+        collection.AddScoped<IScenarioProvider, CheckHistoryScenarioProvider>();
 
         return collection;
     }

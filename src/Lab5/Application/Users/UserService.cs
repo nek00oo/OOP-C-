@@ -1,6 +1,7 @@
 using Abstractions.Repositories;
 using Contracts.Users;
 using Models.Accounts;
+using Models.Operations;
 
 namespace Application.Users;
 
@@ -39,6 +40,7 @@ internal class UserService : IUserService
         Task<MakeWithdrawalResult?> result = _repository.MakeWithdrawalAsync(id, amountMoney);
         if (result.Result is null)
             return new MakeWithdrawalResult.OperationMakeWithdrawalError();
+
         return result.Result;
     }
 
@@ -47,6 +49,27 @@ internal class UserService : IUserService
         long? balance = _repository.CheckBalance(id).Result;
         if (balance is null)
             return new CheckBalanceResult.NotFoundAccount();
+
         return new CheckBalanceResult.Success((long)balance);
+    }
+
+    public CheckHistoryOperationResult CheckHistoryOperation(long accountId)
+    {
+        var operations = new List<Operation>();
+
+        async Task ProcessAsync()
+        {
+            await foreach (Operation operation in _repository.CheckHistoryOperation(accountId))
+            {
+                operations.Add(operation);
+            }
+        }
+
+        Task.Run(ProcessAsync).Wait();
+
+        if (operations.Count == 0)
+            return new CheckHistoryOperationResult.ExecuteError();
+
+        return new CheckHistoryOperationResult.Success(operations);
     }
 }
