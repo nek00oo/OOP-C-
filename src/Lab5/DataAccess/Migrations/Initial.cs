@@ -8,6 +8,7 @@ public class Initial : SqlMigration
 {
     protected override string GetUpSql(IServiceProvider serviceProvider) =>
     """
+
     create table user_account
     (
         account_id bigint primary key generated always as identity ,

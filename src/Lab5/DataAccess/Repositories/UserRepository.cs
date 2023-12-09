@@ -36,7 +36,7 @@ public class UserRepository : IUserRepository
         if (await reader.ReadAsync().ConfigureAwait(false) is false)
             return null;
 
-        return new UserAccount(Id: reader.GetInt64(0));
+        return new UserAccount(Id: reader.GetInt64(0), UserRole.User);
     }
 
     public async Task<long?> ToUpBalanceAsync(long id, long amountMoney)

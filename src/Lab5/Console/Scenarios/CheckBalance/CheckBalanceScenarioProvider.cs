@@ -1,5 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 using Contracts.Users;
+using Models.Accounts;
 
 namespace Console.Scenarios.CheckBalance;
 
@@ -19,7 +20,7 @@ public class CheckBalanceScenarioProvider : IScenarioProvider
     public bool TryGetScenario(
         [NotNullWhen(true)] out IScenario? scenario)
     {
-        if (_currentUser?.UserAccount is not null)
+        if (_currentUser?.UserAccount?.Role is UserRole.User)
         {
             scenario = new CheckBalanceScenario(_service, _currentUser.UserAccount.Id);
             return true;
