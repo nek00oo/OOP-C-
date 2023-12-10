@@ -1,7 +1,6 @@
 using Abstractions.Repositories;
 using Contracts.Users;
 using Models.Accounts;
-using Models.Operations;
 
 namespace Application.Users;
 
@@ -59,28 +58,4 @@ internal class UserService : IUserService
 
         return new CheckBalanceResult.Success((long)balance);
     }
-
-    public CheckHistoryOperationResult CheckHistoryOperation()
-    {
-        if (_currentUserManager.UserAccount == null)
-            return new CheckHistoryOperationResult.ExecuteError();
-        var operations = new List<Operation>();
-
-        async Task ProcessAsync()
-        {
-            await foreach (Operation operation in _repository.CheckHistoryOperation(_currentUserManager.UserAccount.Id))
-            {
-                operations.Add(operation);
-            }
-        }
-
-        Task.Run(ProcessAsync).Wait();
-
-        if (operations.Count == 0)
-            return new CheckHistoryOperationResult.ExecuteError();
-
-        return new CheckHistoryOperationResult.Success(operations);
-    }
-
-    private bool IsLogin() => _currentUserManager.UserAccount != null;
 }

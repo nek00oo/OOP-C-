@@ -11,10 +11,12 @@ namespace DataAccess.Repositories;
 public class UserRepository : IUserRepository
 {
     private readonly IPostgresConnectionProvider _connectionProvider;
+    private readonly IHistoryOperationRepository _historyOperationRepository;
 
-    public UserRepository(IPostgresConnectionProvider connectionProvider)
+    public UserRepository(IPostgresConnectionProvider connectionProvider, IHistoryOperationRepository historyOperationRepository)
     {
         _connectionProvider = connectionProvider;
+        _historyOperationRepository = historyOperationRepository;
     }
 
     public async Task<UserAccount?> FindAccountUserByAccountNumberAndPasswordAsync(long accountNumber, string password)
@@ -41,7 +43,7 @@ public class UserRepository : IUserRepository
 
     public async Task<long?> ToUpBalanceAsync(long id, long amountMoney)
     {
-        await AddHistoryOperation(id, "to up balance");
+        await _historyOperationRepository.AddHistoryOperation(id, "to up balance");
         const string sqlUpDateBalance = """
         update user_account
         set balance = balance + :amountMoney
@@ -70,7 +72,7 @@ public class UserRepository : IUserRepository
         if (currentMoney.Value < amountMoney)
             return new MakeWithdrawalResult.NotEnoughMoneyInAccount();
 
-        await AddHistoryOperation(id, "make a withdrawal");
+        await _historyOperationRepository.AddHistoryOperation(id, "make a withdrawal");
         const string sqlMakeWithdrawal = """
         update user_account
         set balance = balance - :amountMoney
@@ -93,7 +95,7 @@ public class UserRepository : IUserRepository
 
     public async Task<long?> CheckBalance(long id)
     {
-        await AddHistoryOperation(id, "check balance");
+        await _historyOperationRepository.AddHistoryOperation(id, "check balance");
         const string sqlCheckBalance = """
         select balance
         from user_account
@@ -114,7 +116,7 @@ public class UserRepository : IUserRepository
 
     public async IAsyncEnumerable<Operation> CheckHistoryOperation(long accountId)
     {
-        await AddHistoryOperation(accountId, "check history operations");
+        await _historyOperationRepository.AddHistoryOperation(accountId, "check history operations");
         const string sqlCheckHistoryOperation = """
         select operation
         from history_operations
@@ -132,22 +134,5 @@ public class UserRepository : IUserRepository
         {
             yield return new Operation(reader.GetString(0));
         }
-    }
-
-    private async Task<Operation> AddHistoryOperation(long accountId, string textOperation)
-    {
-        const string sqlAddHistoryOperation = """
-                insert into history_operations(account_id, operation)
-                values (:accountId, :textOperation);
-                """;
-        NpgsqlConnection connection = await _connectionProvider.GetConnectionAsync(default);
-
-        await using var command = new NpgsqlCommand(sqlAddHistoryOperation, connection);
-        command.AddParameter("accountId", accountId);
-        command.AddParameter("textOperation", textOperation);
-
-        await command.ExecuteNonQueryAsync().ConfigureAwait(false);
-
-        return new Operation(textOperation);
     }
 }

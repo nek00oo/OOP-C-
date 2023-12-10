@@ -1,6 +1,8 @@
 using Application.Admins;
+using Application.Operations;
 using Application.Users;
 using Contracts.Admins;
+using Contracts.HistoryOperations;
 using Contracts.Users;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -17,8 +19,11 @@ public static class ServiceCollectionExtensions
             p => p.GetRequiredService<CurrentUserManager>());
 
         collection.AddScoped<IAdminService, AdminService>();
+
         collection.AddScoped<CurrentAdminManager>();
         collection.AddScoped<ICurrentAdminService>(p => p.GetRequiredService<CurrentAdminManager>());
+
+        collection.AddScoped<IHistoryOperationService, HistoryOperationService>();
 
         return collection;
     }

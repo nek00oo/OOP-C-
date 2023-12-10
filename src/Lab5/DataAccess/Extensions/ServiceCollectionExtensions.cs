@@ -14,10 +14,10 @@ public static class ServiceCollectionExtensions
         collection.AddPlatformPostgres(builder => builder.Configure(configuration));
         collection.AddPlatformMigrations(typeof(ServiceCollectionExtensions).Assembly);
 
+        collection.AddScoped<IHistoryOperationRepository, HistoryOperationRepository>();
         collection.AddScoped<IUserRepository, UserRepository>();
         collection.AddScoped<IAdminRepository, AdminRepository>();
 
-        // collection.AddScoped<IShopRepository, ShopRepository>();
         return collection;
     }
 }

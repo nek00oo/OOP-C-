@@ -1,4 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
+using Contracts.HistoryOperations;
 using Contracts.Users;
 using Models.Accounts;
 
@@ -6,11 +7,11 @@ namespace Console.Scenarios.CheckHistoryOperation;
 
 public class CheckHistoryScenarioProvider : IScenarioProvider
 {
-    private readonly IUserService _service;
+    private readonly IHistoryOperationService _service;
     private readonly ICurrentUserService _currentUser;
 
     public CheckHistoryScenarioProvider(
-        IUserService service,
+        IHistoryOperationService service,
         ICurrentUserService currentUser)
     {
         _service = service;

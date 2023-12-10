@@ -6,5 +6,4 @@ public interface IUserService
     ToUpBalanceResult ToUpAccountBalance(long amountMoney);
     MakeWithdrawalResult MakeWithdrawal(long amountMoney);
     CheckBalanceResult CheckBalance();
-    CheckHistoryOperationResult CheckHistoryOperation();
 }

@@ -1,3 +1,4 @@
+using Contracts.HistoryOperations;
 using Contracts.Users;
 using Models.Operations;
 using Spectre.Console;
@@ -6,9 +7,9 @@ namespace Console.Scenarios.CheckHistoryOperation;
 
 public class CheckHistoryScenario : IScenario
 {
-    private readonly IUserService _accountService;
+    private readonly IHistoryOperationService _accountService;
 
-    public CheckHistoryScenario(IUserService accountService)
+    public CheckHistoryScenario(IHistoryOperationService accountService)
     {
         _accountService = accountService;
     }
