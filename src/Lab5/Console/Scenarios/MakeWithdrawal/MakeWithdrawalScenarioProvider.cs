@@ -22,7 +22,7 @@ public class MakeWithdrawalScenarioProvider : IScenarioProvider
     {
         if (_currentUser?.UserAccount?.Role is UserRole.User)
         {
-            scenario = new MakeWithdrawalScenario(_service, _currentUser.UserAccount.Id);
+            scenario = new MakeWithdrawalScenario(_service);
             return true;
         }
 

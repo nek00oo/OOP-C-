@@ -22,7 +22,7 @@ public class CheckHistoryScenarioProvider : IScenarioProvider
     {
         if (_currentUser?.UserAccount?.Role is UserRole.User)
         {
-            scenario = new CheckHistoryScenario(_service, _currentUser.UserAccount.Id);
+            scenario = new CheckHistoryScenario(_service);
             return true;
         }
 

@@ -22,7 +22,7 @@ public class CheckBalanceScenarioProvider : IScenarioProvider
     {
         if (_currentUser?.UserAccount?.Role is UserRole.User)
         {
-            scenario = new CheckBalanceScenario(_service, _currentUser.UserAccount.Id);
+            scenario = new CheckBalanceScenario(_service);
             return true;
         }
 

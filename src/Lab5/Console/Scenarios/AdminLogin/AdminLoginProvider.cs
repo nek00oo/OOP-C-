@@ -7,26 +7,29 @@ namespace Console.Scenarios.AdminLogin;
 public class AdminLoginProvider : IScenarioProvider
 {
     private readonly IAdminService _service;
-    private readonly ICurrentUserService _currentAdmin;
+    private readonly ICurrentUserService _currentUser;
+    private readonly ICurrentAdminService _currentAdmin;
 
     public AdminLoginProvider(
         IAdminService service,
-        ICurrentUserService currentAdmin)
+        ICurrentAdminService currentAdmin,
+        ICurrentUserService currentUser)
     {
         _service = service;
         _currentAdmin = currentAdmin;
+        _currentUser = currentUser;
     }
 
     public bool TryGetScenario(
         [NotNullWhen(true)] out IScenario? scenario)
     {
-        if (_currentAdmin.UserAccount is not null)
+        if (_currentAdmin.AdminAccount is null && _currentUser.UserAccount is null)
         {
-            scenario = null;
-            return false;
+            scenario = new AdminLoginScenario(_service);
+            return true;
         }
 
-        scenario = new AdminLoginScenario(_service);
-        return true;
+        scenario = null;
+        return false;
     }
 }

@@ -7,19 +7,17 @@ namespace Console.Scenarios.CheckHistoryOperation;
 public class CheckHistoryScenario : IScenario
 {
     private readonly IUserService _accountService;
-    private readonly long _accountId;
 
-    public CheckHistoryScenario(IUserService accountService, long accountId)
+    public CheckHistoryScenario(IUserService accountService)
     {
         _accountService = accountService;
-        _accountId = accountId;
     }
 
     public string Name => "Check history operations";
 
     public void Run()
     {
-        CheckHistoryOperationResult result = _accountService.CheckHistoryOperation(_accountId);
+        CheckHistoryOperationResult result = _accountService.CheckHistoryOperation();
 
         string message = result switch
         {

@@ -6,12 +6,10 @@ namespace Console.Scenarios.ChangingPassword;
 public class ChangingPasswordScenario : IScenario
 {
     private readonly IAdminService _adminService;
-    private readonly long _currentId;
 
-    public ChangingPasswordScenario(IAdminService adminService, long id)
+    public ChangingPasswordScenario(IAdminService adminService)
     {
         _adminService = adminService;
-        _currentId = id;
     }
 
     public string Name => "Change the password";
@@ -20,7 +18,7 @@ public class ChangingPasswordScenario : IScenario
     {
         string accountPassword = AnsiConsole.Ask<string>("Enter new account password:");
 
-        ChangePasswordResult result = _adminService.ChangePassword(accountPassword, _currentId);
+        ChangePasswordResult result = _adminService.ChangePassword(accountPassword);
 
         string message = result switch
         {

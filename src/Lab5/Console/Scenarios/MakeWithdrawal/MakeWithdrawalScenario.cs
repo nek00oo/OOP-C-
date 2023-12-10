@@ -6,12 +6,10 @@ namespace Console.Scenarios.MakeWithdrawal;
 public class MakeWithdrawalScenario : IScenario
 {
     private readonly IUserService _accountService;
-    private readonly long _accountId;
 
-    public MakeWithdrawalScenario(IUserService accountService, long accountId)
+    public MakeWithdrawalScenario(IUserService accountService)
     {
         _accountService = accountService;
-        _accountId = accountId;
     }
 
     public string Name => "Make a withdrawal";
@@ -19,7 +17,7 @@ public class MakeWithdrawalScenario : IScenario
     public void Run()
     {
         long toUpBalance = AnsiConsole.Ask<long>("Enter the amount of money");
-        MakeWithdrawalResult result = _accountService.MakeWithdrawal(_accountId, toUpBalance);
+        MakeWithdrawalResult result = _accountService.MakeWithdrawal(toUpBalance);
 
         string message = result switch
         {

@@ -22,7 +22,7 @@ public class ToUpBalanceScenarioProvider : IScenarioProvider
     {
         if (_currentUser?.UserAccount?.Role is UserRole.User)
         {
-            scenario = new ToUpBalanceScenario(_service, _currentUser.UserAccount.Id);
+            scenario = new ToUpBalanceScenario(_service);
             return true;
         }
 

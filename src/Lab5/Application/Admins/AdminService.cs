@@ -1,5 +1,4 @@
 using Abstractions.Repositories;
-using Application.Users;
 using Contracts.Admins;
 using Models.Accounts;
 
@@ -8,9 +7,9 @@ namespace Application.Admins;
 internal class AdminService : IAdminService
 {
     private readonly IAdminRepository _repository;
-    private readonly CurrentUserManager _currentAdminManager;
+    private readonly CurrentAdminManager _currentAdminManager;
 
-    public AdminService(IAdminRepository repository, CurrentUserManager currentUserManager)
+    public AdminService(IAdminRepository repository, CurrentAdminManager currentUserManager)
     {
         _repository = repository;
         _currentAdminManager = currentUserManager;
@@ -18,11 +17,11 @@ internal class AdminService : IAdminService
 
     public AccessCheckResult Login(string password)
     {
-        Task<UserAccount?> admin = _repository.FindAdminByPasswordAsync(password);
+        Task<AdminAccount?> admin = _repository.FindAdminByPasswordAsync(password);
         if (admin.Result is null)
             return new AccessCheckResult.IncorrectPassword();
 
-        _currentAdminManager.UserAccount = admin.Result;
+        _currentAdminManager.AdminAccount = admin.Result;
         return new AccessCheckResult.Success();
     }
 
@@ -35,9 +34,11 @@ internal class AdminService : IAdminService
         return new CreateUserAccountResult.Success();
     }
 
-    public ChangePasswordResult ChangePassword(string newPassword, long currentId)
+    public ChangePasswordResult ChangePassword(string newPassword)
     {
-        _repository.ChangePassword(newPassword, currentId);
+        if (_currentAdminManager.AdminAccount is null)
+            return new ChangePasswordResult.ExecuteError();
+        _repository.ChangePassword(newPassword, _currentAdminManager.AdminAccount.Id);
         return new ChangePasswordResult.Success();
     }
 }

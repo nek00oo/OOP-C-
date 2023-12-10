@@ -6,12 +6,10 @@ namespace Console.Scenarios.ToUpBalance;
 public class ToUpBalanceScenario : IScenario
 {
     private readonly IUserService _accountService;
-    private readonly long _accountId;
 
-    public ToUpBalanceScenario(IUserService accountService, long accountId)
+    public ToUpBalanceScenario(IUserService accountService)
     {
         _accountService = accountService;
-        _accountId = accountId;
     }
 
     public string Name => "To up the balance";
@@ -19,7 +17,7 @@ public class ToUpBalanceScenario : IScenario
     public void Run()
     {
         long toUpBalance = AnsiConsole.Ask<long>("Enter the amount of money");
-        ToUpBalanceResult result = _accountService.ToUpAccountBalance(_accountId, toUpBalance);
+        ToUpBalanceResult result = _accountService.ToUpAccountBalance(toUpBalance);
         string message = result switch
         {
             ToUpBalanceResult.Success success => $"Successful replenishment, current balance: {success.CurrentBalance}",

@@ -26,40 +26,49 @@ internal class UserService : IUserService
         return new LoginResult.Success();
     }
 
-    public ToUpBalanceResult ToUpAccountBalance(long id, long amountMoney)
+    public ToUpBalanceResult ToUpAccountBalance(long amountMoney)
     {
-        long? result = _repository.ToUpBalanceAsync(id, amountMoney).Result;
+        if (_currentUserManager.UserAccount == null)
+            return new ToUpBalanceResult.FailedTopUp();
+        long? result = _repository.ToUpBalanceAsync(_currentUserManager.UserAccount.Id, amountMoney).Result;
+
         if (result is null)
             return new ToUpBalanceResult.FailedTopUp();
 
         return new ToUpBalanceResult.Success(result.Value);
     }
 
-    public MakeWithdrawalResult MakeWithdrawal(long id, long amountMoney)
+    public MakeWithdrawalResult MakeWithdrawal(long amountMoney)
     {
-        Task<MakeWithdrawalResult?> result = _repository.MakeWithdrawalAsync(id, amountMoney);
+        if (_currentUserManager.UserAccount == null)
+            return new MakeWithdrawalResult.OperationMakeWithdrawalError();
+        Task<MakeWithdrawalResult?> result = _repository.MakeWithdrawalAsync(_currentUserManager.UserAccount.Id, amountMoney);
         if (result.Result is null)
             return new MakeWithdrawalResult.OperationMakeWithdrawalError();
 
         return result.Result;
     }
 
-    public CheckBalanceResult CheckBalance(long id)
+    public CheckBalanceResult CheckBalance()
     {
-        long? balance = _repository.CheckBalance(id).Result;
+        if (_currentUserManager.UserAccount == null)
+            return new CheckBalanceResult.NotFoundAccount();
+        long? balance = _repository.CheckBalance(_currentUserManager.UserAccount.Id).Result;
         if (balance is null)
             return new CheckBalanceResult.NotFoundAccount();
 
         return new CheckBalanceResult.Success((long)balance);
     }
 
-    public CheckHistoryOperationResult CheckHistoryOperation(long accountId)
+    public CheckHistoryOperationResult CheckHistoryOperation()
     {
+        if (_currentUserManager.UserAccount == null)
+            return new CheckHistoryOperationResult.ExecuteError();
         var operations = new List<Operation>();
 
         async Task ProcessAsync()
         {
-            await foreach (Operation operation in _repository.CheckHistoryOperation(accountId))
+            await foreach (Operation operation in _repository.CheckHistoryOperation(_currentUserManager.UserAccount.Id))
             {
                 operations.Add(operation);
             }
@@ -72,4 +81,6 @@ internal class UserService : IUserService
 
         return new CheckHistoryOperationResult.Success(operations);
     }
+
+    private bool IsLogin() => _currentUserManager.UserAccount != null;
 }

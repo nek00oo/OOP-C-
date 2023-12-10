@@ -6,19 +6,17 @@ namespace Console.Scenarios.CheckBalance;
 public class CheckBalanceScenario : IScenario
 {
     private readonly IUserService _accountService;
-    private readonly long _accountId;
 
-    public CheckBalanceScenario(IUserService accountService, long accountId)
+    public CheckBalanceScenario(IUserService accountService)
     {
         _accountService = accountService;
-        _accountId = accountId;
     }
 
     public string Name => "Check balance";
 
     public void Run()
     {
-        CheckBalanceResult result = _accountService.CheckBalance(_accountId);
+        CheckBalanceResult result = _accountService.CheckBalance();
 
         string message = result switch
         {
