@@ -1,4 +1,5 @@
 using Itmo.ObjectOrientedProgramming.Lab4.ExecutionContext;
+using Itmo.ObjectOrientedProgramming.Lab4.ExecutionContext.ValidateCommand;
 
 namespace Itmo.ObjectOrientedProgramming.Lab4.Command;
 
@@ -13,6 +14,13 @@ public class TreeGoTo : ICommand
 
     public OperationResult Execute(IExecuteContext? executeContext)
     {
-        return executeContext?.TreeGoTo(_path) ?? new OperationResult.ExecutionError("check the connection to the file system");
+        if (executeContext is null)
+            return new OperationResult.ExecutionError("check the connection to the file system");
+
+        string fullPath = executeContext.GetFullPath(_path);
+        if (executeContext.PathExistValidate.Execute(fullPath) is ValidatePathResult.NotExist notExist)
+            return new OperationResult.ExecutionError(notExist.Error);
+
+        return executeContext.TreeGoTo(fullPath);
     }
 }

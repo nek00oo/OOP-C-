@@ -8,24 +8,25 @@ namespace Itmo.ObjectOrientedProgramming.Lab4.ExecutionContext;
 
 public class LocalExecuteContext : IExecuteContext
 {
-    private readonly IValidatePath _fileExistValidate;
-    private readonly IValidatePath _directoryExistValidate;
-    private readonly IValidatePath _pathExistValidate;
-    private readonly IValidatePath _rootPathValidate;
     private string? _rootPath;
     private string? _currentPath;
 
     public LocalExecuteContext(string rootPath)
     {
-        _rootPathValidate = new PathIsRooted();
-        if (_rootPathValidate.Execute(rootPath) is ValidatePathResult.NotExist notExist)
+        RootPathValidate = new PathIsRooted();
+        if (RootPathValidate.Execute(rootPath) is ValidatePathResult.NotExist notExist)
             throw new InvalidOperationException(notExist.Error);
         _rootPath = rootPath;
         _currentPath = rootPath;
-        _fileExistValidate = new FileIsExistPath();
-        _directoryExistValidate = new DirectoryIsExistPath();
-        _pathExistValidate = new PathIsExistPath();
+        FileExistValidate = new FileIsExistPath();
+        DirectoryExistValidate = new DirectoryIsExistPath();
+        PathExistValidate = new PathIsExistPath();
     }
+
+    public IValidatePath FileExistValidate { get; }
+    public IValidatePath DirectoryExistValidate { get; }
+    public IValidatePath PathExistValidate { get; }
+    public IValidatePath RootPathValidate { get; }
 
     public OperationResult Disconnect()
     {
@@ -36,11 +37,7 @@ public class LocalExecuteContext : IExecuteContext
 
     public OperationResult TreeGoTo(string path)
     {
-        string fullPath = GetFullPath(path);
-        if (_pathExistValidate.Execute(fullPath) is ValidatePathResult.NotExist notExist)
-            return new OperationResult.ExecutionError(notExist.Error);
-
-        _currentPath = fullPath;
+        _currentPath = path;
         return new OperationResult.Success(this);
     }
 
@@ -56,11 +53,6 @@ public class LocalExecuteContext : IExecuteContext
 
     public OperationResult ShowFile(IOutputMode outputMode, string filename)
     {
-        string fullPathFileName = GetFullPath(filename);
-
-        if (_fileExistValidate.Execute(fullPathFileName) is ValidatePathResult.NotExist notExist)
-            return new OperationResult.ExecutionError(notExist.Error);
-
         string content = File.ReadAllText(filename);
         outputMode.Output(content);
         return new OperationResult.Success(this);
@@ -68,64 +60,40 @@ public class LocalExecuteContext : IExecuteContext
 
     public OperationResult MoveFile(string sourcePath, string destinationPath)
     {
-        string sourceFullPath = GetFullPath(sourcePath);
-        string destinationFullPath = GetFullPath(destinationPath);
-        if (_fileExistValidate.Execute(sourceFullPath) is ValidatePathResult.NotExist notExistFile)
-            return new OperationResult.ExecutionError(notExistFile.Error);
-        if (_directoryExistValidate.Execute(destinationFullPath) is ValidatePathResult.NotExist notExistDirectory)
-            return new OperationResult.ExecutionError(notExistDirectory.Error);
-
-        File.Move(sourceFullPath, Path.Combine(destinationFullPath, Path.GetFileName(sourceFullPath)));
+        File.Move(sourcePath, Path.Combine(destinationPath, Path.GetFileName(sourcePath)));
         return new OperationResult.Success(this);
     }
 
     public OperationResult CopyFile(string sourcePath, string destinationPath)
     {
-        string sourceFullPath = GetFullPath(sourcePath);
-        string destinationFullPath = GetFullPath(destinationPath);
-        if (_fileExistValidate.Execute(sourceFullPath) is ValidatePathResult.NotExist notExistFile)
-            return new OperationResult.ExecutionError(notExistFile.Error);
-        if (_directoryExistValidate.Execute(destinationFullPath) is ValidatePathResult.NotExist notExistDirectory)
-            return new OperationResult.ExecutionError(notExistDirectory.Error);
-
-        File.Copy(sourceFullPath, Path.Combine(destinationFullPath, Path.GetFileName(sourceFullPath)));
+        File.Copy(sourcePath, Path.Combine(destinationPath, Path.GetFileName(sourcePath)));
         return new OperationResult.Success(this);
     }
 
     public OperationResult FileDelete(string fileName)
     {
-        string fullPath = GetFullPath(fileName);
-
-        if (_fileExistValidate.Execute(fullPath) is ValidatePathResult.NotExist notExistFile)
-            return new OperationResult.ExecutionError(notExistFile.Error);
-
-        File.Delete(fullPath);
+        File.Delete(fileName);
         return new OperationResult.Success(this);
     }
 
     public OperationResult RenameFile(string filePath, string newFileName)
     {
-        string fullPath = GetFullPath(filePath);
-
-        if (_fileExistValidate.Execute(fullPath) is ValidatePathResult.NotExist notExistFile)
-            return new OperationResult.ExecutionError(notExistFile.Error);
-
-        string? directoryFullPath = Path.GetDirectoryName(fullPath);
+        string? directoryFullPath = Path.GetDirectoryName(filePath);
         if (directoryFullPath != null)
         {
             string newFilePath = Path.Combine(directoryFullPath, newFileName);
-            File.Move(fullPath, newFilePath);
+            File.Move(filePath, newFilePath);
             return new OperationResult.Success(this);
         }
 
-        File.Move(fullPath, newFileName);
+        File.Move(filePath, newFileName);
 
         return new OperationResult.Success(this);
     }
 
-    private string GetFullPath(string path)
+    public string GetFullPath(string path)
     {
-        if (_rootPathValidate.Execute(path) is ValidatePathResult.Success)
+        if (RootPathValidate.Execute(path) is ValidatePathResult.Success)
             return path;
         return _rootPath == null ? string.Empty : Path.Combine(_rootPath, path);
     }
@@ -141,8 +109,8 @@ public class LocalExecuteContext : IExecuteContext
         foreach (string directory in directories)
         {
             string? icon;
-            if (_directoryExistValidate.Execute(directory) is ValidatePathResult.Success) icon = iconsVisitor.VisitFolderIcon();
-            else if (_fileExistValidate.Execute(directory) is ValidatePathResult.Success) icon = iconsVisitor.VisitFileIcon();
+            if (DirectoryExistValidate.Execute(directory) is ValidatePathResult.Success) icon = iconsVisitor.VisitFolderIcon();
+            else if (FileExistValidate.Execute(directory) is ValidatePathResult.Success) icon = iconsVisitor.VisitFileIcon();
             else icon = "??";
             try
             {
