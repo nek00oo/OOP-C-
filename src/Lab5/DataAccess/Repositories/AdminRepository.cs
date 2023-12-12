@@ -24,10 +24,10 @@ public class AdminRepository : IAdminRepository
         """;
         NpgsqlConnection connection = await _connectionProvider.GetConnectionAsync(default).ConfigureAwait(false);
 
-        using var command = new NpgsqlCommand(sql, connection);
+        await using var command = new NpgsqlCommand(sql, connection);
         command.AddParameter("password", password);
 
-        using NpgsqlDataReader reader = await command.ExecuteReaderAsync().ConfigureAwait(false);
+        await using NpgsqlDataReader reader = await command.ExecuteReaderAsync().ConfigureAwait(false);
 
         if (await reader.ReadAsync().ConfigureAwait(false) is false)
             return null;
@@ -52,7 +52,7 @@ public class AdminRepository : IAdminRepository
         await using (var checkCommand = new NpgsqlCommand(sqlCheckAccountExistence, connection))
         {
             checkCommand.AddParameter("accountNumber", accountNumber);
-            using NpgsqlDataReader reader = await checkCommand.ExecuteReaderAsync().ConfigureAwait(false);
+            await using NpgsqlDataReader reader = await checkCommand.ExecuteReaderAsync().ConfigureAwait(false);
 
             if (await reader.ReadAsync().ConfigureAwait(false) is false)
                 return null;

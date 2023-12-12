@@ -29,33 +29,36 @@ internal class UserService : IUserService
     {
         if (_currentUserManager.UserAccount == null)
             return new ToUpBalanceResult.FailedTopUp();
-        long? result = _repository.ToUpBalanceAsync(_currentUserManager.UserAccount.Id, amountMoney).Result;
+        _repository.ToUpBalanceAsync(_currentUserManager.UserAccount.Id, amountMoney);
 
-        if (result is null)
-            return new ToUpBalanceResult.FailedTopUp();
-
-        return new ToUpBalanceResult.Success(result.Value);
+        long currentMoney = 0;
+        if (CheckBalance() is CheckBalanceResult.Success success)
+            currentMoney = success.Balance;
+        return new ToUpBalanceResult.Success(currentMoney);
     }
 
     public MakeWithdrawalResult MakeWithdrawal(long amountMoney)
     {
         if (_currentUserManager.UserAccount == null)
             return new MakeWithdrawalResult.OperationMakeWithdrawalError();
-        Task<MakeWithdrawalResult?> result = _repository.MakeWithdrawalAsync(_currentUserManager.UserAccount.Id, amountMoney);
-        if (result.Result is null)
-            return new MakeWithdrawalResult.OperationMakeWithdrawalError();
+        long currentMoney = 0;
+        if (CheckBalance() is CheckBalanceResult.Success success)
+            currentMoney = success.Balance;
+        if (currentMoney < amountMoney)
+            return new MakeWithdrawalResult.NotEnoughMoneyInAccount();
+        _repository.MakeWithdrawalAsync(_currentUserManager.UserAccount.Id, amountMoney);
 
-        return result.Result;
+        return new MakeWithdrawalResult.Success(currentMoney - amountMoney);
     }
 
     public CheckBalanceResult CheckBalance()
     {
         if (_currentUserManager.UserAccount == null)
             return new CheckBalanceResult.NotFoundAccount();
-        long? balance = _repository.CheckBalance(_currentUserManager.UserAccount.Id).Result;
-        if (balance is null)
+        Task<long?> balance = _repository.CheckBalance(_currentUserManager.UserAccount.Id);
+        if (balance.Result is null)
             return new CheckBalanceResult.NotFoundAccount();
 
-        return new CheckBalanceResult.Success((long)balance);
+        return new CheckBalanceResult.Success((long)balance.Result);
     }
 }

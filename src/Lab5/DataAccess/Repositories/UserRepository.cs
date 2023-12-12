@@ -1,9 +1,7 @@
 using Abstractions.Repositories;
-using Contracts.Users;
 using Itmo.Dev.Platform.Postgres.Connection;
 using Itmo.Dev.Platform.Postgres.Extensions;
 using Models.Accounts;
-using Models.Operations;
 using Npgsql;
 
 namespace DataAccess.Repositories;
@@ -41,7 +39,7 @@ public class UserRepository : IUserRepository
         return new UserAccount(Id: reader.GetInt64(0), UserRole.User, reader.GetInt64(1));
     }
 
-    public async Task<long?> ToUpBalanceAsync(long id, long amountMoney)
+    public async Task ToUpBalanceAsync(long id, long amountMoney)
     {
         await _historyOperationRepository.AddHistoryOperation(id, "to up balance");
         const string sqlUpDateBalance = """
@@ -57,21 +55,10 @@ public class UserRepository : IUserRepository
         command.AddParameter("amountMoney", amountMoney);
 
         await command.ExecuteNonQueryAsync().ConfigureAwait(false);
-
-        long? currentMoney = await CheckBalance(id).ConfigureAwait(false);
-        if (currentMoney is null)
-            return null;
-        return currentMoney.Value;
     }
 
-    public async Task<MakeWithdrawalResult?> MakeWithdrawalAsync(long id, long amountMoney)
+    public async Task MakeWithdrawalAsync(long id, long amountMoney)
     {
-        long? currentMoney = await CheckBalance(id).ConfigureAwait(false);
-        if (currentMoney is null)
-            return null;
-        if (currentMoney.Value < amountMoney)
-            return new MakeWithdrawalResult.NotEnoughMoneyInAccount();
-
         await _historyOperationRepository.AddHistoryOperation(id, "make a withdrawal");
         const string sqlMakeWithdrawal = """
         update user_account
@@ -86,11 +73,6 @@ public class UserRepository : IUserRepository
         command.AddParameter("amountMoney", amountMoney);
 
         await command.ExecuteNonQueryAsync().ConfigureAwait(false);
-
-        currentMoney = await CheckBalance(id).ConfigureAwait(false);
-        if (currentMoney is null)
-            return null;
-        return new MakeWithdrawalResult.Success(currentMoney.Value);
     }
 
     public async Task<long?> CheckBalance(long id)
@@ -112,27 +94,5 @@ public class UserRepository : IUserRepository
         if (await reader.ReadAsync().ConfigureAwait(false) is false)
             return null;
         return reader.GetInt64(0);
-    }
-
-    public async IAsyncEnumerable<Operation> CheckHistoryOperation(long accountId)
-    {
-        await _historyOperationRepository.AddHistoryOperation(accountId, "check history operations");
-        const string sqlCheckHistoryOperation = """
-        select operation
-        from history_operations
-        where account_id = :accountId;
-        """;
-
-        NpgsqlConnection connection = await _connectionProvider.GetConnectionAsync(default).ConfigureAwait(false);
-
-        await using var command = new NpgsqlCommand(sqlCheckHistoryOperation, connection);
-        command.AddParameter("accountId", accountId);
-
-        await using NpgsqlDataReader reader = await command.ExecuteReaderAsync();
-
-        while (await reader.ReadAsync())
-        {
-            yield return new Operation(reader.GetString(0));
-        }
     }
 }
