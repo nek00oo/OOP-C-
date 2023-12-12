@@ -22,6 +22,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\src\Lab5\Abstractions\Abstractions.csproj" />
+      <ProjectReference Include="..\..\src\Lab5\Application\Application.csproj" />
       <ProjectReference Include="..\..\src\Lab5\Console\Console.csproj" />
     </ItemGroup>
 

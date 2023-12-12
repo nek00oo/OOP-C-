@@ -9,12 +9,10 @@ namespace DataAccess.Repositories;
 public class UserRepository : IUserRepository
 {
     private readonly IPostgresConnectionProvider _connectionProvider;
-    private readonly IHistoryOperationRepository _historyOperationRepository;
 
-    public UserRepository(IPostgresConnectionProvider connectionProvider, IHistoryOperationRepository historyOperationRepository)
+    public UserRepository(IPostgresConnectionProvider connectionProvider)
     {
         _connectionProvider = connectionProvider;
-        _historyOperationRepository = historyOperationRepository;
     }
 
     public async Task<UserAccount?> FindAccountUserByAccountNumberAndPasswordAsync(long accountNumber, string password)
@@ -36,12 +34,14 @@ public class UserRepository : IUserRepository
         if (await reader.ReadAsync().ConfigureAwait(false) is false)
             return null;
 
-        return new UserAccount(Id: reader.GetInt64(0), UserRole.User, reader.GetInt64(1));
+        return new UserAccount(
+            Id: reader.GetInt64(0),
+            UserRole.User,
+            reader.GetInt64(1));
     }
 
     public async Task ToUpBalanceAsync(long id, long amountMoney)
     {
-        await _historyOperationRepository.AddHistoryOperation(id, "to up balance");
         const string sqlUpDateBalance = """
         update user_account
         set balance = balance + :amountMoney
@@ -59,7 +59,6 @@ public class UserRepository : IUserRepository
 
     public async Task MakeWithdrawalAsync(long id, long amountMoney)
     {
-        await _historyOperationRepository.AddHistoryOperation(id, "make a withdrawal");
         const string sqlMakeWithdrawal = """
         update user_account
         set balance = balance - :amountMoney
@@ -77,7 +76,6 @@ public class UserRepository : IUserRepository
 
     public async Task<long?> CheckBalance(long id)
     {
-        await _historyOperationRepository.AddHistoryOperation(id, "check balance");
         const string sqlCheckBalance = """
         select balance
         from user_account

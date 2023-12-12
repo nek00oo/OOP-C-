@@ -17,7 +17,6 @@ public class HistoryOperationRepository : IHistoryOperationRepository
 
     public async IAsyncEnumerable<Operation> CheckHistoryOperation(long accountId)
     {
-        await AddHistoryOperation(accountId, "check history operations");
         const string sqlCheckHistoryOperation = """
                                                 select operation
                                                 from history_operations
