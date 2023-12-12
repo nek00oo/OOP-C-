@@ -74,10 +74,10 @@ public class UserRepository : IUserRepository
         await command.ExecuteNonQueryAsync().ConfigureAwait(false);
     }
 
-    public async Task<long?> CheckBalance(long id)
+    public async Task<UserAccount?> CheckBalance(long id)
     {
         const string sqlCheckBalance = """
-        select balance
+        select account_id, balance
         from user_account
         where account_id = :id;
         """;
@@ -91,6 +91,9 @@ public class UserRepository : IUserRepository
 
         if (await reader.ReadAsync().ConfigureAwait(false) is false)
             return null;
-        return reader.GetInt64(0);
+        return new UserAccount(
+            Id: reader.GetInt64(0),
+            UserRole.User,
+            reader.GetInt64(1));
     }
 }

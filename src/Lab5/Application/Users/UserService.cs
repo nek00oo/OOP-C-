@@ -52,27 +52,24 @@ internal class UserService : IUserService
     {
         if (_currentUserManager.UserAccount == null)
             return new MakeWithdrawalResult.OperationMakeWithdrawalError();
-        long currentMoney = 0;
-        if (CheckBalance() is CheckBalanceResult.Success success)
-            currentMoney = success.Balance;
-        if (currentMoney < amountMoney)
-            return new MakeWithdrawalResult.NotEnoughMoneyInAccount();
+        CheckBalance();
         Task result = _repository.MakeWithdrawalAsync(_currentUserManager.UserAccount.Id, amountMoney);
         result.Wait();
         Task<Operation> historyResult = _historyOperationRepository.AddHistoryOperation(_currentUserManager.UserAccount.Id, "make withdrawal");
         historyResult.Wait();
-        return new MakeWithdrawalResult.Success(currentMoney - amountMoney);
+        return new MakeWithdrawalResult.Success(_currentUserManager.UserAccount.Balance - amountMoney);
     }
 
     public CheckBalanceResult CheckBalance()
     {
         if (_currentUserManager.UserAccount == null)
             return new CheckBalanceResult.NotFoundAccount();
-        Task<long?> balance = _repository.CheckBalance(_currentUserManager.UserAccount.Id);
-        if (balance.Result is null)
+        UserAccount? userAccount = _repository.CheckBalance(_currentUserManager.UserAccount.Id).Result;
+        if (userAccount is null)
             return new CheckBalanceResult.NotFoundAccount();
+        _currentUserManager.UserAccount = userAccount;
         Task<Operation> historyResult = _historyOperationRepository.AddHistoryOperation(_currentUserManager.UserAccount.Id, "check balance");
         historyResult.Wait();
-        return new CheckBalanceResult.Success((long)balance.Result);
+        return new CheckBalanceResult.Success(userAccount.Balance);
     }
 }
