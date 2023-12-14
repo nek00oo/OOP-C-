@@ -13,7 +13,7 @@ public class ServiceUserAccountTests
     public void TestedMethodMakeWithdrawal_ExpectedResultSuccess_WhenEnoughMoney()
     {
         var currentUserManager = new CurrentUserManager();
-        currentUserManager.UserAccount = new UserAccount(1, UserRole.User);
+        currentUserManager.UserAccount = new UserAccount(1);
         IUserRepository? repositoryMock = Substitute.For<IUserRepository>();
         IHistoryOperationRepository? historyOperationRepositoryMock = Substitute.For<IHistoryOperationRepository>();
         repositoryMock.CheckBalance(currentUserManager.UserAccount.Id).Returns(1000);
@@ -32,7 +32,7 @@ public class ServiceUserAccountTests
     public void TestedMethodMakeWithdrawal_ExpectedResultSuccess_WhenNotEnoughMoney()
     {
         var currentUserManager = new CurrentUserManager();
-        currentUserManager.UserAccount = new UserAccount(1, UserRole.User);
+        currentUserManager.UserAccount = new UserAccount(1);
         IUserRepository? repositoryMock = Substitute.For<IUserRepository>();
         IHistoryOperationRepository? historyOperationRepositoryMock = Substitute.For<IHistoryOperationRepository>();
         repositoryMock.CheckBalance(currentUserManager.UserAccount.Id).Returns(1000);
@@ -50,7 +50,7 @@ public class ServiceUserAccountTests
     public void TestedMethodToUpMoney_ExpectedResultSuccess()
     {
         var currentUserManager = new CurrentUserManager();
-        currentUserManager.UserAccount = new UserAccount(1, UserRole.User);
+        currentUserManager.UserAccount = new UserAccount(1);
         IUserRepository? repositoryMock = Substitute.For<IUserRepository>();
         IHistoryOperationRepository? historyOperationRepositoryMock = Substitute.For<IHistoryOperationRepository>();
         repositoryMock.CheckBalance(currentUserManager.UserAccount.Id).Returns(30);

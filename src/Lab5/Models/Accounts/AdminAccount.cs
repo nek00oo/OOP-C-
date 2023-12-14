@@ -1,3 +1,3 @@
 namespace Models.Accounts;
 
-public record AdminAccount(long Id, UserRole Role);
+public record AdminAccount(long Id);

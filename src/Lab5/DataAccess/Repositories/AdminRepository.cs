@@ -32,7 +32,7 @@ public class AdminRepository : IAdminRepository
         if (await reader.ReadAsync().ConfigureAwait(false) is false)
             return null;
 
-        return new AdminAccount(Id: reader.GetInt64(0), UserRole.Admin);
+        return new AdminAccount(Id: reader.GetInt64(0));
     }
 
     public async Task<bool?> CreateUserAccount(long accountNumber, string accountPassword)

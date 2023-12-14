@@ -1,6 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
 using Contracts.Admins;
-using Models.Accounts;
 
 namespace Console.Scenarios.CreateAccount;
 
@@ -20,7 +19,7 @@ public class CreateAccountScenarioProvider : IScenarioProvider
     public bool TryGetScenario(
         [NotNullWhen(true)] out IScenario? scenario)
     {
-        if (_currentAdmin.AdminAccount?.Role is UserRole.Admin)
+        if (_currentAdmin.AdminAccount is not null)
         {
             scenario = new CreateAccountScenario(_service);
             return true;

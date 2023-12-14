@@ -1,7 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 using Contracts.HistoryOperations;
 using Contracts.Users;
-using Models.Accounts;
 
 namespace Console.Scenarios.CheckHistoryOperation;
 
@@ -21,7 +20,7 @@ public class CheckHistoryScenarioProvider : IScenarioProvider
     public bool TryGetScenario(
         [NotNullWhen(true)] out IScenario? scenario)
     {
-        if (_currentUser?.UserAccount?.Role is UserRole.User)
+        if (_currentUser?.UserAccount is not null)
         {
             scenario = new CheckHistoryScenario(_service);
             return true;
