@@ -18,7 +18,7 @@ public class UserRepository : IUserRepository
     public async Task<UserAccount?> FindAccountUserByAccountNumberAndPasswordAsync(long accountNumber, string password)
     {
         const string sql = """
-        select account_id, balance
+        select account_id
         from user_account
         where account_number = :accountNumber and account_password = :password;
         """;
@@ -36,8 +36,7 @@ public class UserRepository : IUserRepository
 
         return new UserAccount(
             Id: reader.GetInt64(0),
-            UserRole.User,
-            reader.GetInt64(1));
+            UserRole.User);
     }
 
     public async Task ToUpBalanceAsync(long id, long amountMoney)
@@ -74,10 +73,10 @@ public class UserRepository : IUserRepository
         await command.ExecuteNonQueryAsync().ConfigureAwait(false);
     }
 
-    public async Task<UserAccount?> CheckBalance(long id)
+    public async Task<long?> CheckBalance(long id)
     {
         const string sqlCheckBalance = """
-        select account_id, balance
+        select balance
         from user_account
         where account_id = :id;
         """;
@@ -91,9 +90,6 @@ public class UserRepository : IUserRepository
 
         if (await reader.ReadAsync().ConfigureAwait(false) is false)
             return null;
-        return new UserAccount(
-            Id: reader.GetInt64(0),
-            UserRole.User,
-            reader.GetInt64(1));
+        return reader.GetInt64(0);
     }
 }
