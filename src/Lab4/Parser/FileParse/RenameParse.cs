@@ -1,0 +1,21 @@
+using Itmo.ObjectOrientedProgramming.Lab4.Command;
+using Itmo.ObjectOrientedProgramming.Lab4.Iterator;
+
+namespace Itmo.ObjectOrientedProgramming.Lab4.Parser.FileParse;
+
+public class RenameParse : CommandParserBase
+{
+    public override ParseResult CheckCommand(IIterator iterator)
+    {
+        if (iterator.GetCurrent().ToUpperInvariant() == "RENAME" && iterator.MoveNext())
+        {
+            string path = iterator.GetCurrent();
+            if (iterator.MoveNext())
+                return new ParseResult.Success(new RenameFileCommand(path, iterator.GetCurrent()));
+
+            return new ParseResult.CommandNotDetected();
+        }
+
+        return NextCommand?.CheckCommand(iterator) ?? new ParseResult.CommandNotDetected();
+    }
+}

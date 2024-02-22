@@ -1,0 +1,6 @@
+namespace Itmo.ObjectOrientedProgramming.Lab2.Models.ProcessorCoolingSystem;
+
+public interface IProcessorCoolingSystemBuilderDirect
+{
+    IProcessorCoolingSystemBuilder Direct(IProcessorCoolingSystemBuilder processorCoolingSystemBuilder);
+}

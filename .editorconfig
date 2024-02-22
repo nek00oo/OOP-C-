@@ -90,6 +90,9 @@ csharp_style_namespace_declarations = file_scoped:warning
 # Disable XML docs
 dotnet_diagnostic.CS1591.severity = none
 
+
+dotnet_diagnostic.CA1024.severity = none
+
 dotnet_diagnostic.CA1062.severity = none
 
 dotnet_diagnostic.CA1034.severity = none
@@ -97,3 +100,6 @@ dotnet_diagnostic.CA1034.severity = none
 dotnet_diagnostic.CA2007.severity = none
 
 dotnet_diagnostic.CA1707.severity = none
+
+dotnet_diagnostic.CA1040.severity = none
+
