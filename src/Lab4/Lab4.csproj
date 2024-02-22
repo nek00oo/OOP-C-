@@ -4,4 +4,7 @@
         <RootNamespace>Itmo.ObjectOrientedProgramming.Lab4</RootNamespace>
     </PropertyGroup>
 
+    <ItemGroup>
+        <PackageReference Include="SourceKit.Generators.Builder" />
+    </ItemGroup>
 </Project>
