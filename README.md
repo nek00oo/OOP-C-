@@ -5,4 +5,5 @@
   SOLID
   GRASP
   DRY/KISS
-  Patterns
+  Patterns (Пораждающие/Поведенчиские/Структурные)
+  Architecture (MVC/Многослойная/Луковая)
